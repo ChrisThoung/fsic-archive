@@ -12,5 +12,9 @@ setup(
     author='Chris Thoung',
     author_email='chris.thoung@gmail.com',
     url='https://github.com/cthoung/fsic',
-    packages=['fsic'],
+    packages=[
+        'fsic',
+        'fsic.parser',
+        'fsic.parser.tests',
+        ],
     )
