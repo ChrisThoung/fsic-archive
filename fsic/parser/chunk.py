@@ -7,6 +7,7 @@ FSIC parser to convert code chunks into Dictionary objects.
 """
 
 
+import copy
 import re
 
 
@@ -181,3 +182,28 @@ def parse_attributes_block(block):
     attributes['classes'] = classes
     # Return
     return attributes
+
+
+def parse(chunk):
+    """Process `chunk` to a Dictionary.
+
+    Parameters
+    ==========
+    chunk : string
+        Code chunk to parse
+
+    Returns
+    =======
+    parsed : Dictionary
+        Processed `chunk`
+
+    """
+    # Split into attributes and code block
+    contents = split(chunk)
+    # Parse attributes block and use as basis for final Dictionary
+    attributes = parse_attributes_block(contents['attributes'])
+    parsed = copy.deepcopy(attributes)
+    # Copy over the code block
+    parsed['code'] = contents['code']
+    # Return
+    return parsed

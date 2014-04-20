@@ -120,6 +120,21 @@ def test_parse_attributes_block_empty():
     assert attributes == expected
 
 
+def test_parse_chunk():
+    chunk = '\n'.join([
+        '~~~{#consumption .python .postkeynesian type="not hydraulic"}',
+        'C_d = alpha_1 * YD + alpha_2 * H_h[-1]',
+        '~~~'])
+    expected = {
+        'identifier': 'consumption',
+        'classes': ['python', 'postkeynesian'],
+        'type': 'not hydraulic',
+        'code': 'C_d = alpha_1 * YD + alpha_2 * H_h[-1]',
+        }
+    parsed = fsic.parser.chunk.parse(chunk)
+    assert parsed == expected
+
+
 if __name__ == '__main__':
     import nose
     nose.runmodule()
