@@ -35,6 +35,12 @@ def test_parse_attributes_block_identifier_empty():
     assert identifier == None
 
 
+@raises(ValueError)
+def test_parse_attributes_block_identifier_multiple():
+    identifier = fsic.parser.chunk.parse_attributes_block_identifier(
+        '#consumption #consumption')
+
+
 def test_parse_attributes_block_classes():
     classes = fsic.parser.chunk.parse_attributes_block_classes(
         '.python .postkeynesian')
@@ -46,11 +52,40 @@ def test_parse_attributes_block_classes_empty():
     assert classes == []
 
 
-def test_parse_attributes_block_attributes():
+def test_parse_attributes_block_attributes_single():
     attributes = fsic.parser.chunk.parse_attributes_block_attributes(
         'type="not hydraulic"')
     assert attributes == {
         'type': 'not hydraulic'}
+
+
+def test_parse_attributes_block_attributes_spaces_before():
+    attributes = fsic.parser.chunk.parse_attributes_block_attributes(
+        'type  ="not hydraulic"')
+    assert attributes == {
+        'type': 'not hydraulic'}
+
+
+def test_parse_attributes_block_attributes_spaces_after():
+    attributes = fsic.parser.chunk.parse_attributes_block_attributes(
+        'type=  "not hydraulic"')
+    assert attributes == {
+        'type': 'not hydraulic'}
+
+
+def test_parse_attributes_block_attributes_spaces_either_side():
+    attributes = fsic.parser.chunk.parse_attributes_block_attributes(
+        'type  =  "not hydraulic"')
+    assert attributes == {
+        'type': 'not hydraulic'}
+
+
+def test_parse_attributes_block_attributes_multiple():
+    attributes = fsic.parser.chunk.parse_attributes_block_attributes(
+        'type="not hydraulic" comment="exhibits stock-flow norm"')
+    assert attributes == {
+        'type': 'not hydraulic',
+        'comment': 'exhibits stock-flow norm'}
 
 
 def test_parse_attributes_block_attributes_empty():

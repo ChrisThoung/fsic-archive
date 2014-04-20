@@ -65,6 +65,12 @@ def parse_attributes_block_identifier(block):
 
     """
     pattern = re.compile(r'#(?P<identifier>\w+\b)')
+    instances = len(pattern.findall(block))
+    if instances > 1:
+        raise ValueError(
+            'Found ' +
+            str(instances) +
+            ' identifiers; expected at most one')
     s = pattern.search(block)
     if s == None:
         return None
@@ -117,7 +123,9 @@ def parse_attributes_block_attributes(block):
     s = pattern.findall(block)
     attributes = {}
     for i in s:
-        k, v = i.partition('=')[0::2]
+        parts = i.partition('=')
+        parts = [p.strip() for p in parts]
+        k, v = parts[0::2]
         if k in attributes:
             raise ValueError('Duplicate keys found in attributes block')
         attributes[k] = v[1:-1]
