@@ -23,6 +23,17 @@ def test_split():
         }
 
 
+def test_parse_attributes_block():
+    block = '#consumption .python .postkeynesian type="not hydraulic"'
+    expected = {
+        'identifier': 'consumption',
+        'classes': ['python', 'postkeynesian'],
+        'type': 'not hydraulic',
+        }
+    attributes = fsic.parser.chunk.parse_attributes_block(block)
+    assert attributes == expected
+
+
 if __name__ == '__main__':
     import nose
     nose.runmodule()
