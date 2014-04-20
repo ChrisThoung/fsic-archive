@@ -113,11 +113,13 @@ def parse_attributes_block_attributes(block):
     Values are left as strings
 
     """
-    pattern = re.compile(r'\w+\s*=\s*".+"')
+    pattern = re.compile(r'\w+\s*=\s*".+?"')
     s = pattern.findall(block)
     attributes = {}
     for i in s:
         k, v = i.partition('=')[0::2]
+        if k in attributes:
+            raise ValueError('Duplicate keys found in attributes block')
         attributes[k] = v[1:-1]
     return attributes
 
@@ -139,8 +141,8 @@ def parse_attributes_block(block):
                 preceded by '#'; one instance per block only
             'classes' : list
                 Any attributes (empty if none supplied);
-                words preceded by '.'; multiple instance per block
-                permitted
+                words preceded by '.'; multiple instances per block
+                permitted; duplicates permitted
             attributes : strings
                 Keyword-type attributes are split into their key:value
                 pairs; 'identifier' and 'classes' are reserved keywords;
