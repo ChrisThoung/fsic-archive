@@ -172,6 +172,12 @@ def parse_attributes_block(block):
             'identifier' : None
             'classes' : []
 
+    See also
+    ========
+    parse_attributes_block_identifier()
+    parse_attributes_block_classes()
+    parse_attributes_block_attributes()
+
     """
     # Extract identifier and classes
     identifier = parse_attributes_block_identifier(block)
@@ -196,6 +202,11 @@ def parse(chunk):
     =======
     parsed : Dictionary
         Processed `chunk`
+
+    See also
+    ========
+    split()
+    parse_attributes_block()
 
     """
     # Split into attributes and code block
