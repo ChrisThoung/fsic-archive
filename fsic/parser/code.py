@@ -83,6 +83,7 @@ def translate(block, period='period'):
         ''',
         re.VERBOSE)
     block = index_pattern.sub(r'\1'.strip() + '[' + period + ']', block)
+    block = block.replace('[' + period + ']]', ']')
     # Insert patterns for variables with lead/lag offsets
     lead_pattern = re.compile(
         r'''\[      # Open square (index) bracket
