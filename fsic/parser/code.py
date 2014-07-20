@@ -46,6 +46,15 @@ def translate(block, period='period'):
     'self.G_s[time] = self.G_d[time]'
 
     """
-    pattern = re.compile(r'([A-z]+[\w]*)')
+    pattern = re.compile(
+        r'''(               # New group
+            \b              # Open word boundary
+            [A-z_]+[\w]*    # Valid Python identifier (starts with a letter or
+                            # underscore, then any sequence of alphanumeric
+                            #  characters)
+            \b              # Close word boundary
+            )               # Close group
+        ''',
+        re.VERBOSE)
     block = pattern.sub('self.' + r'\1'+ '[' + period + ']', block)
     return block

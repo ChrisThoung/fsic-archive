@@ -10,18 +10,6 @@ FSIC parser to extract code blocks from Pandoc Markdown-formatted strings.
 import re
 
 
-pattern = re.compile(
-    r'''^[~`]{3,}   # Chunk begins with at least three tildes or backticks
-                    # at the start of a line
-        \{.+?\}\n   # Immediately followed by attributes, in braces (non-greedy)
-        .*?         # Non-greedy quantifier (guards against blocks not separated
-                    # by a double newline)
-        ^[~`]{3,}$  # Chunk ends with at least three tildes or backticks
-                    # at the start of a line
-    ''',
-    re.DOTALL | re.MULTILINE | re.VERBOSE)
-
-
 def extract(script):
     """Return the code chunks from `script`.
 
@@ -36,5 +24,15 @@ def extract(script):
         One string per chunk
 
     """
+    pattern = re.compile(
+        r'''^[~`]{3,}   # Chunk begins with at least three tildes or backticks
+                        # at the start of a line
+            \{.+?\}\n   # Immediately followed by attributes, in braces (non-greedy)
+            .*?         # Non-greedy quantifier (guards against blocks not separated
+                        # by a double newline)
+            ^[~`]{3,}$  # Chunk ends with at least three tildes or backticks
+                        # at the start of a line
+        ''',
+    re.DOTALL | re.MULTILINE | re.VERBOSE)
     split = pattern.findall(script)
     return split
