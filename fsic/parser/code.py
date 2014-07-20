@@ -78,23 +78,11 @@ def translate(block, period='period'):
             self\.[A-z_]+[\w]*  # Valid Python identifier preceded by 'self.'
             \b                  # Close word boundary
             )                   # Close group
-            [^[]                # Next character is *not* an opening square
+            (?!\[)              # Next character is *not* an opening square
                                 # bracket
         ''',
         re.VERBOSE)
-    block = index_pattern.sub(r'\1'.strip() + '[' + period + '] ', block)
-    block = block.strip()
-    # Index pattern for the last variable in each expression
-    index_pattern_last = re.compile(
-        r'''(                   # New group
-            \b                  # Open word boundary
-            self\.[A-z_]+[\w]*  # Valid Python identifier preceded by 'self.'
-            $                   # End of string
-            )                   # Close group
-        ''',
-        re.VERBOSE)
-    block = index_pattern_last.sub(r'\1'.strip() + '[' + period + '] ', block)
-    block = block.strip()
+    block = index_pattern.sub(r'\1'.strip() + '[' + period + ']', block)
     # Insert patterns for variables with lead/lag offsets
     lead_pattern = re.compile(
         r'''\[      # Open square (index) bracket
