@@ -24,6 +24,14 @@ def test_one_line_lag():
         'self.alpha_2[period] * self.H_h[period-1]')
 
 
+def test_one_line_lead():
+    block = 'C_d = alpha_1 * YD + alpha_2 * H_h[+1]'
+    assert fsic.parser.code.translate(block) == (
+        'self.C_d[period] = '
+        'self.alpha_1[period] * self.YD[period] + '
+        'self.alpha_2[period] * self.H_h[period+1]')
+
+
 def test_one_line_lag_single_space():
     block = 'C_d = alpha_1 * YD + alpha_2 * H_h [-1]'
     assert fsic.parser.code.translate(block) == (

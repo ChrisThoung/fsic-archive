@@ -95,7 +95,17 @@ def translate(block, period='period'):
         re.VERBOSE)
     block = index_pattern_last.sub(r'\1'.strip() + '[' + period + '] ', block)
     block = block.strip()
-    # Insert pattern for variables with a lead/lag offset
+    # Insert patterns for variables with lead/lag offsets
+    lead_pattern = re.compile(
+        r'''\[      # Open square (index) bracket
+            \s*     # Any whitespace before
+            (       # Open group
+            [\d]+   # One or more digits (no sign)
+            )       # Close group
+            \s*     # Any whitespace after
+            \]      # Close square (index) bracket
+        ''',
+        re.VERBOSE)
     lead_lag_pattern = re.compile(
         r'''\[      # Open square (index) bracket
             \s*     # Any whitespace before
@@ -106,6 +116,7 @@ def translate(block, period='period'):
             \]      # Close square (index) bracket
         ''',
         re.VERBOSE)
+    block = lead_pattern.sub('[' + period + '+' + r'\1' + ']', block)
     block = lead_lag_pattern.sub('[' + period + r'\1' + ']', block)
     # Return
     return block
