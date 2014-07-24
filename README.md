@@ -5,7 +5,7 @@ Stock-Flow Consistent macroeconomic models in the tradition of Wynne Godley.
 
 ## References
 
-Godley, W., Lavoie, L. (2007),
+Godley, W., Lavoie, M. (2007),
 *Monetary economics: an integrated approach to
 credit, money, income, production and wealth*,
 Palgrave Macmillan
