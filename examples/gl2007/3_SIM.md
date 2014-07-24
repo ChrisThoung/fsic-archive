@@ -1,6 +1,4 @@
-% Chapter 3: The simplest model with government money
-% Godley and Lavoie
-% 2007
+# Chapter 3: The simplest model with government money
 
 Markdown file to demonstrate the FSIC model builder, using the example of Model
 SIM from:
@@ -8,13 +6,13 @@ SIM from:
 > Godley, W., Lavoie, M. (2007), *Monetary economics: an integrated approach to
 > credit, money, income, production and wealth*, Palgrave Macmillan
 
-# Instructions
+## Instructions
 
 This Markdown file defines Model SIM.
 
-# Model
+## Model
 
-## Mechanisms adjusting supply and demand
+### Mechanisms adjusting supply and demand
 
 The following four equations equalise demands and supplies, with whatever is
 demanded in each period (variables with a subscript $d$) always supplied
