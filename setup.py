@@ -28,6 +28,9 @@ setup(
         'fsic.parser',
         'fsic.parser.tests',
         ],
+    scripts=[
+        'scripts/fsic-build.py',
+        ],
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Environment :: Console',
