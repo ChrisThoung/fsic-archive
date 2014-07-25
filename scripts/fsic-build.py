@@ -25,10 +25,19 @@ parser.add_argument(
     version=version)
 
 parser.add_argument(
+    '-o', '--output',
+    nargs=1,
+    metavar='OUTPUT',
+    default=None,
+    type=str,
+    required=False,
+    help='set model name (exclude file extension)')
+
+parser.add_argument(
     'files',
+    nargs='+',
     metavar='FILE',
     type=str,
-    nargs='+',
     help='list of files that define the model')
 
 
