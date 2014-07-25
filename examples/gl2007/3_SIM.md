@@ -10,7 +10,7 @@ SIM from:
 
 This Markdown file defines Model SIM.
 
-## Model
+## Equations of Model SIM
 
 ### Mechanisms adjusting supply and demand
 
@@ -75,4 +75,79 @@ The corresponding Python code:
 ~~~{.python}
 YD = W * N_s - T_s
 T_d = theta * W * N_s
+~~~
+
+### Consumption function
+
+\begin{equation} \tag{3.7}
+C_d = \alpha_1 . YD + \alpha_2 . H_{h-1} \qquad 0 < \alpha_2 < \alpha_1 < 1
+\end{equation}
+
+In Python:
+
+~~~{.python}
+C_d = alpha_1 * YD + alpha_2 * H_h[-1]
+~~~
+
+### Government debt/household holdings of cash
+
+The government surplus/deficit (the change in debt) is the difference between
+(consumption) expenditure and (tax) revenue:
+
+\begin{equation} \tag{3.8}
+\Delta H_s = H_s - H_{s-1} = G_d - T_d
+\end{equation}
+
+Alternatively, household holdings of that debt are a vehicle for savings:
+
+\begin{equation} \tag{3.9}
+\Delta H_h = H_h - H_{h-1} = YD - C_d
+\end{equation}
+
+These equations are more conveniently represented in terms of the stock of debt,
+rather than as flows:
+
+~~~{.python}
+H_s = H_s[-1] + G_d - T_d
+H_h = H_h[-1] + YD - C_d
+~~~
+
+### National income identity
+
+In output terms:
+
+\begin{equation} \tag{3.10}
+Y = C_s + G_s
+\end{equation}
+
+Or, in income terms:
+
+\begin{equation} \tag{3.11A}
+Y = W . N_d
+\end{equation}
+
+Which by re-arrangement, gives labour demand:
+
+\begin{equation} \tag{3.11}
+N_d = \frac{Y}{W}
+\end{equation}
+
+The corresponding Python equations are:
+
+~~~{.python}
+Y = C_s + G_s
+N_d = Y / W
+~~~
+
+### The hidden/redundant equation
+
+\begin{equation} \tag{3.12}
+\Delta H_h = \Delta H_s
+\end{equation}
+
+As for the changes in debt/cash, this is better represented as equality of
+stocks:
+
+~~~{.python}
+H_h = H_s
 ~~~
