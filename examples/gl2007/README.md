@@ -9,16 +9,11 @@ formats by programs such as [Pandoc](http://johnmacfarlane.net/pandoc/).
 
 ## Contents
 
---------------------------------------------------------------------------------
-  # Chapter                                     Model(s)       File(s)
---- ------------------------------------------- -------------- -----------------
-  1 Introduction                                -              -
-
-  2 Balance sheets, transaction matrices and    -              -
-    the monetary circuit
-
-  3 The simplest model with government money    SIM            3_SIM.md
---------------------------------------------------------------------------------
+  #|Chapter                                                      |Model(s) |File(s)
+--:|:------------------------------------------------------------|:--------|:-------
+  1|Introduction                                                 |-        |-
+  2|Balance sheets, transaction matrices and the monetary circuit|-        |-
+  3|The simplest model with government money                     |SIM      |3_SIM.md
 
 ## References
 
