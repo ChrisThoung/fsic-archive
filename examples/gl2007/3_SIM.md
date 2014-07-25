@@ -1,10 +1,7 @@
 # Chapter 3: The simplest model with government money
 
-Markdown file to demonstrate the FSIC model builder, using the example of Model
-SIM from:
-
-> Godley, W., Lavoie, M. (2007), *Monetary economics: an integrated approach to
-> credit, money, income, production and wealth*, Palgrave Macmillan
+Markdown file to demonstrate how to use `fsic-build.py`, using the example of
+Model SIM from Godley and Lavoie (2007).
 
 ## Instructions
 

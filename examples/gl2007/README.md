@@ -14,10 +14,3 @@ formats by programs such as [Pandoc](http://johnmacfarlane.net/pandoc/).
   1|Introduction                                                 |-        |-
   2|Balance sheets, transaction matrices and the monetary circuit|-        |-
   3|The simplest model with government money                     |SIM      |3_SIM.md
-
-## References
-
-Godley, W., Lavoie, L. (2007),
-*Monetary economics: an integrated approach to
-credit, money, income, production and wealth*,
-Palgrave Macmillan
