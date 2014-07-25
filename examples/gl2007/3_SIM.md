@@ -55,3 +55,24 @@ N_s = N_d
 Note that in the raw Markdown, there are three tildes that fence the code block
 before and after. The block has `.python` as a class attribute, to indicate the
 programming language.
+
+### Disposable income and taxes
+
+Disposable income ($YD$) is the wage bill earned by households, minus taxes:
+
+\begin{equation} \tag{3.5}
+YD = W . N_s - T_s
+\end{equation}
+
+Taxes are a fixed share of income, at rate $\theta$:
+
+\begin{equation} \tag{3.6}
+T_d = \theta . W . N_s \qquad \theta < 1
+\end{equation}
+
+The corresponding Python code:
+
+~~~{.python}
+YD = W * N_s - T_s
+T_d = theta * W * N_s
+~~~
