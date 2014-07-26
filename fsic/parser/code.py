@@ -153,10 +153,15 @@ def identify_variables(statement, prefix=r'self\.'):
             \w*         # Any other characters in a valid Python identifier
         ''',
         re.VERBOSE)
-    # Split by equals sign and then parse
-    endogenous, exogenous = statement.split('=', 1)
-    endogenous = pattern.findall(endogenous)
-    exogenous = pattern.findall(exogenous)
+    # Split lines and then parse line by line
+    statement = statement.splitlines()
+    endogenous = []
+    exogenous = []
+    for l in statement:
+        # Split by equals sign and then parse
+        n, x = l.split('=', 1)
+        endogenous = endogenous + list(pattern.findall(n))
+        exogenous = exogenous + list(pattern.findall(x))
     # Store to Dictionary and return
     variables = {
         'endogenous': list(endogenous),

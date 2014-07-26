@@ -106,6 +106,17 @@ def test_identify_variables_multiple_exogenous_variables_no_prefix():
          'exogenous': ['alpha_1', 'YD', 'alpha_2', 'H_h']})
 
 
+def test_identify_variables_multiple_lines():
+    statement = '\n'.join([
+        'self.C_s = self.C_d',
+        'self.G_s = self.G_d',
+        'self.T_s = self.T_d',
+        'self.N_s = self.N_d',])
+    assert fsic.parser.code.identify_variables(statement) == (
+        {'endogenous': ['self.C_s', 'self.G_s', 'self.T_s', 'self.N_s'],
+         'exogenous': ['self.C_d', 'self.G_d', 'self.T_d', 'self.N_d']})
+
+
 if __name__ == '__main__':
     import nose
     nose.runmodule()
