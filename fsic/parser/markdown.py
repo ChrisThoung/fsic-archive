@@ -2,7 +2,8 @@
 """
 markdown
 ========
-FSIC parser to extract code blocks from Pandoc Markdown-formatted strings.
+FSIC parser to operate on Pandoc Markdown-formatted strings, in order to
+extract code chunks.
 
 """
 

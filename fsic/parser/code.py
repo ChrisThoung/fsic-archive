@@ -2,7 +2,8 @@
 """
 code
 ====
-FSIC parser to generate model-compatible Python code from code blocks.
+FSIC parser to operate on Python code blocks extracted from code chunks, in
+order to generate class definition-compatible code.
 
 """
 
@@ -109,3 +110,55 @@ def translate(block, period='period'):
     block = lead_lag_pattern.sub('[' + period + r'\1' + ']', block)
     # Return
     return block
+
+
+def identify_variables(statement, prefix=r'self\.'):
+    """Identify the endogenous and exogenous variables in `statement`.
+
+    Parameters
+    ==========
+    statement : string
+        Python code block to parse
+    prefix : string
+        String each variable should begin with, to be included in the search
+        regular expression (use r'\b' if no prefix desired)
+
+    Returns
+    =======
+    variables : Dictionary
+        Contains:
+            'endogenous' : list of strings
+                Names of endogenous variables (to the left of the equals sign)
+            'exogenous' : list of strings
+                Names of exogenous variables (to the right of the equals sign)
+
+    Examples
+    ========
+    >>> import fsic.parser.code.identify_variables as identify_variables
+    >>> identify_variables('self.C_s[0] = self.C_d[0]')
+    {'endogenous': ['C_s'],
+     'exogenous': ['C_d']})
+
+    >>> import fsic.parser.code.identify_variables as identify_variables
+    >>> identify_variables('C_s[0] = C_d[0]', prefix=r'\b')
+    {'endogenous': ['C_s'],
+     'exogenous': ['C_d']})
+
+    """
+    pattern = re.compile(
+        prefix +
+        r'''(?<!\[)     # Preceding character is *not* an opening square bracket
+            \b          # Word boundary
+            [A-Za-z_]+  # Valid Python identifier opening character(s)
+            \w*         # Any other characters in a valid Python identifier
+        ''',
+        re.VERBOSE)
+    # Split by equals sign and then parse
+    endogenous, exogenous = statement.split('=', 1)
+    endogenous = pattern.findall(endogenous)
+    exogenous = pattern.findall(exogenous)
+    # Store to Dictionary and return
+    variables = {
+        'endogenous': list(endogenous),
+        'exogenous': list(exogenous), }
+    return variables

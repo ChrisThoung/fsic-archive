@@ -2,7 +2,8 @@
 """
 chunk
 =====
-FSIC parser to convert code chunks into Dictionary objects.
+FSIC parser to operate on code chunks, in order to extract code blocks and
+metadata.
 
 """
 
