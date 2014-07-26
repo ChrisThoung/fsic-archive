@@ -86,7 +86,10 @@ def test_identify_variables_multiple_exogenous_variables():
         'self.alpha_2[period]*self.H_h[period-1]')
     assert fsic.parser.code.identify_variables(statement) == (
         {'endogenous': ['self.C_d'],
-         'exogenous': ['self.alpha_1', 'self.YD', 'self.alpha_2', 'self.H_h']})
+         'exogenous': list(sorted(['self.alpha_1',
+                                   'self.YD',
+                                   'self.alpha_2',
+                                   'self.H_h']))})
 
 
 def test_identify_variables_one_exogenous_variable_no_prefix():
@@ -103,7 +106,10 @@ def test_identify_variables_multiple_exogenous_variables_no_prefix():
         'alpha_2[period] * H_h[period-1]')
     assert fsic.parser.code.identify_variables(statement, prefix=r'\b') == (
         {'endogenous': ['C_d'],
-         'exogenous': ['alpha_1', 'YD', 'alpha_2', 'H_h']})
+         'exogenous': list(sorted(['alpha_1',
+                                   'YD',
+                                   'alpha_2',
+                                   'H_h']))})
 
 
 def test_identify_variables_multiple_lines():
@@ -113,8 +119,69 @@ def test_identify_variables_multiple_lines():
         'self.T_s = self.T_d',
         'self.N_s = self.N_d',])
     assert fsic.parser.code.identify_variables(statement) == (
-        {'endogenous': ['self.C_s', 'self.G_s', 'self.T_s', 'self.N_s'],
-         'exogenous': ['self.C_d', 'self.G_d', 'self.T_d', 'self.N_d']})
+        {'endogenous': list(sorted(['self.C_s',
+                                    'self.G_s',
+                                    'self.T_s',
+                                    'self.N_s'])),
+         'exogenous': list(sorted(['self.C_d',
+                                   'self.G_d',
+                                   'self.T_d',
+                                   'self.N_d']))})
+
+
+def test_identify_variables_multiple_lines_remove_duplicates():
+    statement = '\n'.join([
+        'self.C_d = self.alpha_1 * self.YD + self.alpha_2 * self.H_h[-1]',
+        'self.C_s = self.C_d',
+        'self.G_s = self.G_d',
+        'self.T_s = self.T_d',
+        'self.N_s = self.N_d',
+        'self.T_d = self.theta * self.W * self.N_d'])
+    assert fsic.parser.code.identify_variables(statement) == (
+        {'endogenous': list(sorted(['self.C_d',
+                                    'self.C_s',
+                                    'self.G_s',
+                                    'self.T_s',
+                                    'self.N_s',
+                                    'self.T_d', ])),
+         'exogenous': list(sorted(['self.alpha_1',
+                                   'self.YD',
+                                   'self.alpha_2',
+                                   'self.H_h',
+                                   'self.G_d',
+                                   'self.N_d',
+                                   'self.theta',
+                                   'self.W', ]))})
+
+
+def test_identify_variables_multiple_lines_keep_duplicates():
+    statement = '\n'.join([
+        'self.C_d = self.alpha_1 * self.YD + self.alpha_2 * self.H_h[-1]',
+        'self.C_s = self.C_d',
+        'self.G_s = self.G_d',
+        'self.T_s = self.T_d',
+        'self.N_s = self.N_d',
+        'self.T_d = self.theta * self.W * self.N_d'])
+    assert fsic.parser.code.identify_variables(
+        statement,
+        remove_duplicates=False) == (
+        {'endogenous': list(sorted(['self.C_d',
+                                    'self.C_s',
+                                    'self.G_s',
+                                    'self.T_s',
+                                    'self.N_s',
+                                    'self.T_d', ])),
+         'exogenous': list(sorted(['self.alpha_1',
+                                   'self.YD',
+                                   'self.alpha_2',
+                                   'self.H_h',
+                                   'self.C_d',
+                                   'self.G_d',
+                                   'self.T_d',
+                                   'self.N_d',
+                                   'self.theta',
+                                   'self.W',
+                                   'self.N_d']))})
 
 
 if __name__ == '__main__':

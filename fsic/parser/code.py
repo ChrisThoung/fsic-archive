@@ -112,7 +112,7 @@ def translate(block, period='period'):
     return block
 
 
-def identify_variables(statement, prefix=r'self\.'):
+def identify_variables(statement, prefix=r'self\.', remove_duplicates=True, sort_variables=True):
     """Identify the endogenous and exogenous variables in `statement`.
 
     Parameters
@@ -122,6 +122,12 @@ def identify_variables(statement, prefix=r'self\.'):
     prefix : string
         String each variable should begin with, to be included in the search
         regular expression (use r'\b' if no prefix desired)
+    remove_duplicates : logical
+        If True, remove duplicate entries. Where a variable appears as both
+        an endogenous and an exogenous variable, retain the variable as an
+        endogenous variable
+    sort_variables : logical
+        If True, sort the variables alphabetically before returning
 
     Returns
     =======
@@ -162,6 +168,18 @@ def identify_variables(statement, prefix=r'self\.'):
         n, x = l.split('=', 1)
         endogenous = endogenous + list(pattern.findall(n))
         exogenous = exogenous + list(pattern.findall(x))
+    # Check for duplicates, if required
+    if remove_duplicates:
+        # Remove duplicates from individual lists
+        endogenous = list(set(endogenous))
+        exogenous = list(set(exogenous))
+        # Find the union of the two sets and remove from `exogenous`
+        union = list(set(endogenous) & set(exogenous))
+        exogenous = [x for x in exogenous if x not in union]
+    # Sort alphabetically
+    if sort_variables:
+        endogenous = list(sorted(endogenous))
+        exogenous = list(sorted(exogenous))
     # Store to Dictionary and return
     variables = {
         'endogenous': list(endogenous),
