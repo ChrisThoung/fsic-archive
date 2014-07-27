@@ -19,12 +19,20 @@ setup(
     name='fsic',
     version=VERSION,
     description='Tools for Stock-Flow Consistent macroeconomic modelling',
+    long_description='''
+FSIC
+====
+FSIC (Flows and Stocks Integrated Consistently) is a Python package for the
+specification, solution and analysis of Stock-Flow Consistent macroeconomic
+models in the tradition of Wynne Godley.
+''',
     license='BSD',
     author='Chris Thoung',
     author_email='chris.thoung@gmail.com',
     url='https://github.com/cthoung/fsic',
     packages=[
         'fsic',
+        'fsic.model',
         'fsic.parser',
         'fsic.parser.tests',
         ],
