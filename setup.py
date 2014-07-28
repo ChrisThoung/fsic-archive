@@ -12,8 +12,11 @@ from distutils.core import setup
 MAJOR = 0
 MINOR = 0
 PATCH = 0
-VERSION = '%d.%d.%d' % (MAJOR, MINOR, PATCH)
+for_release = False
 
+VERSION = '%d.%d.%d' % (MAJOR, MINOR, PATCH)
+if not for_release:
+    VERSION += '.dev'
 
 setup(
     name='fsic',
@@ -22,7 +25,7 @@ setup(
     long_description='''
 FSIC
 ====
-FSIC (Flows and Stocks Integrated Consistently) is a Python package for the
+**FSIC** (Flows and Stocks Integrated Consistently) is a Python package for the
 specification, solution and analysis of Stock-Flow Consistent macroeconomic
 models in the tradition of Wynne Godley.
 ''',
@@ -46,7 +49,9 @@ models in the tradition of Wynne Godley.
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Topic :: Scientific/Engineering',
         ],
+    platforms=['Any'],
     )
