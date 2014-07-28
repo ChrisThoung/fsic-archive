@@ -38,6 +38,7 @@ models in the tradition of Wynne Godley.
         'fsic.model',
         'fsic.parser',
         'fsic.parser.tests',
+        'fsic.tools',
         ],
     scripts=[
         'scripts/fsic-build.py',
