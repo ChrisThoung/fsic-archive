@@ -9,3 +9,7 @@ try:
 except:
     def get_ipython():
         return None
+
+
+if __name__ == '__main__' and get_ipython() == None:
+    pass
