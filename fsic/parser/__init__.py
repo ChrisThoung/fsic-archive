@@ -44,11 +44,17 @@ In summary, the structure of a typical script is as follows:
                 * Attributes
             * A code block
 
-The parser subpackage contains three modules:
+The parser subpackage contains the following modules:
+
+Generic:
 
 * `markdown`, to extract chunks from a Markdown-formatted script string
 * `chunk`, to extract code blocks and metadata from chunks
-* `code`, to translate code blocks into compatible Python code and identify 
+
+Language-specific:
+
+* `code`, to translate Python code blocks into compatible code and identify 
   model variables
+* `ini`, to handle INI-style configuration file strings
 
 """
