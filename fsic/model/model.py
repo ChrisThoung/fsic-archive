@@ -11,4 +11,6 @@ are implemented as derived classes from this one.
 
 class Model:
     """Base class for FSIC models."""
-    pass
+
+    def __init__():
+        pass
