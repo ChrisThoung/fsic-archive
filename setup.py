@@ -40,6 +40,9 @@ models in the tradition of Wynne Godley.
         'fsic.parser.tests',
         'fsic.tools',
         ],
+    package_data={
+        'fsic': ['templates/*.py'],
+        },
     scripts=[
         'scripts/fsic-build.py',
         ],
