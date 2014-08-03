@@ -11,7 +11,7 @@ import argparse
 
 from fsic import __version__ as version
 
-from fsic.parser.markdown import extract
+from fsic.tools.build import Build
 from fsic.parser.chunk import parse
 from fsic.parser.code import translate, identify_variables
 
@@ -44,11 +44,13 @@ parser.add_argument(
 if __name__ == '__main__':
     # Parse arguments
     args = parser.parse_args()
+    # Initialise new Build object
+    b = Build()
     # Read in file by file and flatten code-block list
-    chunks = [extract(open(f, 'rt').read()) for f in args.files]
-    chunks = [i for c in chunks for i in c]
+    for f in args.files:
+        b.read_file(f)
     # Parse to a list of Dictionary objects
-    blocks = [parse(c) for c in chunks]
+    blocks = [parse(c) for c in b.chunks]
     # Extract Python code only and translate
     python_code = [b['code'] for b in blocks if 'python' in b['classes']]
     python_code = '\n'.join(python_code)
