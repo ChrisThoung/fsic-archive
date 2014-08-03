@@ -25,6 +25,22 @@ class Build:
         self.linker_template = os.path.join(template_path, 'linker.py')
         self.chunks = []
 
+    def read_files(self, files):
+        """Read in the chunks from the filepaths in `files`.
+
+        Parameters
+        ==========
+        files : list of strings
+            List of files to parse
+
+        See also
+        ========
+        read_file()
+
+        """
+        for f in files:
+            self.read_file(f)
+
     def read_file(self, path):
         """Read in the chunks from the file in `path`.
 
@@ -37,6 +53,10 @@ class Build:
         =====
         This function reads the contents of `path` and passes them to
         read_string() for processing.
+
+        See also
+        ========
+        read_string()
 
         """
         with open(path, 'rt') as f:

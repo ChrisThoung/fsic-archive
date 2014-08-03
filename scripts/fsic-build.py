@@ -47,8 +47,7 @@ if __name__ == '__main__':
     # Initialise new Build object
     b = Build()
     # Read in file by file and flatten code-block list
-    for f in args.files:
-        b.read_file(f)
+    b.read_files(list(args.files))
     # Parse to a list of Dictionary objects
     blocks = [parse(c) for c in b.chunks]
     # Extract Python code only and translate
