@@ -39,6 +39,7 @@ models in the tradition of Wynne Godley.
         'fsic.parser',
         'fsic.parser.tests',
         'fsic.tools',
+        'fsic.tools.tests',
         ],
     package_data={
         'fsic': ['templates/*.py'],
