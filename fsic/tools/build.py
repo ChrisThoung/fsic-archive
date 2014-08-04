@@ -70,11 +70,26 @@ class Build:
         script : string
             Markdown-formatted string to parse
 
-        Notes
-        =====
-        This function extracts the chunks defined in `script` and *appends*
-        them to the variable `chunks`
+        See also
+        ========
+        add_chunks()
 
         """
         from fsic.parser.markdown import extract
-        self.chunks = self.chunks + extract(script)
+        self.add_chunks(extract(script))
+
+    def add_chunks(self, chunks):
+        """Store `chunks`.
+
+        Parameters
+        ==========
+        chunks : list of strings
+            Chunks to store for parsing
+
+        Notes
+        =====
+        This function *appends* `chunks` to `self.chunks`. It does not test
+        for duplicates.
+
+        """
+        self.chunks = self.chunks + chunks
