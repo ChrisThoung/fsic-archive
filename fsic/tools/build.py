@@ -95,6 +95,55 @@ class Build:
         self.chunks = self.chunks + chunks
 
     def build(self):
-        """Build the final model script and return as a string."""
+        """Build the final model script and return as a string.
+
+        See also
+        ========
+        parse_chunks()
+        fsic.parser.code.identify_variables()
+
+        """
+        # Parse Python code chunks
+        code = self.parse_chunks()
+        # Identify variables
+        from fsic.parser.code import identify_variables
+        variables = identify_variables(code)
+        # Generate initialisation code
+        initialisation = variables['endogenous'] + variables['exogenous']
+        initialisation = [v + (' = Series(default_value, '
+                               'index=span, dtype=np.float64)')
+                          for v in initialisation]
+        initialisation = '\n'.join(initialisation)
+        # Extract template script
         with open(self.model_template, 'rt') as f:
-            script_template = f.read()
+            script = f.read()
+        # Return
+        return script
+
+    def parse_chunks(self, classes=['python'], type='python'):
+        """Parse `self.chunks` with attributes matching `classes`.
+
+        Parameters
+        ==========
+        classes : list of strings
+            Classes to match against those in `self.chunks`
+
+        See also
+        ========
+        fsic.parser.chunk.parse()
+        fsic.parser.code.translate()
+
+        """
+        if type == 'python':
+            # Parse chunks to extract metadata
+            from fsic.parser.chunk import parse
+            blocks = [parse(c) for c in self.chunks]
+            # Filter by classes
+            blocks = [b for b in blocks if len(set(b['classes']) & set(classes))]
+            # Extract code blocks and translate
+            code_blocks = [b['code'] for b in blocks]
+            code = '\n'.join(code_blocks)
+            from fsic.parser.code import translate
+            code = translate(code)
+            # Return
+            return code

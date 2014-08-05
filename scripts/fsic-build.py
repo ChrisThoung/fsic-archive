@@ -12,8 +12,6 @@ import argparse
 from fsic import __version__ as version
 
 from fsic.tools.build import Build
-from fsic.parser.chunk import parse
-from fsic.parser.code import translate, identify_variables
 
 
 parser = argparse.ArgumentParser(
@@ -48,18 +46,6 @@ if __name__ == '__main__':
     b = Build()
     # Read in file by file and flatten code-block list
     b.read_files(list(args.files))
-    # Parse to a list of Dictionary objects
-    blocks = [parse(c) for c in b.chunks]
-    # Extract Python code only and translate
-    python_code = [b['code'] for b in blocks if 'python' in b['classes']]
-    python_code = '\n'.join(python_code)
-    python_code = translate(python_code)
-    # Identify variable names and generate initialisation code
-    variables = identify_variables(python_code)
-    variables = variables['endogenous'] + variables['exogenous']
-    initialisation = [v + ' = Series(default_value, index=span, dtype=np.float64)'
-                      for v in variables]
-    initialisation = '\n'.join(initialisation)
     # Generate output
     script = b.build()
     if args.output is None:
