@@ -134,20 +134,25 @@ class Build:
         ========
         fsic.parser.chunk.parse()
         fsic.parser.code.translate()
+        fsic.parser.ini.read_string()
 
         """
+        # Parse chunks to extract metadata
+        from fsic.parser.chunk import parse
+        blocks = [parse(c) for c in self.chunks]
+        # Filter by classes
+        blocks = [b for b in blocks if len(set(b['classes']) & set(classes))]
+        # Extract code
+        code_blocks = [b['code'] for b in blocks]
+        code = '\n'.join(code_blocks)
+        # Parse
         if language == 'python':
-            # Parse chunks to extract metadata
-            from fsic.parser.chunk import parse
-            blocks = [parse(c) for c in self.chunks]
-            # Filter by classes
-            blocks = [b for b in blocks if len(set(b['classes']) & set(classes))]
-            # Extract code blocks and translate
-            code_blocks = [b['code'] for b in blocks]
-            code = '\n'.join(code_blocks)
             from fsic.parser.code import translate
             code = translate(code)
-            # Return
-            return code
+        elif language == 'ini':
+            from fsic.parser.ini import read_string
+            code = read_string(code)
         else:
             raise ValueError('Unrecognise language argument \'%s\'' % (language))
+        # Return
+        return code
