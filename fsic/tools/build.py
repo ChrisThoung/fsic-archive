@@ -120,13 +120,15 @@ class Build:
         # Return
         return script
 
-    def parse_chunks(self, classes=['python'], type='python'):
+    def parse_chunks(self, classes=['python'], language='python'):
         """Parse `self.chunks` with attributes matching `classes`.
 
         Parameters
         ==========
         classes : list of strings
             Classes to match against those in `self.chunks`
+        language : string
+            Programming language of code blocks to be parsed
 
         See also
         ========
@@ -134,7 +136,7 @@ class Build:
         fsic.parser.code.translate()
 
         """
-        if type == 'python':
+        if language == 'python':
             # Parse chunks to extract metadata
             from fsic.parser.chunk import parse
             blocks = [parse(c) for c in self.chunks]
@@ -147,3 +149,5 @@ class Build:
             code = translate(code)
             # Return
             return code
+        else:
+            raise ValueError('Unrecognise language argument \'%s\'' % (language))
