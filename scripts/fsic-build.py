@@ -60,3 +60,10 @@ if __name__ == '__main__':
     initialisation = [v + ' = Series(default_value, index=span, dtype=np.float64)'
                       for v in variables]
     initialisation = '\n'.join(initialisation)
+    # Generate output
+    script = b.build()
+    if args.output is None:
+        print(script)
+    else:
+        with open(args.output, 'wt') as f:
+            f.write(script)

@@ -93,3 +93,8 @@ class Build:
 
         """
         self.chunks = self.chunks + chunks
+
+    def build(self):
+        """Build the final model script and return as a string."""
+        with open(self.model_template, 'rt') as f:
+            script_template = f.read()
