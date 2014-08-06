@@ -13,3 +13,6 @@ class Model:
 
     def __init__():
         pass
+
+    def solve_period(self, period, max_iter=100, tol=1.0e-3):
+        pass

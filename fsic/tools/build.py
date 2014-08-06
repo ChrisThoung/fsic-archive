@@ -117,6 +117,10 @@ class Build:
         # Extract template script
         with open(self.model_template, 'rt') as f:
             script = f.read()
+        # Insert code
+        from fsic.utilities.string import indent_lines
+        code = indent_lines(code, num_tabs=2, skip_first_line=True)
+        script = script.replace('___SOLVE_EQUATIONS___', code)
         # Return
         return script
 

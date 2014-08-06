@@ -22,7 +22,9 @@ class ___MODEL___(Model):
     ___LONG_DESCRIPTION___
 
     """
-    pass
+
+    def solve_equations(self, period):
+        ___SOLVE_EQUATIONS___
 
 
 if __name__ == '__main__' and get_ipython() == None:
