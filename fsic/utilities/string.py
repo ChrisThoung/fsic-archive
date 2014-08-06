@@ -7,21 +7,22 @@ FSIC utility functions to operate on strings.
 """
 
 
-def indent(block, num_tabs=1, include_first_line=False, spaces_instead_of_tabs=True, spaces_to_tabs=4):
-    """Return the code block in `block` with indents.
+def indent_lines(block, num_tabs=1, expand_tabs=True, tab_size=4, skip_first_line=False):
+    """Return `block` indented with additional tabs on each line.
 
     Parameters
     ==========
     block : string
-        Python code block to indent
+        Block to indent after newlines
     num_tabs : integer
-        Number of tabs to indent
-    include_first_line : logical
-        Whether to also indent the first line
-    spaces_instead_of_tabs : logical
-        Whether to replace tabs with spaces
-    spaces_to_tabs : integer
-        If replacing tabs with spaces, how many spaces to use
+        Number of tabs to indent by
+    expand_tabs : logical
+        If True, convert tabs to spaces
+    tab_size : integer
+        If `expand_tabs` is True, `tab_size` sets the number of spaces
+        per tab
+    skip_first_line : logical
+        If True, don't indent the first line
 
     Returns
     =======
@@ -29,15 +30,15 @@ def indent(block, num_tabs=1, include_first_line=False, spaces_instead_of_tabs=T
         Indented version of `block`
 
     """
-    # Split lines and re-assemble with tabs as indents
-    indented = block.splitlines()
     indentation = '\t' * num_tabs
+    # Split lines and reassemble with tabs for all but the first line
+    indented = block.splitlines()
     indented = ('\n' + indentation).join(indented)
-    # If required, indent the first line
-    if include_first_line:
+    # Indent the first line
+    if not skip_first_line:
         indented = indentation + indented
-    # If required, replace tabs with spaces
-    if spaces_instead_of_tabs:
-        indented = indented.replace('\t', ' ' * spaces_to_tabs)
+    # Expand tabs
+    if expand_tabs:
+        indented = indented.expandtabs(tab_size)
     # Return
     return indented
