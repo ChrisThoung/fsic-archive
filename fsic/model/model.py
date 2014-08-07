@@ -17,6 +17,38 @@ class Model:
     def __init__(self):
         pass
 
+    def solve(self, start=0, end=None, max_iter=100, min_iter=0, tol=1.0e-8):
+        """Solve the model.
+
+        Parameters
+        ==========
+        start : Series index
+            First period to solve
+        end : Series index
+            Last period to solve (set to be the last period in `span` if
+            equal to None)
+        max_iter : integer
+            The maximum number of iterations to solve over
+        min_iter : integer
+            The minimum number of iterations to solve over
+        tol : float
+            Tolerance to check convergence, based on the sum of squared
+            differences between the endogenous variables between iterations
+
+        See also
+        ========
+        solve_period()
+
+        """
+        if end is None:
+            end = self.span[-1]
+        for i in range(start, end + 1):
+            self.solve_period(
+                period=i,
+                max_iter=max_iter,
+                min_iter=min_iter,
+                tol=tol)
+
     def solve_period(self, period, max_iter=100, min_iter=0, tol=1.0e-8):
         """Solve for the current period.
 

@@ -42,6 +42,9 @@ class ___MODEL___(Model):
             Value to initialise variable Series objects with
 
         """
+        # Store `span`
+        self.span = span
+        # Initialise model variables
         ___INITIALISE___
 
     def solve_equations(self, period):
@@ -107,3 +110,6 @@ parser.add_argument(
 
 if __name__ == '__main__' and get_ipython() == None:
     args = parser.parse_args()
+    # Write results
+    if args.output is not None:
+        pass
