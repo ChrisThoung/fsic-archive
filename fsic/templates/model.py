@@ -30,7 +30,7 @@ class ___MODEL___(Model):
 
     """
 
-    def initialise(self, span, default):
+    def initialise(self, span, default=0):
         """Initialise the model for solution.
 
         Parameters
@@ -54,6 +54,37 @@ class ___MODEL___(Model):
 
         """
         ___SOLVE_EQUATIONS___
+
+    def get_endogenous_variable_values(self, period):
+        """Return the current values of the endogenous variables.
+
+        Parameters
+        ==========
+        period : Series index
+            The identifier of the period to solve
+
+        Returns
+        =======
+        values : pandas Series
+            Endogenous variable values for the current `period`
+
+        """
+        ___GET_ENDOGENOUS_VARIABLE_VALUES___
+
+    def get_results(self):
+        """Return the results from the model solution.
+
+        Parameters
+        ==========
+        N/A
+
+        Returns
+        =======
+        results : DataFrame
+            Solution results
+
+        """
+        ___GET_RESULTS___
 
 
 parser = argparse.ArgumentParser(

@@ -35,9 +35,9 @@ class Model:
         """
         for i in range(max_iter):
             # Solve model equations
-            before = Series(self.get_endogenous_variable_values(period))
+            before = self.get_endogenous_variable_values(period)
             self.solve_equations(period)
-            after = Series(self.get_endogenous_variable_values(period))
+            after = self.get_endogenous_variable_values(period)
             # Test for convergence
             diff = (after - before).apply(lambda x: x * x)
             diff = diff.sum()
