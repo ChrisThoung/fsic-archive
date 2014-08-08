@@ -7,6 +7,7 @@ ___MODULE_DOCSTRING___
 
 
 import argparse
+import os
 
 import numpy as np
 from pandas import Series, DataFrame
@@ -42,8 +43,9 @@ class ___MODEL___(Model):
             Value to initialise variable Series objects with
 
         """
-        # Store `span`
+        # Store `span` and initialise `iter`
         self.span = span
+        self.iter = Series(default, index=span, dtype=np.float64)
         # Initialise model variables
         ___INITIALISE___
 
@@ -72,7 +74,9 @@ class ___MODEL___(Model):
             Endogenous variable values for the current `period`
 
         """
+        values = {}
         ___GET_ENDOGENOUS_VARIABLE_VALUES___
+        return Series(values)
 
     def get_results(self):
         """Return the results from the model solution.
@@ -88,6 +92,8 @@ class ___MODEL___(Model):
 
         """
         ___GET_RESULTS___
+        results['iter'] = self.iter
+        return results
 
 
 parser = argparse.ArgumentParser(
@@ -112,4 +118,11 @@ if __name__ == '__main__' and get_ipython() == None:
     args = parser.parse_args()
     # Write results
     if args.output is not None:
-        pass
+        results = model.get_results()
+        for o in args.output:
+            if o.endswith('.csv'):
+                results.to_csv(o)
+            else:
+                ext = os.path.splitext(o)[1]
+                raise ValueError(
+                    'Unrecognised output file extension: \'%s\'' % (ext))
