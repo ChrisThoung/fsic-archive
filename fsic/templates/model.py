@@ -105,6 +105,11 @@ parser.add_argument(
     version=version)
 
 parser.add_argument(
+    '-v', '--verbose',
+    action='store_true',
+    help='print detailed solution output')
+
+parser.add_argument(
     '-o', '--output',
     nargs='+',
     metavar='OUTPUT',
