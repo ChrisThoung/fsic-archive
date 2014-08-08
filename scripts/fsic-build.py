@@ -51,5 +51,5 @@ if __name__ == '__main__':
     if args.output is None:
         print(script)
     else:
-        with open(args.output, 'wt') as f:
+        with open(args.output[0], 'wt') as f:
             f.write(script)
