@@ -42,6 +42,12 @@ class ___MODEL___(Model):
         default : float
             Value to initialise variable Series objects with
 
+        Notes
+        =====
+        Variable-initialisation statements take the form (using the variable C_d
+        as an example):
+            self.C_d = Series(default, index=span, dtype=np.float64)
+
         """
         # Store `span` and initialise `iter`
         self.span = span
@@ -56,6 +62,11 @@ class ___MODEL___(Model):
         ==========
         period : Series index
             The identifier of the period to solve
+
+        Notes
+        =====
+        Equation statements take the form (usng the variable C_s as an example):
+            self.C_s[period] = self.C_d[period]
 
         """
         ___SOLVE_EQUATIONS___
@@ -73,6 +84,12 @@ class ___MODEL___(Model):
         values : pandas Series
             Endogenous variable values for the current `period`
 
+        Notes
+        =====
+        Endogenous variable value-extraction statements take the form (using the
+        variable C_d as an example):
+            values['C_d'] = self.C_d[period]
+
         """
         values = {}
         ___GET_ENDOGENOUS_VARIABLE_VALUES___
@@ -89,6 +106,13 @@ class ___MODEL___(Model):
         =======
         results : DataFrame
             Solution results
+
+        Notes
+        =====
+        The code to form a results DataFrame takes the following form:
+            results = DataFrame({
+                'C_d': self.C_d,
+                'C_s': self.C_s,})
 
         """
         ___GET_RESULTS___
