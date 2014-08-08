@@ -157,6 +157,7 @@ class Build:
             from fsic.parser.ini import read_string
             code = read_string(code)
         else:
-            raise ValueError('Unrecognise language argument \'%s\'' % (language))
+            raise ValueError(
+                'Unrecognised language argument \'%s\'' % (language))
         # Return
         return code
