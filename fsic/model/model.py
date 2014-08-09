@@ -15,7 +15,8 @@ class Model:
     """Base class for FSIC models."""
 
     def __init__(self):
-        pass
+        self.initialised = False
+        self.solved = False
 
     def solve(self, start=None, end=None, max_iter=100, min_iter=0, tol=1.0e-8):
         """Solve the model.
@@ -41,6 +42,9 @@ class Model:
         solve_period()
 
         """
+        # Check for initialisation
+        if not self.initialised:
+            raise ValueError('Model not yet initialised: call `initialise()`')
         # Set start and end periods
         if start is None:
             start = self.span[0]
@@ -57,6 +61,8 @@ class Model:
                 max_iter=max_iter,
                 min_iter=min_iter,
                 tol=tol)
+        # Update solution state
+        self.solved = True
 
     def solve_period(self, period, max_iter=100, min_iter=0, tol=1.0e-8):
         """Solve for the current period.

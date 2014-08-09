@@ -61,6 +61,9 @@ class ___MODEL___(Model):
         self.iter = Series(default, index=self.full_span, dtype=np.float64)
         # Initialise model variables
         ___INITIALISE___
+        # Update solution state variables
+        self.initialised = True
+        self.solved = False
 
     def solve_equations(self, period):
         """Solve the model equations for `period`.

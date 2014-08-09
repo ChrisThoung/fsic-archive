@@ -26,8 +26,6 @@ class Build:
         self.linker_template = os.path.join(template_path, 'linker.py')
         # Initialise variables
         self.chunks = []
-        self.initialised = False
-        self.solved = False
 
     def read_files(self, files):
         """Read in the chunks from the filepaths in `files`.
