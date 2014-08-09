@@ -17,15 +17,16 @@ class Model:
     def __init__(self):
         pass
 
-    def solve(self, start=0, end=None, max_iter=100, min_iter=0, tol=1.0e-8):
+    def solve(self, start=None, end=None, max_iter=100, min_iter=0, tol=1.0e-8):
         """Solve the model.
 
         Parameters
         ==========
         start : Series index
-            First period to solve
+            First period to solve (set to be the first period of `self.span` if
+            equal to None)
         end : Series index
-            Last period to solve (set to be the last period in `span` if
+            Last period to solve (set to be the last period in `self.span` if
             equal to None)
         max_iter : integer
             The maximum number of iterations to solve over
@@ -40,11 +41,19 @@ class Model:
         solve_period()
 
         """
+        # Set start and end periods
+        if start is None:
+            start = self.span[0]
         if end is None:
             end = self.span[-1]
+        # Index start and end periods
+        start = self.full_span.index(start)
+        end = self.full_span.index(end)
+        # Solve
         for i in range(start, end + 1):
+            period = self.full_span[i]
             self.solve_period(
-                period=i,
+                period=period,
                 max_iter=max_iter,
                 min_iter=min_iter,
                 tol=tol)

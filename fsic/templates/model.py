@@ -31,14 +31,18 @@ class ___MODEL___(Model):
 
     """
 
-    def initialise(self, span, default=0):
+    def initialise(self, span, past=[], default=0):
         """Initialise the model for solution.
 
         Parameters
         ==========
         span : list
-            The index to set the span of the model (used as the index for
-            individual variable Series objects)
+            The index to set the principal span of the model (used as part of
+            the index for individual variable Series objects)
+        past : list
+            The index to set the preceding span of the model (may be necessary
+            to supply enough lags for dynamic models; added to the beginning of
+            `span`)
         default : float
             Value to initialise variable Series objects with
 
@@ -46,12 +50,15 @@ class ___MODEL___(Model):
         =====
         Variable-initialisation statements take the form (using the variable C_d
         as an example):
-            self.C_d = Series(default, index=span, dtype=np.float64)
+            self.C_d = Series(default, index=self.full_span, dtype=np.float64)
 
         """
-        # Store `span` and initialise `iter`
+        # Store function arguments
         self.span = span
-        self.iter = Series(default, index=span, dtype=np.float64)
+        self.past = past
+        # Form full span and initialise `iter`
+        self.full_span = past + span
+        self.iter = Series(default, index=self.full_span, dtype=np.float64)
         # Initialise model variables
         ___INITIALISE___
 
