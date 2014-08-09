@@ -42,3 +42,44 @@ def indent_lines(block, num_tabs=1, expand_tabs=True, tab_size=4, skip_first_lin
         indented = indented.expandtabs(tab_size)
     # Return
     return indented
+
+def wrap_text(text, num_chars=80, delim=' ', sep='\n'):
+    """Wrap `text` to `num_chars` characters per line.
+
+    Parameters
+    ==========
+    text : string
+        Text to wrap
+    num_chars : integer
+        Number of characters per line
+    delim : string
+        String to define word boundaries
+    sep : string
+        String to separate lines with
+
+    Returns
+    =======
+    wrapped : string
+        Copy of `text`, wrapped to `num_chars` characters using `sep`
+
+    """
+    # No change if already less than num_chars
+    if len(text) <= num_chars:
+        return text
+    # Split by `sep`
+    lines = text.split(sep)
+    # Wrap one line at a time
+    wrapped = []
+    for line in lines:
+        if len(line) > num_chars:
+            while len(line) > num_chars:
+                last_delim = line[:num_chars+1].rfind(delim)
+                if last_delim == -1:
+                    last_delim = num_chars
+                wrapped.append(line[:last_delim])
+                line = line[last_delim:]
+        wrapped.append(line)
+    # Join and return
+    wrapped = [w.strip() for w in wrapped]
+    wrapped = sep.join(wrapped)
+    return wrapped
