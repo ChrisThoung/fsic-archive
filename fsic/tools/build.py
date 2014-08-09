@@ -18,12 +18,16 @@ class Build:
     """
 
     def __init__(self):
+        # Set templates path and form model and linker filepaths
         template_path = os.path.join(
             os.path.dirname(os.path.dirname(__file__)),
             'templates')
         self.model_template = os.path.join(template_path, 'model.py')
         self.linker_template = os.path.join(template_path, 'linker.py')
+        # Initialise variables
         self.chunks = []
+        self.initialised = False
+        self.solved = False
 
     def read_files(self, files):
         """Read in the chunks from the filepaths in `files`.
@@ -100,29 +104,120 @@ class Build:
         See also
         ========
         parse_chunks()
-        fsic.parser.code.identify_variables()
+        build_initialise()
+        build_endogenous_variables()
+        build_results()
+
+        fsic.utilities.string.indent_lines()
 
         """
-        # Parse Python code chunks
-        code = self.parse_chunks()
-        # Identify variables
-        from fsic.parser.code import identify_variables
-        variables = identify_variables(code)
-        # Generate initialisation code
-        initialisation = variables['endogenous'] + variables['exogenous']
-        initialisation = [v + (' = Series(default_value, '
-                               'index=span, dtype=np.float64)')
-                          for v in initialisation]
-        initialisation = '\n'.join(initialisation)
+        # Generate class code
+        equations = self.parse_chunks()
+        initialise = self.build_initialise(equations)
+        endogenous = self.build_endogenous_variables(equations)
+        results = self.build_results(equations)
         # Extract template script
         with open(self.model_template, 'rt') as f:
             script = f.read()
         # Insert code
         from fsic.utilities.string import indent_lines
-        code = indent_lines(code, num_tabs=2, skip_first_line=True)
-        script = script.replace('___SOLVE_EQUATIONS___', code)
+        script = script.replace(
+            '___INITIALISE___',
+            indent_lines(initialise, num_tabs=2, skip_first_line=True))
+        script = script.replace(
+            '___SOLVE_EQUATIONS___',
+            indent_lines(equations, num_tabs=2, skip_first_line=True))
+        script = script.replace(
+            '___GET_ENDOGENOUS_VARIABLE_VALUES___',
+            indent_lines(endogenous, num_tabs=2, skip_first_line=True))
+        script = script.replace(
+            '___GET_RESULTS___',
+            indent_lines(results, num_tabs=2, skip_first_line=True))
         # Return
         return script
+
+    def build_initialise(self, code):
+        """Return code to initialise the variables of a model.
+
+        Parameters
+        ==========
+        code : string
+            Code script containing all model variables
+
+        Returns
+        =======
+        initialise : string
+            Python code to initialise model variables
+
+        See also
+        ========
+        fsic.parser.code.identify_variables()
+
+        """
+        from fsic.parser.code import identify_variables
+        variables = identify_variables(code)
+        variables = variables['endogenous'] + variables['exogenous']
+        initialise = [v + (' = Series(default, '
+                           'index=self.full_span, '
+                           'dtype=np.float64)')
+                      for v in variables]
+        initialise = '\n'.join(initialise)
+        return initialise
+
+    def build_endogenous_variables(self, code):
+        """Return code to store endogenous variable values.
+
+        Parameters
+        ==========
+        code : string
+            Code script containing endogenous model variables
+
+        Returns
+        =======
+        variables : string
+            Python code to insert endogenous variable values into a Dictionary
+
+        See also
+        ========
+        fsic.parser.code.identify_variables()
+
+        """
+        from fsic.parser.code import identify_variables
+        variables = identify_variables(code)
+        variables = variables['endogenous']
+        variables = [('values[\'' +
+                      v.replace('self.', '') +
+                      '\'] = ' + v + '[period]')
+                     for v in variables]
+        variables = '\n'.join(variables)
+        return variables
+
+    def build_results(self, code):
+        """Return code to return model results as a DataFrame.
+
+        Parameters
+        ==========
+        code : string
+            Code script containing all model variables
+
+        Returns
+        =======
+        results : string
+            Python code to generate a results DataFrame
+
+        See also
+        ========
+        fsic.parser.code.identify_variables()
+
+        """
+        from fsic.parser.code import identify_variables
+        variables = identify_variables(code)
+        variables = variables['endogenous'] + variables['exogenous']
+        results = 'results = DataFrame({' + '\n\t' + (
+            ',\n\t'.join(
+                ['\'' + v.replace('self.', '') + '\': ' + v
+                 for v in variables]) + '})')
+        return results
 
     def parse_chunks(self, classes=['python'], language='python'):
         """Parse `self.chunks` with attributes matching `classes`.
@@ -141,9 +236,11 @@ class Build:
         fsic.parser.ini.read_string()
 
         """
+        # Remove duplicates
+        chunks = list(set(self.chunks))
         # Parse chunks to extract metadata
         from fsic.parser.chunk import parse
-        blocks = [parse(c) for c in self.chunks]
+        blocks = [parse(c) for c in chunks]
         # Filter by classes
         blocks = [b for b in blocks if len(set(b['classes']) & set(classes))]
         # Extract code
