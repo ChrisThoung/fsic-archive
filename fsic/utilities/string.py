@@ -43,43 +43,59 @@ def indent_lines(block, num_tabs=1, expand_tabs=True, tab_size=4, skip_first_lin
     # Return
     return indented
 
-def wrap_text(text, num_chars=80, delim=' ', sep='\n'):
-    """Wrap `text` to `num_chars` characters per line.
+def wrap_lines(lines, line_length=80, word_sep=' ', line_sep='\n', strip_whitespace=True):
+    """Wrap the contents of `lines` to be `line_length` characters long.
 
     Parameters
     ==========
-    text : string
+    lines : string
         Text to wrap
-    num_chars : integer
-        Number of characters per line
-    delim : string
-        String to define word boundaries
-    sep : string
-        String to separate lines with
+    line_length : integer
+        Maximum number of characters per line
+    word_sep : string
+        Word separator. Where possible, this function will attempt to preserve
+        words by wrapping at instances of this string
+    line_sep : string
+        Line separator to identify individual lines in `lines` and to join the
+        newly-wrapped lines back together
+    strip_whitespace : logical
+        If True, strip leading and trailing whitespace from the newly-wrapped
+        lines
 
     Returns
     =======
     wrapped : string
-        Copy of `text`, wrapped to `num_chars` characters using `sep`
+        Version of `lines`, wrapped to a maximum of `line_length`
+
+    Notes
+    =====
+    Where `word_sep` is not an empty string, this function attempts to split at
+    word boundaries while still having each line have a maximum character length
+    of `line_length`.
+
+    Where this is not possible, the line is simply wrapped at `line_length`
+    characters.
 
     """
-    # No change if already less than num_chars
-    if len(text) <= num_chars:
-        return text
-    # Split by `sep`
-    lines = text.split(sep)
+    # Just return if wrapping not required
+    if len(lines) <= line_length:
+        return lines
+    # Split by `line_sep`
+    lines = lines.split(line_sep)
     # Wrap one line at a time
     wrapped = []
     for line in lines:
-        if len(line) > num_chars:
-            while len(line) > num_chars:
-                last_delim = line[:num_chars+1].rfind(delim)
-                if last_delim == -1:
-                    last_delim = num_chars
-                wrapped.append(line[:last_delim])
-                line = line[last_delim:]
+        while len(line) > line_length:
+            rightmost_word_sep = line[:line_length + 1].rfind(word_sep)
+            # Just set to `line_length` if no word separator found
+            if rightmost_word_sep == -1:
+                rightmost_word_sep = line_length
+            wrapped.append(line[:rightmost_word_sep])
+            line = line[rightmost_word_sep:]
         wrapped.append(line)
+    # Strip whitespace
+    if strip_whitespace:
+        wrapped = [w.strip() for w in wrapped]
     # Join and return
-    wrapped = [w.strip() for w in wrapped]
-    wrapped = sep.join(wrapped)
+    wrapped = line_sep.join(wrapped)
     return wrapped
