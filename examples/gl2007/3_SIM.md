@@ -7,6 +7,31 @@ Model SIM from Godley and Lavoie (2007).
 
 This Markdown file defines Model SIM.
 
+## Setup
+
+The block below defines various pieces of descriptive information about the
+model, including its:
+
+* `NAME`
+* `DESCRIPTION`
+* `REFERENCE` to the corresponding documentation or academic paper, if
+  applicable
+* Version number, comprising:
+    * `MAJOR` version number
+    * `MINOR` version number
+    * `PATCH` number
+	* Whether this is a `DEV`elopment` version or not
+
+~~~{.ini}
+NAME = SIM
+DESCRIPTION = The simplest model with government money
+REFERENCE = Godley, W. and Lavoie, M. (2007), *Monetary economics: an integrated approach to credit, money, income, production and wealth*, Palgrave Macmillan
+MAJOR = 0
+MINOR = 0
+PATCH = 0
+DEV = Yes
+~~~
+
 ## Equations of Model SIM
 
 ### Mechanisms adjusting supply and demand
@@ -145,6 +170,6 @@ N_d = Y / W
 As for the changes in debt/cash, this is better represented as equality of
 stocks:
 
-~~~{.python}
+~~~{.python .hidden}
 H_h = H_s
 ~~~
