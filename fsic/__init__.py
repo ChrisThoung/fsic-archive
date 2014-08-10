@@ -17,4 +17,8 @@ models in the tradition of Wynne Godley.
 MAJOR = 0
 MINOR = 0
 PATCH = 0
+for_release = False
+
 __version__ = '%d.%d.%d' % (MAJOR, MINOR, PATCH)
+if not for_release:
+    __version__ += '.dev'
