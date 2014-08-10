@@ -11,6 +11,8 @@ macroeconomic model.
 import configparser
 import os
 
+from fsic import __version__ as version
+
 
 class Build:
     """FSIC class to generate macroeconomic models from user-supplied inputs.
@@ -109,6 +111,9 @@ class Build:
         fsic.utilities.string.indent_lines()
 
         """
+        # Extract model information
+        cfg = self.parse_chunks(classes='ini', language='ini')
+        cfg = self.get_descriptors(cfg)
         # Generate class code
         equations = self.parse_chunks()
         initialise = self.build_initialise(equations)
@@ -222,7 +227,7 @@ class Build:
 
         Parameters
         ==========
-        classes : list of strings
+        classes : string or list of strings
             Classes to match against those in `self.chunks`
         language : string
             Programming language of code blocks to be parsed
@@ -240,7 +245,10 @@ class Build:
         from fsic.parser.chunk import parse
         blocks = [parse(c) for c in chunks]
         # Filter by classes
-        blocks = [b for b in blocks if len(set(b['classes']) & set(classes))]
+        if type(classes) is not list:
+            classes = [classes]
+        blocks = [b for b in blocks
+                  if len(set(b['classes']) & set(classes))]
         # Extract code
         code_blocks = [b['code'] for b in blocks]
         code = '\n'.join(code_blocks)
@@ -256,3 +264,31 @@ class Build:
                 'Unrecognised language argument \'%s\'' % (language))
         # Return
         return code
+
+    def get_descriptors(self, cfg, section='DEFAULT'):
+        """Return the relevant section of `cfg` with derived information added.
+
+        Parameters
+        ==========
+        cfg : ConfigParser object
+            ConfigParser object of settings/descriptors
+        section : string
+            Section name from `cfg` to extract
+
+        Returns
+        =======
+        extract : ConfigParser section object
+            Subset of `cfg`, with additional derived information
+
+        """
+        # Extract `section`
+        extract = cfg[section]
+        # Form model version number (adding 'dev' as required)
+        extract['version'] = '%d.%d.%d' % (
+            int(extract['major']),
+            int(extract['minor']),
+            int(extract['patch']))
+        if extract.getboolean('dev'):
+            extract['version'] = extract['version'] + '.dev'
+        # Return
+        return extract
