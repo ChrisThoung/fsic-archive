@@ -9,16 +9,4 @@ models in the tradition of Wynne Godley.
 """
 
 
-# Version numbering follows the conventions of Semantic Versioning 2.0.0:
-# 1. MAJOR - changes with backwards-incompatible modifications to the API
-# 2. MINOR - for backwards-compatible additions to functionality
-# 3. PATCH - for backwards-compatible bug fixes
-# Source: http://semver.org/spec/v2.0.0.html
-MAJOR = 0
-MINOR = 0
-PATCH = 0
-for_release = False
-
-__version__ = '%d.%d.%d' % (MAJOR, MINOR, PATCH)
-if not for_release:
-    __version__ += '.dev'
+from fsic.version import MAJOR, MINOR, PATCH, VERSION as __version__

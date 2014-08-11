@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
+import os
 from distutils.core import setup
 
 
@@ -18,6 +19,19 @@ VERSION = '%d.%d.%d' % (MAJOR, MINOR, PATCH)
 if not for_release:
     VERSION += '.dev'
 
+# Write package version.py
+with open(os.path.join('fsic', 'version.py'), 'wt') as f:
+    version_to_write = """\
+MAJOR = '%d'
+MINOR = '%d'
+PATCH = '%d'
+VERSION = '%d.%d.%d"""
+    if not for_release:
+        version_to_write += '.dev'
+    version_to_write += '\''
+    f.write(version_to_write % (MAJOR, MINOR, PATCH, MAJOR, MINOR, PATCH))
+
+# Call setup()
 setup(
     name='fsic',
     version=VERSION,
