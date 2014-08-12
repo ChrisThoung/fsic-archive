@@ -93,3 +93,4 @@ class Model:
                 break
         else:
             num_iter = None
+        self.iter[period] = num_iter
