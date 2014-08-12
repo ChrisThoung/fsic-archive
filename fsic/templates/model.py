@@ -3,6 +3,8 @@
 ___NAME___
 ___MODULE_DOCSTRING___
 
+___FSIC_VERSION___
+
 """
 
 
@@ -17,19 +19,16 @@ from fsic import __version__ as version
 from fsic.model.model import Model
 
 
-try:
-    from IPython import get_ipython
-except:
-    def get_ipython():
-        return None
-
-
+# Define ___MODEL___ class
 class ___MODEL___(Model):
     """___SHORT_DESCRIPTION___
 
     ___LONG_DESCRIPTION___
 
     """
+
+    def __init__(self):
+        ___MODEL_VERSION___
 
     def initialise(self, span, past=[], default=0):
         """Initialise the model for solution.
@@ -130,13 +129,22 @@ class ___MODEL___(Model):
         return results
 
 
+# Create command-line argument parser
 parser = argparse.ArgumentParser(
-    description='___SHORT_DESCRIPTION___.',
-    fromfile_prefix_chars='@')
+    description='___SHORT_DESCRIPTION___',
+    fromfile_prefix_chars='@',
+    formatter_class=argparse.RawDescriptionHelpFormatter)
+
+model_version = SIM()
 parser.add_argument(
     '-V', '--version',
     action='version',
-    version=version)
+    version='''\
+Model version: %s
+Built under FSIC version: %s
+FSIC version installed: %s
+''' % (model_version.VERSION, model_version.FSIC_BUILD, version))
+del model_version
 
 parser.add_argument(
     '-v', '--verbose',
@@ -152,6 +160,13 @@ parser.add_argument(
     required=False,
     help='list of output files for model results')
 
+
+# Import get_ipython() from IPython as a check for an interactive shell
+try:
+    from IPython import get_ipython
+except:
+    def get_ipython():
+        return None
 
 if __name__ == '__main__' and get_ipython() == None:
     args = parser.parse_args()
