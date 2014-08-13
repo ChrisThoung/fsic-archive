@@ -28,6 +28,7 @@ class ___MODEL___(Model):
     """
 
     def __init__(self):
+        Model.__init__(self)
         ___MODEL_VERSION___
 
     def initialise(self, span, past=[], default=0):
@@ -149,7 +150,7 @@ del model_version
 parser.add_argument(
     '-v', '--verbose',
     action='store_true',
-    help='print detailed solution output')
+    help='print detailed solution output (not yet implemented)')
 
 parser.add_argument(
     '-o', '--output',
@@ -160,6 +161,41 @@ parser.add_argument(
     required=False,
     help='list of output files for model results')
 
+parser.add_argument(
+    '-D', '--define',
+    action='append',
+    nargs='+',
+    metavar='PARAMETER',
+    default=None,
+    type=str,
+    required=False,
+    help='set (time-invariant) model parameters')
+parser.add_argument(
+    '--set',
+    action='append',
+    nargs='+',
+    metavar='EXPRESSION',
+    default=None,
+    type=str,
+    required=False,
+    help='set (time-varying) model variables prior to run')
+
+parser.add_argument(
+    '--span',
+    nargs=2,
+    metavar='PERIOD',
+    default=None,
+    type=int,
+    required=False,
+    help='set the start and end periods of the model run')
+parser.add_argument(
+    '--past',
+    metavar='PERIOD',
+    default=None,
+    type=int,
+    required=False,
+    help='set the first historical period of the model run')
+
 
 # Import get_ipython() from IPython as a check for an interactive shell
 try:
@@ -169,14 +205,61 @@ except:
         return None
 
 if __name__ == '__main__' and get_ipython() == None:
+    # Parse arguments
     args = parser.parse_args()
+    # Setup model
+    model = ___MODEL___()
+    if args.span:
+        start, end = args.span
+        span = list(range(start, end + 1))
+        if args.past:
+            past = args.past
+            if past >= start:
+                raise ValueError(
+                    'First historical period (`past`) is %d, when it must '
+                    'be *before* the first solution period (`start`) of %d'
+                    % (past, start))
+            past = list(range(past, start))
+        else:
+            past = []
+        model.initialise(span=span, past=past)
+    if args.define:
+        parameters = []
+        for a in args.define:
+            for d in a:
+                d = d.split('=')
+                if len(d) != 2:
+                    raise ValueError(
+                        'Error in `define` argument: \'%s\'; '
+                        'must be a parameter name and value '
+                        'separated by an equals sign e.g. W=1' % (d))
+                p, v = d
+                c = 'model.%s.ix[:] = %f' % (p, float(v))
+                parameters.append(c)
+        parameters = '\n'.join(parameters)
+        exec(parameters)
+    if args.set:
+        expressions = []
+        for a in args.set:
+            for x in a:
+                x = 'model.' + x.replace('[', '.ix[')
+                expressions.append(x)
+        expressions = '\n'.join(expressions)
+        exec(expressions)
+    # Solve
+    if model.initialised:
+        model.solve()
     # Write results
     if args.output is not None:
-        results = model.get_results()
-        for o in args.output:
-            if o.endswith('.csv'):
-                results.to_csv(o)
-            else:
-                ext = os.path.splitext(o)[1]
-                raise ValueError(
-                    'Unrecognised output file extension: \'%s\'' % (ext))
+        if model.initialised:
+            results = model.get_results()
+            for o in args.output:
+                if o.endswith('.csv'):
+                    results.to_csv(o)
+                else:
+                    ext = os.path.splitext(o)[1]
+                    raise ValueError(
+                        'Unrecognised output file extension: \'%s\'' % (ext))
+        else:
+            raise ValueError(
+                'Model not solved: no results to save')
