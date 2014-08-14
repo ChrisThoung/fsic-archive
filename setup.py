@@ -50,6 +50,8 @@ models in the tradition of Wynne Godley.
     packages=[
         'fsic',
         'fsic.model',
+        'fsic.optimise',
+        'fsic.optimise.tests',
         'fsic.parser',
         'fsic.parser.tests',
         'fsic.tools',
