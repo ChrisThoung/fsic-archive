@@ -20,7 +20,7 @@ model, including its:
     * `MAJOR` version number
     * `MINOR` version number
     * `PATCH` number
-	* Whether this is a `DEV`elopment` version or not
+	* Whether this is a `DEV`elopment version or not
 
 ~~~{.ini}
 NAME = SIM
