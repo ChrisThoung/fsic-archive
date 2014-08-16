@@ -18,3 +18,9 @@ Stock-Flow Consistent macroeconomic models in the tradition of Wynne Godley.
   Version 2.0.0 or higher
 * [Sphinx](http://sphinx-doc.org/) to build the documentation:
   Version 1.2.2 or higher
+
+## Other useful software
+
+* [pandoc](http://johnmacfarlane.net/pandoc/) to convert pandoc Markdown files
+  (the preferred format with which to define a model using FSIC's built-in
+  template) to other formats, such as HTML, PDF and Microsoft Word docx
