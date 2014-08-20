@@ -17,6 +17,14 @@ bibliography in `REFERENCES.md`.
 
 ### Optional
 
+#### Features
+
+* [NetworkX](http://networkx.github.io/) - required by the `optimise`
+  subpackage:
+  Version 1.8.1 or higher
+
+#### Other
+
 * [IPython](http://ipython.org/) for interactive modelling:
   Version 2.0.0 or higher
 * [Sphinx](http://sphinx-doc.org/) to build the documentation:
