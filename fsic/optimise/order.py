@@ -12,3 +12,20 @@ try:
     import networkx as nx
 except:
     raise ImportError('Unable to import NetworkX')
+
+
+def recursive(equations):
+    """Reorder `equations` to be 'more recursive'.
+
+    Parameters
+    ==========
+    equations : list of strings
+        List of equations to reorder, one equation per element
+
+    Returns
+    =======
+    reordered : list of strings
+        Reordered version of equations
+
+    """
+    pass
