@@ -4,6 +4,15 @@
 import fsic.optimise.order
 
 
+def test_recursive_empty():
+    assert fsic.optimise.order.recursive([]) == []
+
+
+def test_recursive_single():
+    unchanged = ['self.C_s[period] = self.C_d[period]']
+    assert fsic.optimise.order.recursive(unchanged) == unchanged
+
+
 def test_recursive():
     equations = [
         'self.H_h[period] = self.H_s[period]',

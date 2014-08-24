@@ -25,7 +25,8 @@ def recursive(equations):
     Returns
     =======
     reordered : list of strings
-        Reordered version of equations
+        Reordered version of equations (unchanged if length of equation list is
+        one or zero)
 
     Notes
     =====
@@ -34,6 +35,9 @@ def recursive(equations):
     1. Translate `equations` into a directed graph object (a NetworkX DiGraph)
 
     """
+    # Return `equations` unchanged if length is zero or one
+    if len(equations) < 2:
+        return equations
     # 1. Translate `equations` into a directed graph object (a NetworkX DiGraph)
     G = make_graph(equations)
 
