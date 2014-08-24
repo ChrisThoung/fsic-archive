@@ -13,6 +13,18 @@ def test_recursive_single():
     assert fsic.optimise.order.recursive(unchanged) == unchanged
 
 
+def test_recursive_simple():
+    equations = [
+        'self.Y[period] = self.C_s[period] + self.G_s[period]',
+        'self.C_s[period] = self.C_d[period]',
+    ]
+    reordered = [
+        'self.C_s[period] = self.C_d[period]',
+        'self.Y[period] = self.C_s[period] + self.G_s[period]',
+    ]
+    assert fsic.optimise.order.recursive(equations) == reordered
+
+
 def test_recursive():
     equations = [
         'self.H_h[period] = self.H_s[period]',
