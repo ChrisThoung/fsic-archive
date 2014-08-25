@@ -40,6 +40,13 @@ def recursive(equations):
         return equations
     # 1. Translate `equations` into a directed graph object (a NetworkX DiGraph)
     G = make_graph(equations)
+    # 2. While there are still nodes in G...
+    reordered = []
+    while True:
+        if not len(G.nodes()):
+            break
+    # Return
+    return reordered
 
 
 def make_graph(equations):
