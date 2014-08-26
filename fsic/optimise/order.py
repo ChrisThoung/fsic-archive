@@ -40,9 +40,18 @@ def recursive(equations):
         return equations
     # 1. Translate `equations` into a directed graph object (a NetworkX DiGraph)
     G = make_graph(equations)
-    # 2. While there are still nodes in G...
+    # 2. While there are still nodes in `G`...
     reordered = []
     while True:
+        # Take the in-degree of the nodes in `G` and use to identify the next
+        # node(s) to delete
+        in_degree = G.in_degree()
+        if 0 in in_degree.values():
+            nodes_to_delete = [k for k, v in in_degree.items() if v == 0]
+        else:
+            pass
+        # Delete nodes; break if no nodes remain in `G`
+        G.remove_nodes_from(nodes_to_delete)
         if not len(G.nodes()):
             break
     # Return
