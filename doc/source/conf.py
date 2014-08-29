@@ -245,7 +245,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'FSIC', 'FSIC Documentation',
-   'Chris Thoung', 'FSIC', 'One line description of project.',
+   'Chris Thoung', 'FSIC', 'Flows and Stocks Integrated Consistently.',
    'Miscellaneous'),
 ]
 
