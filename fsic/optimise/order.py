@@ -46,10 +46,16 @@ def recursive(equations):
         # Take the in-degree of the nodes in `G` and use to identify the next
         # node(s) to delete
         in_degree = G.in_degree()
-        if 0 in in_degree.values():
+        # a. One node remaining: Extract
+        if len(in_degree) == 1:
+            nodes_to_delete = in_degree.keys()
+        # b. Nodes with degree zero: Extract
+        elif 0 in in_degree.values():
             nodes_to_delete = [k for k, v in in_degree.items() if v == 0]
+        # c. More than one node with in-degree of one or greater: Examine
+        #    further
         else:
-            pass
+            break
         # Delete nodes; break if no nodes remain in `G`
         G.remove_nodes_from(nodes_to_delete)
         if not len(G.nodes()):
