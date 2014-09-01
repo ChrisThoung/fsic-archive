@@ -112,7 +112,7 @@ def translate(block, period='period'):
     return block
 
 
-def identify_variables(statement, prefix=r'self\.', remove_duplicates=True, sort_variables=True):
+def identify_variables(statement, prefix=r'self\.', suffix=r'', remove_duplicates=True, sort_variables=True):
     """Identify the endogenous and exogenous variables in `statement`.
 
     Parameters
@@ -121,7 +121,10 @@ def identify_variables(statement, prefix=r'self\.', remove_duplicates=True, sort
         Python code block to parse
     prefix : string
         String each variable should begin with, to be included in the search
-        regular expression (use r'\b' if no prefix desired)
+        regular expression (use `r'\b'` if no prefix desired)
+    suffix : string
+        String each variable should end with, to be included in the search
+        regular expression (use `r'\[.+?\]'` to preserve trailing time index)
     remove_duplicates : logical
         If True, remove duplicate entries. Where a variable appears as both
         an endogenous and an exogenous variable, retain the variable as an
@@ -157,7 +160,8 @@ def identify_variables(statement, prefix=r'self\.', remove_duplicates=True, sort
             \b          # Word boundary
             [A-Za-z_]+  # Valid Python identifier opening character(s)
             \w*         # Any other characters in a valid Python identifier
-        ''',
+        ''' +
+        suffix,
         re.VERBOSE)
     # Split lines and then parse line by line
     statement = statement.splitlines()

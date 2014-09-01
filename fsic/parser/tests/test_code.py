@@ -112,6 +112,21 @@ def test_identify_variables_multiple_exogenous_variables_no_prefix():
                                    'H_h']))})
 
 
+def test_identify_variables_multiple_exogenous_variables_with_suffix():
+    statement = (
+        'self.C_d[period] = '
+        'self.alpha_1[period] * self.YD[period] + '
+        'self.alpha_2[period] * self.H_h[period-1]')
+    assert fsic.parser.code.identify_variables(
+        statement,
+        suffix=r'\[.+?\]') == (
+        {'endogenous': ['self.C_d[period]'],
+         'exogenous': list(sorted(['self.alpha_1[period]',
+                                   'self.YD[period]',
+                                   'self.alpha_2[period]',
+                                   'self.H_h[period-1]']))})
+
+
 def test_identify_variables_multiple_lines():
     statement = '\n'.join([
         'self.C_s = self.C_d',
