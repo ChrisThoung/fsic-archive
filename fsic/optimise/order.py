@@ -82,7 +82,7 @@ def make_graph(equations):
     G = nx.DiGraph()
     # Loop by equation
     for e in equations:
-        v = identify_variables(e)
+        v = identify_variables(e, suffix=r'\[.+?\]')
         # Extract endogenous variable (should only be one)
         n = v['endogenous']
         if len(n) != 1:
