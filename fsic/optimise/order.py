@@ -48,16 +48,17 @@ def recursive(equations):
         in_degree = G.in_degree()
         # a. One node remaining: Extract
         if len(in_degree) == 1:
-            nodes_to_delete = in_degree.keys()
+            nodes_to_delete = list(in_degree.keys())
         # b. Nodes with degree zero: Extract
         elif 0 in in_degree.values():
             nodes_to_delete = [k for k, v in in_degree.items() if v == 0]
-        # c. More than one node with in-degree of one or greater: Examine
-        #    further
+        # c. More than one node with in-degree of one or greater: Extract
+        #    the node with the lowest PageRank
         else:
             break
-        # Delete nodes; break if no nodes remain in `G`
+        # Delete from `G`
         G.remove_nodes_from(nodes_to_delete)
+        # Break if no nodes remain in `G`
         if not len(G.nodes()):
             break
     # Return
