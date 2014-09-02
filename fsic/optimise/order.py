@@ -52,10 +52,14 @@ def recursive(equations):
         # b. Nodes with degree zero: Extract
         elif 0 in in_degree.values():
             nodes_to_delete = [k for k, v in in_degree.items() if v == 0]
-        # c. More than one node with in-degree of one or greater: Extract
-        #    the node with the lowest PageRank
+        # c. More than one node with in-degree of one or greater: Extract the
+        #    node with the lowest PageRank (sort alphabetically as a
+        #    tie-breaker)
         else:
-            break
+            pr = nx.pagerank(G)
+            next_node = sorted(
+                sorted(pr, key=pr.get))[0]
+            nodes_to_delete = [next_node]
         # Delete from `G`
         G.remove_nodes_from(nodes_to_delete)
         # Break if no nodes remain in `G`
