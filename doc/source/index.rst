@@ -16,6 +16,7 @@ Contents:
    :maxdepth: 2
 
    build.rst
+   markdown.rst
 
 
 Indices and tables
