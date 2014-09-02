@@ -48,10 +48,11 @@ def test_recursive():
         'self.N_d[period] = self.Y[period] / self.W[period]',
         'self.N_s[period] = self.N_d[period]',
         'self.T_d[period] = self.theta[period] * self.W[period] * self.N_s[period]',
-        'self.T_s[period] = self.T_d[period]',
         'self.H_s[period] = self.H_s[period-1] + self.G_d[period] - self.T_d[period]',
+        'self.T_s[period] = self.T_d[period]',
         'self.YD[period] = self.W[period] * self.N_s[period] - self.T_s[period]',
         'self.H_h[period] = self.H_s[period]',
+        'self.H_h[period] = self.H_h[period-1] + self.YD[period] - self.C_d[period]',
     ]
     assert fsic.optimise.order.recursive(equations) == reordered
 

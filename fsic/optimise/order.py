@@ -17,7 +17,7 @@ except:
     raise ImportError('Unable to import NetworkX')
 
 
-def recursive(equations):
+def recursive(equations, warn=True):
     """Reorder `equations` to be 'more recursive'.
 
     Parameters
@@ -30,6 +30,9 @@ def recursive(equations):
     reordered : list of strings
         Reordered version of equations (unchanged if length of equation list is
         one or zero)
+    warn : boolean
+        If `True`, print a warning if there is more than one equation with the
+        same endogenous variable
 
     Notes
     =====
@@ -44,7 +47,7 @@ def recursive(equations):
     if len(equations) < 2:
         return equations
     # 1. Translate `equations` into a directed graph object (a NetworkX DiGraph)
-    G = make_graph(equations)
+    G = make_graph(equations, warn=warn)
     # 2. Extract equation list from node attributes
     node_equations = nx.get_node_attributes(G, 'equations')
     # 3. While there are still nodes in `G`...
@@ -70,7 +73,8 @@ def recursive(equations):
         # Add equations to `reordered` and delete endogenous variables from `G`
         for n in nodes_to_delete:
             if n in node_equations:
-                reordered.append(node_equations.pop(n)[0])
+                for e in node_equations.pop(n):
+                    reordered.append(e)
         G.remove_nodes_from(nodes_to_delete)
         # Break if no nodes remain in `G`
         if not len(G.nodes()):
