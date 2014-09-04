@@ -3,8 +3,8 @@
 FSIC is a Python package for the specification, solution and analysis of
 Stock-Flow Consistent macroeconomic models in the tradition of Wynne Godley.
 
-For more information on Stock-Flow Consistent macroeconomic modelling, see the
-bibliography in `REFERENCES.md`.
+`REFERENCES.md` contains a bibliography to accompany this package and the
+included examples.
 
 ## Dependencies
 
