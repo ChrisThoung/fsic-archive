@@ -10,6 +10,12 @@ def test_one_line_no_lag():
         'self.Y[period] = self.W[period] * self.N_d[period]')
 
 
+def test_one_line_hardcoded_parameter():
+    block = 'T_d = 0.2 * W * N_s'
+    assert fsic.parser.code.translate(block) == (
+        'self.T_d[period] = 0.2 * self.W[period] * self.N_s[period]')
+
+
 def test_one_line_no_lag_custom_period():
     block = 'T_s = T_d'
     assert fsic.parser.code.translate(block, period='time') == (
