@@ -16,6 +16,12 @@ def test_one_line_hardcoded_parameter():
         'self.T_d[period] = 0.2 * self.W[period] * self.N_s[period]')
 
 
+def test_one_line_with_function():
+    block = 'PQ = max(Q, PQ[-1])'
+    assert fsic.parser.code.translate(block) == (
+        'self.PQ[period] = max(self.Q[period], self.PQ[period-1])')
+
+
 def test_one_line_no_lag_custom_period():
     block = 'T_s = T_d'
     assert fsic.parser.code.translate(block, period='time') == (

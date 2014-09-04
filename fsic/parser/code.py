@@ -69,6 +69,8 @@ def translate(block, period='period'):
             [A-z_]+[\w]*    # Valid Python identifier
             \b              # Close word boundary
             )               # Close group
+            (?!\()          # Next character is *not* an opening bracket
+                            # (necessary to ignore function calls)
         ''',
         re.VERBOSE)
     block = prefix_pattern.sub('self.' + r'\1', block)
