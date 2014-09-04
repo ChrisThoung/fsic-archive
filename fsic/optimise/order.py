@@ -10,6 +10,7 @@ of iterations to convergence by the Gauss-Seidel method.
 
 import warnings
 
+import numpy as np
 
 try:
     import networkx as nx
@@ -67,9 +68,13 @@ def recursive(equations, warn=True):
         #    tie-breaker)
         else:
             pr = nx.pagerank(G)
-            next_node = sorted(
-                sorted(pr, key=pr.get))[0]
-            nodes_to_delete = [next_node]
+            # Get lowest PageRank in the system and identify all nodes with that
+            # PageRank
+            lowest_pr = min(pr.values())
+            least_connected_nodes = [k for k, v in pr.items()
+                                     if np.isclose(v, lowest_pr)]
+            # Sort alphabetically as the tie-breaker
+            nodes_to_delete = [sorted(least_connected_nodes)[0]]
         # Add equations to `reordered` and delete endogenous variables from `G`
         for n in nodes_to_delete:
             if n in node_equations:
