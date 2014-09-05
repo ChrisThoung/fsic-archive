@@ -1,28 +1,36 @@
 #!python
 """
-fsic-build
-==========
-FSIC script to generate models from user-defined specification files.
+fsic
+====
+Tools for Stock-Flow Consistent macroeconomic modelling.
 
 """
 
 
 import argparse
 
-from fsic import __version__ as version
-
-from fsic.tools.build import Build
+from FSIC import __version__ as version
 
 
+# Create top-level parser
 parser = argparse.ArgumentParser(
-    description='FSIC model builder.',
+    description='Tools for Stock-Flow Consistent macroeconomic modelling.',
     fromfile_prefix_chars='@')
 parser.add_argument(
     '-V', '--version',
     action='version',
     version=version)
 
-parser.add_argument(
+# Add sub-parsers
+subparsers = parser.add_subparsers(
+    title='commands',
+    dest='command')
+
+# 'Build' sub-parser
+parser_build = subparsers.add_parser(
+    'build',
+    help='build a model from one or more source files')
+parser_build.add_argument(
     '-o', '--output',
     nargs=1,
     metavar='OUTPUT',
@@ -30,8 +38,7 @@ parser.add_argument(
     type=str,
     required=False,
     help='set model name (exclude file extension)')
-
-parser.add_argument(
+parser_build.add_argument(
     'files',
     nargs='+',
     metavar='FILE',
@@ -39,17 +46,16 @@ parser.add_argument(
     help='list of files that define the model')
 
 
+# Main
 if __name__ == '__main__':
-    # Parse arguments
     args = parser.parse_args()
-    # Initialise new Build object
-    b = Build()
-    # Read in file by file and flatten code-block list
-    b.read_files(list(args.files))
-    # Generate output
-    script = b.build()
-    if args.output is None:
-        print(script)
-    else:
-        with open(args.output[0], 'wt') as f:
-            f.write(script)
+    if args.command == 'build':
+        from fsic.tools.build import Build
+        b = Build()
+        b.read_files(list(args.files))
+        script = b.build()
+        if args.output is None:
+            print(script)
+        else:
+            with open(args.output[0], 'wt') as f:
+                f.write(script)
