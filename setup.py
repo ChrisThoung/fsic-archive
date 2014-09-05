@@ -20,7 +20,7 @@ if not for_release:
     VERSION += '.dev'
 
 # Write package version.py
-with open(os.path.join('fsic', 'version.py'), 'wt') as f:
+with open(os.path.join('FSIC', 'version.py'), 'wt') as f:
     version_to_write = """\
 MAJOR = '%d'
 MINOR = '%d'
@@ -33,7 +33,7 @@ VERSION = '%d.%d.%d"""
 
 # Call setup()
 setup(
-    name='fsic',
+    name='FSIC',
     version=VERSION,
     description='Tools for Stock-Flow Consistent macroeconomic modelling',
     long_description='''
@@ -48,22 +48,22 @@ models in the tradition of Wynne Godley.
     author_email='chris.thoung@gmail.com',
     url='https://github.com/cthoung/fsic',
     packages=[
-        'fsic',
-        'fsic.model',
-        'fsic.optimise',
-        'fsic.optimise.tests',
-        'fsic.parser',
-        'fsic.parser.tests',
-        'fsic.tools',
-        'fsic.tools.tests',
-        'fsic.utilities',
-        'fsic.utilities.tests',
+        'FSIC',
+        'FSIC.model',
+        'FSIC.optimise',
+        'FSIC.optimise.tests',
+        'FSIC.parser',
+        'FSIC.parser.tests',
+        'FSIC.tools',
+        'FSIC.tools.tests',
+        'FSIC.utilities',
+        'FSIC.utilities.tests',
         ],
     package_data={
-        'fsic': ['templates/*.py'],
+        'FSIC': ['templates/*.py'],
         },
     scripts=[
-        'scripts/fsic-build.py',
+        'scripts/fsic.py',
         ],
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
