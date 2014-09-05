@@ -27,7 +27,6 @@ def test_recursive_simple():
 
 def test_recursive():
     equations = [
-        'self.H_h[period] = self.H_s[period]',
         'self.C_d[period] = self.alpha_1[period] * self.YD[period] + self.alpha_2[period] * self.H_h[period-1]',
         'self.C_s[period] = self.C_d[period]',
         'self.G_s[period] = self.G_d[period]',
@@ -51,7 +50,6 @@ def test_recursive():
         'self.T_s[period] = self.T_d[period]',
         'self.YD[period] = self.W[period] * self.N_s[period] - self.T_s[period]',
         'self.C_d[period] = self.alpha_1[period] * self.YD[period] + self.alpha_2[period] * self.H_h[period-1]',
-        'self.H_h[period] = self.H_s[period]',
         'self.H_h[period] = self.H_h[period-1] + self.YD[period] - self.C_d[period]',
     ]
     assert FSIC.optimise.order.recursive(equations) == reordered
