@@ -50,7 +50,7 @@ parser_build.add_argument(
 if __name__ == '__main__':
     args = parser.parse_args()
     if args.command == 'build':
-        from fsic.tools.build import Build
+        from FSIC.tools.build import Build
         b = Build()
         b.read_files(list(args.files))
         script = b.build()

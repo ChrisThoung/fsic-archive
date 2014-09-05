@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-import fsic.parser.markdown
+import FSIC.parser.markdown
 
 
 def test_extract_single():
@@ -12,7 +12,7 @@ def test_extract_single():
         'T_s = T_d',
         'N_s = N_d',
         '~~~'])
-    chunk = fsic.parser.markdown.extract(script)
+    chunk = FSIC.parser.markdown.extract(script)
     assert chunk == [script]
 
 
@@ -56,7 +56,7 @@ def test_extract_multiple():
             'Y = C_s + G_s',
             '~~~']),
         ]
-    chunks = fsic.parser.markdown.extract(script)
+    chunks = FSIC.parser.markdown.extract(script)
     assert chunks == expected
 
 

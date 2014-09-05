@@ -108,7 +108,7 @@ def make_graph(equations, warn=True):
         multiple equations are found for a single endogenous variable.
 
     """
-    from fsic.parser.code import identify_variables
+    from FSIC.parser.code import identify_variables
     G = nx.DiGraph()
     # Initialise dictionary to store equations
     node_equations = {}

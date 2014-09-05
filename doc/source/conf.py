@@ -55,7 +55,7 @@ copyright = '2014, Chris Thoung'
 # built documents.
 #
 # The short X.Y version.
-from fsic import __version__ as version
+from FSIC import __version__ as version
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -230,7 +230,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'fsic', 'FSIC Documentation',
+    ('index', 'FSIC', 'FSIC Documentation',
      ['Chris Thoung'], 1)
 ]
 

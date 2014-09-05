@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-import fsic.tools.build
+import FSIC.tools.build
 
 
 if __name__ == '__main__':

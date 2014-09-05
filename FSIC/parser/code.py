@@ -38,11 +38,11 @@ def translate(block, period='period'):
 
     Examples
     ========
-    >>> import fsic.parser.code.translate as translate
+    >>> import FSIC.parser.code.translate as translate
     >>> translate('C_s = C_d')
     'self.C_s[period] = self.C_d[period]'
 
-    >>> import fsic.parser.code.translate as translate
+    >>> import FSIC.parser.code.translate as translate
     >>> translate('G_s = G_d', period='time')
     'self.G_s[time] = self.G_d[time]'
 
@@ -145,12 +145,12 @@ def identify_variables(statement, prefix=r'self\.', suffix=r'', remove_duplicate
 
     Examples
     ========
-    >>> import fsic.parser.code.identify_variables as identify_variables
+    >>> import FSIC.parser.code.identify_variables as identify_variables
     >>> identify_variables('self.C_s[0] = self.C_d[0]')
     {'endogenous': ['C_s'],
      'exogenous': ['C_d']})
 
-    >>> import fsic.parser.code.identify_variables as identify_variables
+    >>> import FSIC.parser.code.identify_variables as identify_variables
     >>> identify_variables('C_s[0] = C_d[0]', prefix=r'\b')
     {'endogenous': ['C_s'],
      'exogenous': ['C_d']})

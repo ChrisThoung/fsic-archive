@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 
 
-import fsic.optimise.order
+import FSIC.optimise.order
 
 
 def test_recursive_empty():
-    assert fsic.optimise.order.recursive([]) == []
+    assert FSIC.optimise.order.recursive([]) == []
 
 
 def test_recursive_single():
     unchanged = ['self.C_s[period] = self.C_d[period]']
-    assert fsic.optimise.order.recursive(unchanged) == unchanged
+    assert FSIC.optimise.order.recursive(unchanged) == unchanged
 
 
 def test_recursive_simple():
@@ -22,7 +22,7 @@ def test_recursive_simple():
         'self.C_s[period] = self.C_d[period]',
         'self.Y[period] = self.C_s[period] + self.G_s[period]',
     ]
-    assert fsic.optimise.order.recursive(equations) == reordered
+    assert FSIC.optimise.order.recursive(equations) == reordered
 
 
 def test_recursive():
@@ -54,7 +54,7 @@ def test_recursive():
         'self.H_h[period] = self.H_s[period]',
         'self.H_h[period] = self.H_h[period-1] + self.YD[period] - self.C_d[period]',
     ]
-    assert fsic.optimise.order.recursive(equations) == reordered
+    assert FSIC.optimise.order.recursive(equations) == reordered
 
 
 if __name__ == '__main__':

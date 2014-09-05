@@ -14,9 +14,9 @@ import os
 import numpy as np
 from pandas import Series, DataFrame
 
-from fsic import __version__ as version
+from FSIC import __version__ as version
 
-from fsic.model.model import Model
+from FSIC.model.model import Model
 
 
 # Define ___MODEL___ class

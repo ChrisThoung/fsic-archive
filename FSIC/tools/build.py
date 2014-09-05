@@ -11,7 +11,7 @@ macroeconomic model.
 import configparser
 import os
 
-from fsic import __version__ as version
+from FSIC import __version__ as version
 
 
 class Build:
@@ -79,7 +79,7 @@ class Build:
         add_chunks()
 
         """
-        from fsic.parser.markdown import extract
+        from FSIC.parser.markdown import extract
         self.add_chunks(extract(script))
 
     def add_chunks(self, chunks):
@@ -137,7 +137,7 @@ class Build:
         build_endogenous_variables()
         build_results()
 
-        fsic.utilities.string.indent_lines()
+        FSIC.utilities.string.indent_lines()
 
         """
         # Generate class code
@@ -146,7 +146,7 @@ class Build:
         endogenous = self.build_endogenous_variables(equations)
         results = self.build_results(equations)
         # Insert into `script`
-        from fsic.utilities.string import indent_lines
+        from FSIC.utilities.string import indent_lines
         script = script.replace(
             '___INITIALISE___',
             indent_lines(initialise, num_tabs=2, skip_first_line=True))
@@ -180,15 +180,15 @@ class Build:
         parse_chunks()
         get_descriptors()
 
-        fsic.utilities.string.indent_lines()
-        fsic.utilities.string.wrap_lines()
+        FSIC.utilities.string.indent_lines()
+        FSIC.utilities.string.wrap_lines()
 
         """
         # Extract model information
         cfg = self.parse_chunks(classes='ini', language='ini')
         cfg = self.get_descriptors(cfg)
         # Insert into `script`
-        from fsic.utilities.string import indent_lines, wrap_lines
+        from FSIC.utilities.string import indent_lines, wrap_lines
         # Model name and accompanying version information
         script = script.replace('___MODEL___', cfg['name'])
         script = script.replace(
@@ -259,15 +259,15 @@ self.FSIC_BUILD = \'%s\'
 
         See also
         ========
-        fsic.parser.chunk.parse()
-        fsic.parser.code.translate()
-        fsic.parser.ini.read_string()
+        FSIC.parser.chunk.parse()
+        FSIC.parser.code.translate()
+        FSIC.parser.ini.read_string()
 
         """
         # Remove duplicates
         chunks = list(sorted(list(set(self.chunks))))
         # Parse chunks to extract metadata
-        from fsic.parser.chunk import parse
+        from FSIC.parser.chunk import parse
         blocks = [parse(c) for c in chunks]
         # Filter by classes
         if type(classes) is not list:
@@ -279,10 +279,10 @@ self.FSIC_BUILD = \'%s\'
         code = '\n'.join(code_blocks)
         # Parse
         if language == 'python':
-            from fsic.parser.code import translate
+            from FSIC.parser.code import translate
             code = translate(code)
         elif language == 'ini':
-            from fsic.parser.ini import read_string
+            from FSIC.parser.ini import read_string
             code = read_string(code)
         else:
             raise ValueError(
@@ -305,10 +305,10 @@ self.FSIC_BUILD = \'%s\'
 
         See also
         ========
-        fsic.parser.code.identify_variables()
+        FSIC.parser.code.identify_variables()
 
         """
-        from fsic.parser.code import identify_variables
+        from FSIC.parser.code import identify_variables
         variables = identify_variables(code)
         variables = variables['endogenous'] + variables['exogenous']
         initialise = [v + (' = Series(default, '
@@ -333,10 +333,10 @@ self.FSIC_BUILD = \'%s\'
 
         See also
         ========
-        fsic.parser.code.identify_variables()
+        FSIC.parser.code.identify_variables()
 
         """
-        from fsic.parser.code import identify_variables
+        from FSIC.parser.code import identify_variables
         variables = identify_variables(code)
         variables = variables['endogenous']
         variables = [('values[\'' +
@@ -361,10 +361,10 @@ self.FSIC_BUILD = \'%s\'
 
         See also
         ========
-        fsic.parser.code.identify_variables()
+        FSIC.parser.code.identify_variables()
 
         """
-        from fsic.parser.code import identify_variables
+        from FSIC.parser.code import identify_variables
         variables = identify_variables(code)
         variables = variables['endogenous'] + variables['exogenous']
         results = 'results = DataFrame({' + '\n\t' + (
