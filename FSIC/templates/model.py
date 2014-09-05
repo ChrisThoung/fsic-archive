@@ -136,7 +136,7 @@ parser = argparse.ArgumentParser(
     fromfile_prefix_chars='@',
     formatter_class=argparse.RawDescriptionHelpFormatter)
 
-model_version = SIM()
+model_version = ___MODEL___()
 parser.add_argument(
     '-V', '--version',
     action='version',
