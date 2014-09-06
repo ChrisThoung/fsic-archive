@@ -1,6 +1,6 @@
 # FSIC: Flows and Stocks Integrated Consistently
 
-![Travis-CI Build Status](https://travis-ci.org/cthoung/fsic.svg)
+[![Build Status](https://travis-ci.org/cthoung/fsic.svg?branch=master)](https://travis-ci.org/cthoung/fsic)
 
 FSIC is a Python package for the specification, solution and analysis of
 Stock-Flow Consistent macroeconomic models in the tradition of Wynne Godley.
