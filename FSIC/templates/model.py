@@ -163,13 +163,21 @@ parser_build.add_argument(
     help='print detailed solution output (not yet implemented)')
 
 parser_build.add_argument(
+    '-f', '--input',
+    nargs='+',
+    metavar='INPUT',
+    default=None,
+    type=str,
+    required=False,
+    help='input file(s) for model data')
+parser_build.add_argument(
     '-o', '--output',
     nargs='+',
     metavar='OUTPUT',
     default=None,
     type=str,
     required=False,
-    help='list of output files for model results')
+    help='output file(s) for model results')
 
 parser_build.add_argument(
     '-D', '--define',
@@ -235,6 +243,17 @@ if __name__ == '__main__' and get_ipython() == None:
             else:
                 past = []
             model.initialise(span=span, past=past)
+        if args.input is not None:
+            if model.initialised:
+                data = model.get_results()
+                for i in args.input:
+                    if i.endswith('.csv'):
+                        pass
+                    else:
+                        ext = os.path.splitext(i)[1]
+                        raise ValueError(
+                            'Unrecognised input file extension: \'%s\''
+                            % (ext))
         if args.define:
             parameters = []
             for a in args.define:
@@ -271,7 +290,8 @@ if __name__ == '__main__' and get_ipython() == None:
                     else:
                         ext = os.path.splitext(o)[1]
                         raise ValueError(
-                            'Unrecognised output file extension: \'%s\'' % (ext))
+                            'Unrecognised output file extension: \'%s\''
+                            % (ext))
             else:
                 raise ValueError(
                     'Model not solved: no results to save')
