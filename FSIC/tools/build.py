@@ -98,8 +98,15 @@ class Build:
         """
         self.chunks = self.chunks + chunks
 
-    def build(self):
+    def build(self, optimise=True):
         """Build the final model script and return as a string.
+
+        Parameters
+        ==========
+        optimise : boolean
+            If `True`, attempt to optimise the equation order to achieve a
+            'more-recursive' system, to reduce the number of iterations to
+            convergence.
 
         See also
         ========
@@ -111,19 +118,23 @@ class Build:
         with open(self.model_template, 'rt') as f:
             script = f.read()
         # Insert code and other information into template
-        script = self.insert_code(script)
+        script = self.insert_code(script, optimise=optimise)
         # Insert other information
         script = self.insert_info(script)
         # Return
         return script
 
-    def insert_code(self, script):
+    def insert_code(self, script, optimise=True):
         """Insert Python code blocks into script.
 
         Parameters
         ==========
         script : string
             Script containing markers for replacement
+        optimise : boolean
+            If `True`, attempt to optimise the equation order to achieve a
+            'more-recursive' system, to reduce the number of iterations to
+            convergence.
 
         Returns
         =======
@@ -137,11 +148,20 @@ class Build:
         build_endogenous_variables()
         build_results()
 
+        FSIC.optimise.order.recursive()
         FSIC.utilities.string.indent_lines()
 
         """
-        # Generate class code
+        # Generate class code, optimising as necessary
         equations = self.parse_chunks()
+        if optimise:
+            try:
+                from FSIC.optimise.order import recursive
+                equations = equations.splitlines()
+                equations = recursive(equations)
+                equations = '\n'.join(equations)
+            except:
+                pass
         initialise = self.build_initialise(equations)
         endogenous = self.build_endogenous_variables(equations)
         results = self.build_results(equations)
