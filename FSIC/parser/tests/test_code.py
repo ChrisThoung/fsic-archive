@@ -88,13 +88,11 @@ def test_translate_with_import_statement():
     block = '''\
 import math
 C_d = alpha_1 * math.log(YD) + alpha_2 * math.log(H_h[-1])
-C_d = math.exp(C_d)
-'''
+C_d = math.exp(C_d)'''
     expected = '''\
 import math
 self.C_d[period] = self.alpha_1[period] * math.log(self.YD[period]) + self.alpha_2[period] * math.log(self.H_h[period-1])
-self.C_d[period] = math.exp(self.C_d[period])
-'''
+self.C_d[period] = math.exp(self.C_d[period])'''
     result = FSIC.parser.code.translate(block)
     assert result == expected
 
@@ -103,13 +101,11 @@ def test_translate_with_from_import_statement():
     block = '''\
 from random import normalvariate
 Ra = normalvariate(0, 1)
-YD_e = YD * (1 + Ra)
-'''
+YD_e = YD * (1 + Ra)'''
     expected = '''\
 from random import normalvariate
 self.Ra[period] = normalvariate(0, 1)
-self.YD_e[period] = self.YD[period] * (1 + self.Ra[period])
-'''
+self.YD_e[period] = self.YD[period] * (1 + self.Ra[period])'''
     result = FSIC.parser.code.translate(block)
     assert result == expected
 
