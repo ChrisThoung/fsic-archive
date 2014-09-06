@@ -18,6 +18,44 @@ class Model:
         self.initialised = False
         self.solved = False
 
+    def update_data(self, data):
+        """Store the contents of `data`.
+
+        Parameters
+        ==========
+        data : pandas DataFrame
+            Data to store; one column per variable, with name matching that of
+            the intended model variable
+
+        Returns
+        =======
+        N/A
+
+        Notes
+        =====
+        The index of the DataFrame must match the index of the model
+        variables. It is not necessary for all periods in the model to be
+        covered by the DataFrame index.
+
+        See also
+        ========
+        FSIC.parser.code.translate()
+
+        """
+        # Generate a set of statements for execution
+        from FSIC.parser.code import translate
+        expression = []
+        for c in data.columns:
+            # Translate the statement into one compatible with the model class
+            e = ''.join([
+                translate(c, period=''),
+                ' = data[\'', c, '\']'])
+            e = e.replace('[]', '')
+            expression.append(e)
+        # Combine into a single string and call
+        expression = '\n'.join(expression)
+        exec(expression)
+
     def solve(self, start=None, end=None, max_iter=100, min_iter=0, tol=1.0e-8):
         """Solve the model.
 
