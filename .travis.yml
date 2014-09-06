@@ -5,4 +5,5 @@ python:
     - 3.4
 install:
     - pip install pandas
+    - pip install networkx
 script: nosetests
