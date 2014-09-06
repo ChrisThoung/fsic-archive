@@ -13,6 +13,7 @@ import os
 
 import numpy as np
 from pandas import Series, DataFrame
+import pandas as pd
 
 from FSIC import __version__ as version
 
@@ -248,12 +249,17 @@ if __name__ == '__main__' and get_ipython() == None:
                 data = model.get_results()
                 for i in args.input:
                     if i.endswith('.csv'):
-                        pass
+                        data = pd.read_csv(i, dtype=np.float64)
                     else:
                         ext = os.path.splitext(i)[1]
                         raise ValueError(
                             'Unrecognised input file extension: \'%s\''
                             % (ext))
+                    # Update data frame index
+                    data.index = data['period']
+                    del data['period']
+                    # Update model data
+                    model.update_data(data)
         if args.define:
             parameters = []
             for a in args.define:
