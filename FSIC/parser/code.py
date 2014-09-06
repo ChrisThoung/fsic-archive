@@ -61,7 +61,10 @@ def translate(block, period='period'):
             \[              # Open square (index) bracket
         ''',
         re.VERBOSE)
-    block = split_pattern.sub(r'\1' + '[', block)
+    block = substitute(
+        split_pattern,
+        lambda x: x.groups()[0] + '[',
+        block)
     # Prefix pattern to add 'self.'
     prefix_pattern = re.compile(
         r'''(               # New group
@@ -69,11 +72,14 @@ def translate(block, period='period'):
             [A-z_]+[\w]*    # Valid Python identifier
             \b              # Close word boundary
             )               # Close group
-            (?!\()          # Next character is *not* an opening bracket
-                            # (necessary to ignore function calls)
+            (?![(.])        # Next character is neither an opening bracket,
+                            # nor a dot (necessary to ignore function calls)
         ''',
         re.VERBOSE)
-    block = prefix_pattern.sub('self.' + r'\1', block)
+    block = substitute(
+        prefix_pattern,
+        lambda x: 'self.' + x.groups()[0],
+        block)
     # Index pattern for variables without a period index
     index_pattern = re.compile(
         r'''(                   # New group
@@ -85,7 +91,10 @@ def translate(block, period='period'):
                                 # bracket
         ''',
         re.VERBOSE)
-    block = index_pattern.sub(r'\1'.strip() + '[' + period + ']', block)
+    block = substitute(
+        index_pattern,
+        lambda x: x.groups()[0].strip() + '[' + period + ']',
+        block)
     block = block.replace('[' + period + ']]', ']')
     # Insert patterns for variables with lead/lag offsets
     lead_pattern = re.compile(
@@ -108,10 +117,64 @@ def translate(block, period='period'):
             \]      # Close square (index) bracket
         ''',
         re.VERBOSE)
-    block = lead_pattern.sub('[' + period + '+' + r'\1' + ']', block)
-    block = lead_lag_pattern.sub('[' + period + r'\1' + ']', block)
+    block = substitute(
+        lead_pattern,
+        lambda x: '[' + period + '+' + x.groups()[0] + ']',
+        block)
+    block = substitute(
+        lead_lag_pattern,
+        lambda x: '[' + period + x.groups()[0] + ']',
+        block)
     # Return
     return block
+
+
+def substitute(pattern, repl, string, ignore_keywords=True):
+    """Modify elements in `string` that match `pattern`, using `repl`.
+
+    Parameters
+    ==========
+    pattern : regular expression object
+        Regular expression to locate fields in `string` for substitution
+    repl : function
+        Function that takes a `match` object as an argument and returns a
+        string
+    string : string
+        Expression to parse
+    ignore_keywords : boolean
+        If `True`, ignore words in `string` that match Python keywords
+
+    Returns
+    =======
+    modified : string
+        Copy of `string`, with matches against `pattern` replaced according to
+        `repl()`
+
+    """
+    # Extract keyword list, if required
+    if ignore_keywords:
+        from keyword import kwlist
+    else:
+        kwlist = []
+    # Initialise `modified` as a list and loop by line in `string`
+    modified = []
+    for line in string.splitlines():
+        # If required, ignore lines that contain `import` statements
+        if ignore_keywords and (line.strip().startswith('from') or
+                                line.strip().startswith('import')):
+            pass
+        # Otherwise, find instances and replace
+        else:
+            matches = list(pattern.finditer(line))
+            for m in reversed(matches):
+                start = m.start()
+                end = m.end()
+                line = line[:start] + repl(m) + line[end:]
+        # Append to `modified`
+        modified.append(line)
+    # Join strings back together and return
+    modified = '\n'.join(modified)
+    return modified
 
 
 def identify_variables(statement, prefix=r'self\.', suffix=r'', remove_duplicates=True, sort_variables=True):
