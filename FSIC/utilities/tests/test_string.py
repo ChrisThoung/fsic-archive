@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+"""
+test_string
+===========
+Example equations come from Model SIM, from Chapter 3 of Godley and Lavoie
+(2007).
+
+"""
 
 
 import FSIC.utilities.string

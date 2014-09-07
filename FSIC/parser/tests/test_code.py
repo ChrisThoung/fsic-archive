@@ -1,4 +1,14 @@
 # -*- coding: utf-8 -*-
+"""
+test_code
+=========
+Example equations are from, or based on, those from:
+
+* Model SIM, from Chapter 3 of Godley and Lavoie (2007)
+* Model PCEX, from Chapter 4 of Godley and Lavoie (2007)
+* The AMI model, from Chapter 1 of Almon (2014)
+
+"""
 
 
 import FSIC.parser.code

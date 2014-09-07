@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+"""
+test_markdown
+=============
+Example equations come from Model SIM, from Chapter 3 of Godley and Lavoie
+(2007).
+
+"""
 
 
 import FSIC.parser.markdown

@@ -50,6 +50,7 @@ models in the tradition of Wynne Godley.
     packages=[
         'FSIC',
         'FSIC.cli',
+        'FSIC.cli.tests',
         'FSIC.model',
         'FSIC.optimise',
         'FSIC.optimise.tests',

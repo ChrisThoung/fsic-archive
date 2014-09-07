@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+"""
+test_ini
+========
+Example descriptors cite Model SIM, from Chapter 3 of Godley and Lavoie (2007).
+
+"""
 
 
 import configparser
