@@ -250,6 +250,7 @@ if __name__ == '__main__' and get_ipython() == None:
                 for i in args.input:
                     if i.endswith('.csv'):
                         data = pd.read_csv(i, dtype=np.float64)
+                        data = data.fillna(0)
                     else:
                         ext = os.path.splitext(i)[1]
                         raise ValueError(
