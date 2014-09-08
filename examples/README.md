@@ -15,4 +15,5 @@ This folder contains examples of how to use FSIC for macroeconomic modelling.
 
 Folder             |Description                                                        |Demonstrates
 :------------------|:------------------------------------------------------------------|:---------------------------------------
+almon              |Implementations of the various models from Almon (2014)            |How to create models from Markdown files
 gl2007             |Implementations of the various models from Godley and Lavoie (2007)|How to create models from Markdown files
