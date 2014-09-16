@@ -51,6 +51,8 @@ models in the tradition of Wynne Godley.
         'FSIC',
         'FSIC.cli',
         'FSIC.cli.tests',
+        'FSIC.io',
+        'FSIC.io.tests',
         'FSIC.model',
         'FSIC.optimise',
         'FSIC.optimise.tests',
