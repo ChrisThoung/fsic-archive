@@ -48,7 +48,7 @@ class Model:
         for c in data.columns:
             # Translate the statement into one compatible with the model class
             e = ''.join([
-                translate(c, period=''),
+                translate(c, period='') + '[data.index]',
                 ' = data[\'', c, '\']'])
             e = e.replace('[]', '')
             expression.append(e)
