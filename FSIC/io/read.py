@@ -76,16 +76,13 @@ def read(path, filetype=None):
     # 3. Call the relevant function and return its return value
 
 
-def detect_filetype(path, max_exts=2, sep='.'):
-    """Return the cleaned file extension(s) of `path`.
+def detect_filetype(path, sep='.'):
+    """Return the cleaned file extension(s) in `path`.
 
     Parameters
     ==========
     path : string
         The input filepath to process
-    max_exts : integer
-        The maximum number of extensions to extract from `path` e.g. to handle
-        extensions such as 'tsv.gz' or 'csv.zip'
     sep : string
         String to split file extensions
 
@@ -95,24 +92,22 @@ def detect_filetype(path, max_exts=2, sep='.'):
         The file extension(s) identified from `path`
 
     """
-    # Split into individual pieces
+    # Raise error if `sep` not found (nothing to separate by)
+    if sep not in path:
+        raise ValueError(
+            'Unable to split `path`: no instances of `sep` (\'%s\') found' %
+            sep)
+    # Split by `sep`
     pieces = path.split(sep)
-    # Search back from the end for valid filetypes to locate the first valid
-    # extension
-    found = False
-    for first_ext, p in enumerate(reversed(pieces)):
-        if p in valid_filetypes or p in valid_compressed_types:
-            found = True
-        else:
-            break
-    # Raise an error if no valid file extensions found
-    if not found:
-        raise ValueError('No valid file extensions found in: %s' % path)
-    # Extract valid extensions only and join back together
-    exts = pieces[-min(first_ext, max_exts):]
-    exts = sep.join(exts)
-    # Return
-    return exts
+    # Extract last piece
+    file_ext = pieces.pop(-1)
+    if file_ext in valid_compressed_types:
+        file_ext, compressed_ext = pieces.pop(-1), file_ext
+    if file_ext not in valid_filetypes:
+        raise ValueError(
+            'Unable to identify a valid file extension in `path`: %s' %
+            path)
+    return
 
 
 def clean_filetype(filetype):
