@@ -89,6 +89,15 @@ def detect_filetype(path):
     filetype : dictionary
         The file extension(s) identified in `path`
 
+    Notes
+    =====
+    A valid filepath must satisfy one of the following:
+
+    1. End with one file extension that describes the format of the data
+    2. End with two file extensions, the first (leftmost/penultimate) one
+       describing the format of the data; the second (rightmost/last) indicating
+       the compression type
+
     """
     pass
 
