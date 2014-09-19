@@ -76,38 +76,21 @@ def read(path, filetype=None):
     # 3. Call the relevant function and return its return value
 
 
-def detect_filetype(path, sep='.'):
-    """Return the cleaned file extension(s) in `path`.
+def detect_filetype(path):
+    """Return the file extension(s) in `path` as a dictionary.
 
     Parameters
     ==========
     path : string
         The input filepath to process
-    sep : string
-        String to split file extensions
 
     Returns
     =======
-    filetype : string
-        The file extension(s) identified from `path`
+    filetype : dictionary
+        The file extension(s) identified in `path`
 
     """
-    # Raise error if `sep` not found (nothing to separate by)
-    if sep not in path:
-        raise ValueError(
-            'Unable to split `path`: no instances of `sep` (\'%s\') found' %
-            sep)
-    # Split by `sep`
-    pieces = path.split(sep)
-    # Extract last piece
-    file_ext = pieces.pop(-1)
-    if file_ext in valid_compressed_types:
-        file_ext, compressed_ext = pieces.pop(-1), file_ext
-    if file_ext not in valid_filetypes:
-        raise ValueError(
-            'Unable to identify a valid file extension in `path`: %s' %
-            path)
-    return
+    pass
 
 
 def clean_filetype(filetype):
