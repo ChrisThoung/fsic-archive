@@ -87,7 +87,11 @@ def detect_filetype(path):
     Returns
     =======
     filetype : dictionary
-        The file extension(s) identified in `path`
+        The file extension(s) identified in `path`, with keys as follows:
+        'format' : the file extension that signifies the format of the data in
+                   `path`
+        'compression' : the file extension/format of the compressed file, if
+                        applicable ('' if none found)
 
     Notes
     =====
@@ -99,8 +103,43 @@ def detect_filetype(path):
        the compression type
 
     """
-    pass
+    # Attempt to extract last two file extensions
+    stub1, ext1 = os.path.splitext(path)
+    stub2, ext2 = os.path.splitext(stub1)
+    # Clean file extensions
+    ext1 = clean_file_ext(ext1)
+    ext2 = clean_file_ext(ext2)
+    # Initialise dictionary to store final return values
+    filetype = {}
+    # Check for compressed file extension and re-assign `ext1` as required
+    if ext1 in valid_compressed_types:
+        filetype['compression'] = ext1
+        ext1 = ext2
+    else:
+        filetype['compression'] = ''
+    # Check for valid filetype
+    if ext1 not in valid_filetypes:
+        raise ValueError('Unable to locate file extension in: %s' % path)
+    # Assign
+    filetype['format'] = ext1
+    # Return
+    return filetype
 
 
-def clean_filetype(filetype):
-    pass
+def clean_file_ext(ext):
+    """Return `ext` without the leading dot, if found.
+
+    Parameters
+    ==========
+    ext : string
+        File extension to clean
+
+    Returns
+    =======
+    ext : string
+        Modified version of `ext`
+
+    """
+    if ext.startswith('.'):
+        ext = ext[1:]
+    return ext
