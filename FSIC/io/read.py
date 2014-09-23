@@ -9,6 +9,8 @@ of a path to process an input file, returning a pandas DataFrame.
 
 
 import os
+import zip
+
 from pandas import Series, DataFrame
 import pandas as pd
 
@@ -39,7 +41,7 @@ def read(path, filetype=None):
 
     Returns
     =======
-    data : pandas DataFrame
+    data : list of pandas DataFrame objects
         Contents of `path`
 
     Notes
@@ -64,7 +66,10 @@ def read(path, filetype=None):
 
     * zip archives (file extension: 'zip') are more complicated, as they contain
       multiple files. By default, these are handled as follows:
-        *
+        * Identify all files in the archive that are themselves valid as data
+          files. Files in the archive can also be compressed (creating the
+          potential for a tree of compressed files)
+        * Loop through the file list and extract
 
     """
     # 1. Identify the filetype, if not specified explicitly in `filetype`
