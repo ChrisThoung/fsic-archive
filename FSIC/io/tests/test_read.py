@@ -6,6 +6,7 @@ import os
 import pandas as pd
 from pandas.util.testing import assert_frame_equal
 
+
 import FSIC.io.read
 
 
@@ -46,6 +47,13 @@ def test_detect_filetype_exts():
     for input, expected in test_data.items():
         output = FSIC.io.read.detect_filetype(input)
         assert output == expected
+
+
+def test_read_csv():
+    input = os.path.join(test_dir, 'data', 'national_accounts.csv')
+    result = FSIC.io.read.read(input)
+    expected = pd.read_csv(input)
+    assert_frame_equal(result, expected)
 
 
 if __name__ == '__main__':
