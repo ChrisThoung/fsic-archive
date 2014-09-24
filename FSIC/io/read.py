@@ -20,13 +20,9 @@ valid_filetypes = [
     'csv',
     'tsv',
 ]
-valid_compressed_types = [
-    'gz',
-    'zip',
-]
 
 
-def read(path, filetype=None):
+def read(path, filetype=None, fail_on_error=True):
     """Return the contents of `path` as a pandas DataFrame.
 
     Parameters
@@ -38,6 +34,9 @@ def read(path, filetype=None):
         input file according to its file extension. Otherwise, `filetype` must
         be a string that specifies the file extension to use (the leading dot is
         optional)
+    fail_on_error : boolean
+        If `True`, raise a runtime error in the event of a failed read
+        operation. If `False`, continue
 
     Returns
     =======
@@ -52,8 +51,13 @@ def read(path, filetype=None):
     The steps are as follows:
 
     1. Identify the filetype, if not specified explicitly in `filetype`
-    2. Match the filetype to the relevant function in `FSIC.io.readers`
-    3. Call the relevant function and return its return value
+    2. If `path` is a zip archive, open the archive and loop through its
+       contents, calling this function again to read the archived data
+
+    Otherwise:
+
+    3. Match the filetype to the relevant function in `FSIC.io.readers`
+    4. Call the relevant function and return its return value
 
     The vast majority of readers provide at least some support for compressed
     files:
@@ -77,26 +81,36 @@ def read(path, filetype=None):
         filetype = detect_filetype(path)
     else:
         filetype = clean_filetype(filetype)
-    # 2. Match the filetype to the relevant function in `FSIC.io.readers`
-    # 3. Call the relevant function and return its return value
+    # 2. If `path` is a zip archive, open the archive and loop through its
+    #    contents, calling this function again to read the archived data
+    if 'compression' in filetype and filetype['compression'] == 'zip':
+        pass
+    # 3. Match the filetype to the relevant function in `FSIC.io.readers`
+    # 4. Call the relevant function and return its return value
 
 
-def detect_filetype(path):
+def detect_filetype(path, compressed_types=['gz'], archive_types=['zip']):
     """Return the file extension(s) in `path` as a dictionary.
 
     Parameters
     ==========
     path : string
         The input filepath to process
+    compressed_types : list of strings
+    archive_types : list of strings
+        File extensions that denote archives of files, for which a further
+        file-format extension is not necessary
 
     Returns
     =======
-    filetype : dictionary
-        The file extension(s) identified in `path`, with keys as follows:
-        'format' : the file extension that signifies the format of the data in
-                   `path`
-        'compression' : the file extension/format of the compressed file, if
-                        applicable ('' if none found)
+    filetype : either:
+               - a dictionary, if a filetype was successfully detected
+               - None, if a filetype was not successfully detected
+        If a dictionary, `filetype` will contain one or more of the following
+        keys:
+        - 'format' : the file extension that signifies the format of the data
+                     in `path`
+        - 'compression' : if compressed, the compression type of the file
 
     Notes
     =====
@@ -116,16 +130,19 @@ def detect_filetype(path):
     ext2 = clean_file_ext(ext2)
     # Initialise dictionary to store final return values
     filetype = {}
-    # Check for compressed file extension and re-assign `ext1` as required
-    if ext1 in valid_compressed_types:
+    # Check for compressed/archived file extension and, if found, either:
+    # - Return, if the compressed format is in `archive_types`
+    # - Re-assign `ext1` to be `ext2` i.e. the extension of the file in its
+    #   uncompressed form
+    if ext1 in compressed_types + archive_types:
         filetype['compression'] = ext1
+        if ext1 in archive_types:
+            return filetype
         ext1 = ext2
-    else:
-        filetype['compression'] = ''
-    # Check for valid filetype
+    # Check for valid filetype; return `None` if not found
     if ext1 not in valid_filetypes:
-        raise ValueError('Unable to locate file extension in: %s' % path)
-    # Assign
+        return None
+    # If here, assign the format
     filetype['format'] = ext1
     # Return
     return filetype
