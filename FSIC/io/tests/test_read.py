@@ -44,13 +44,19 @@ def test_detect_filetype_exts():
         '.tsv': None,
         '.zip': None,
     }
+    # Without preceding folder path
     for input, expected in test_data.items():
+        output = FSIC.io.read.detect_filetype(input)
+        assert output == expected
+    # With preceding folder path
+    for input, expected in test_data.items():
+        input = os.path.join('model', 'data', input)
         output = FSIC.io.read.detect_filetype(input)
         assert output == expected
 
 
 def test_read_csv():
-    input = os.path.join(test_dir, 'data', 'national_accounts.csv')
+    input = os.path.join(test_dir, 'data', 'table.csv')
     result = FSIC.io.read.read(input)
     expected = pd.read_csv(input)
     assert_frame_equal(result, expected)
