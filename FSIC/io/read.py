@@ -9,7 +9,7 @@ of a path to process an input file, returning a pandas DataFrame.
 
 
 import os
-import zip
+import zipfile
 
 from pandas import Series, DataFrame
 import pandas as pd
