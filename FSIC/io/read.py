@@ -131,6 +131,8 @@ def detect_filetype(path, compressed_types=['gz'], archive_types=['zip']):
       'format'
 
     """
+    # Extract filename from filepath
+    path = os.path.split(path)[1]
     # Attempt to extract last two file extensions
     stub1, ext1 = os.path.splitext(path)
     stub2, ext2 = os.path.splitext(stub1)
