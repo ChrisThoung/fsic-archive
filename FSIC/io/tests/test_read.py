@@ -1,7 +1,15 @@
 # -*- coding: utf-8 -*-
 
 
+import os
+
+import pandas as pd
+from pandas.util.testing import assert_frame_equal
+
 import FSIC.io.read
+
+
+test_dir = os.path.dirname(__file__)
 
 
 def test_clean_file_ext():
