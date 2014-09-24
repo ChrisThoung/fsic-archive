@@ -114,12 +114,21 @@ def detect_filetype(path, compressed_types=['gz'], archive_types=['zip']):
 
     Notes
     =====
-    A valid filepath must satisfy one of the following:
+    A valid filepath must have at least one file extension. In the case of just
+    one file extension, the file extension is assumed to denote the format of
+    the data file e.g. 'csv', 'tsv', 'zip' archive.
 
-    1. End with one file extension that describes the format of the data
-    2. End with two file extensions, the first (leftmost/penultimate) one
-       describing the format of the data; the second (rightmost/last) indicating
-       the compression type
+    Note that the contents of the return dictionary differ depending on whether
+    the extension is listed in `archive_types` (in which case, it is stored with
+    key 'compression') or not (stored with key 'format').
+
+    A valid filepath can have at most two file extensions (any that precede the
+    last two are ignored). In this case:
+
+    * The last (rightmost) file extension must denote the compression type
+      i.e. be listed in `compressed_types`; it is stored with key 'compression'
+    * The penultimate extension denotes the format of the data, stored with key
+      'format'
 
     """
     # Attempt to extract last two file extensions
@@ -139,12 +148,11 @@ def detect_filetype(path, compressed_types=['gz'], archive_types=['zip']):
         if ext1 in archive_types:
             return filetype
         ext1 = ext2
-    # Check for valid filetype; return `None` if not found
-    if ext1 not in valid_filetypes:
+    # Return `None` if length of `ext1` is zero
+    if len(ext1) == 0:
         return None
-    # If here, assign the format
+    # Assign format and return
     filetype['format'] = ext1
-    # Return
     return filetype
 
 

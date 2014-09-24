@@ -29,8 +29,8 @@ def test_detect_filetype_exts():
         'no_further_ext_required.zip': {'compression': 'zip'},
         # Invalid filepaths evaluate to `None`
         'no_file_ext': None,
-        'invalid_file_ext.not_a_type': None,
-        # Dot files, with no filename should evaluate to `None`
+        'invalid_file_ext.not_a_type': {'format': 'not_a_type'},
+        # Dot files, with no filename, should evaluate to `None`
         '.csv': None,
         '.tsv': None,
         '.zip': None,
