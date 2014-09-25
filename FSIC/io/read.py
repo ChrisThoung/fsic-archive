@@ -15,6 +15,31 @@ from pandas import Series, DataFrame
 import pandas as pd
 
 
+def read(path, method=None, fail_on_error=True):
+    """Return the contents of `path` as a list of pandas DataFrame objects.
+
+    Parameters
+    ==========
+    path : string
+        Location of file to read
+    method : `None` or string
+        If `None`, attempt to detect the format of the file in `path` based on
+        its file extension(s).
+        If a string, this variable specifies the file extensions to use for
+        reading.
+    fail_on_error : boolean
+        If `True`, raise a `ValueError` in the event that the filetype cannot be
+        identified. If False, return `None`
+
+    Returns
+    =======
+    data : list of pandas DataFrames
+        Contents of the file in `path`
+
+    """
+    pass
+
+
 def filetype(path, compressed_exts=['gz'], archive_exts=['zip']):
     """Return the filetypes of `path` as a dictionary.
 
