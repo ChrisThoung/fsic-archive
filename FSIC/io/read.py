@@ -15,6 +15,9 @@ from pandas import Series, DataFrame
 import pandas as pd
 
 
+archive_extensions = ['zip']
+
+
 def read(path, method=None, fail_on_error=True):
     """Return the contents of `path` as a list of pandas DataFrame objects.
 
@@ -37,10 +40,29 @@ def read(path, method=None, fail_on_error=True):
         Contents of the file in `path`
 
     """
-    pass
+    # If method is `None`, attempt to identify the type of the file in `path`
+    if method is None:
+        method = filetype(path)
+        if method is None:
+            if fail_on_error:
+                raise ValueError(
+                    'Unable to identify valid file extension(s) in: %s' % path)
+            else:
+                return None
+    else:
+        method = clean_file_ext(method)
+    # If method contains an archive file extension, loop through and call this
+    # function again
+    if 'compression' in method and method['compression'] in archive_extensions:
+        if method['compression'] == 'zip':
+            pass
+    # Otherwise, identify the relevant `reader` function, read `path` and return
+    # its contents as a one-element list
+    else:
+        pass
 
 
-def filetype(path, compressed_exts=['gz'], archive_exts=['zip']):
+def filetype(path, compressed_exts=['gz'], archive_exts=archive_extensions):
     """Return the filetypes of `path` as a dictionary.
 
     Parameters
