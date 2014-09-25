@@ -63,8 +63,6 @@ def test_filetype():
     }
     for input, expected in test_data.items():
         output = FSIC.io.read.filetype(input)
-        print(input)
-        print(output)
         assert output == expected
         with_folder = FSIC.io.read.filetype(
             os.path.join('model', 'data', input))
