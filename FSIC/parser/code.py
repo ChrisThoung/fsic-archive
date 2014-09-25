@@ -42,7 +42,6 @@ def translate(block, period='period'):
     >>> translate('C_s = C_d')
     'self.C_s[period] = self.C_d[period]'
 
-    >>> import FSIC.parser.code.translate as translate
     >>> translate('G_s = G_d', period='time')
     'self.G_s[time] = self.G_d[time]'
 
