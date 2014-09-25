@@ -6,7 +6,6 @@ import os
 import pandas as pd
 from pandas.util.testing import assert_frame_equal
 
-
 import FSIC.io.read
 
 
@@ -17,42 +16,59 @@ def test_clean_file_ext():
     test_data = {
         '.csv': 'csv',
         'csv': 'csv',
+        '.': '',
+        'a': 'a',
+        '.a': 'a',
     }
     for input, expected in test_data.items():
         output = FSIC.io.read.clean_file_ext(input)
         assert output == expected
 
 
-def test_detect_filetype_exts():
+def test_filetype():
     test_data = {
-        # Standard formats, whether compressed or not
+        # Uncompressed files: Should only identify the extension
         'input.csv': {'format': 'csv'},
-        'input.csv.gz': {'format': 'csv', 'compression': 'gz'},
-        'input.data.csv.gz': {'format': 'csv', 'compression': 'gz'},
-        'input.csv.data.csv': {'format': 'csv'},
-        'input.csv.csv': {'format': 'csv'},
+        'input.tsv': {'format': 'tsv'},
         'input.csv.tsv': {'format': 'tsv'},
-        'input.gz.csv': {'format': 'csv'},
-        'input.csv.tsv.csv': {'format': 'csv'},
-        # Zip archives
-        'no_further_ext_required.zip': {'compression': 'zip'},
-        # Invalid filepaths evaluate to `None`
-        'no_file_ext': None,
-        'invalid_file_ext.not_a_type': {'format': 'not_a_type'},
-        # Dot files, with no filename, should evaluate to `None`
+        # Compressed file: Should identify the compression type and the 'main'
+        # file extension
+        'input.csv.gz':
+            {'format': 'csv', 'compression': 'gz'},
+        # Filenames containing many dots should make no difference
+        'many.descriptors.separated.by.dots.csv':
+            {'format': 'csv'},
+        'many.descriptors.separated.by.dots.csv.gz':
+            {'format': 'csv', 'compression': 'gz'},
+        'many.descriptors.separated.by.dots.zip':
+            {'compression': 'zip'},
+        # Archive files: Identify the compression type only
+        'archive.zip': {'compression': 'zip'},
+        # Compression formats in the middle of the path are ignored
+        'extracted.from.gz.csv' : {'format': 'csv'},
+        'extracted.from.zip.csv' : {'format': 'csv'},
+        # No file extension: `None`
+        'missing_file_ext': None,
+        # Dot files: `None`
         '.csv': None,
         '.tsv': None,
+        '.gz': None,
         '.zip': None,
+        # Dot file with extension: As normal
+        '.csv.tsv': {'format': 'tsv'},
+        '.csv.tsv.gz': {'format': 'tsv', 'compression': 'gz'},
+        # Dot file with a compressed-file extension: `None` (consistent with
+        # uncompressed dot files treatment)
+        '.csv.gz': None,
     }
-    # Without preceding folder path
     for input, expected in test_data.items():
-        output = FSIC.io.read.detect_filetype(input)
+        output = FSIC.io.read.filetype(input)
+        print(input)
+        print(output)
         assert output == expected
-    # With preceding folder path
-    for input, expected in test_data.items():
-        input = os.path.join('model', 'data', input)
-        output = FSIC.io.read.detect_filetype(input)
-        assert output == expected
+        with_folder = FSIC.io.read.filetype(
+            os.path.join('model', 'data', input))
+        assert with_folder == expected
 
 
 def test_read_csv():
