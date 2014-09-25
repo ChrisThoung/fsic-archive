@@ -136,8 +136,8 @@ def substitute(pattern, repl, string, ignore_keywords=True):
     pattern : regular expression object
         Regular expression to locate fields in `string` for substitution
     repl : function
-        Function that takes a `match` object as an argument and returns a
-        string
+        Function that takes a `match` object (containing subgroups) as an
+        argument and returns a string
     string : string
         Expression to parse
     ignore_keywords : boolean
@@ -168,6 +168,8 @@ def substitute(pattern, repl, string, ignore_keywords=True):
             for m in reversed(matches):
                 start = m.start()
                 end = m.end()
+                if ignore_keywords and line[start:end].strip() in kwlist:
+                    continue
                 line = line[:start] + repl(m) + line[end:]
         # Append to `modified`
         modified.append(line)

@@ -11,6 +11,7 @@ Example equations are from, or based on, those from:
 """
 
 
+import re
 import FSIC.parser.code
 
 
@@ -245,6 +246,46 @@ def test_identify_variables_multiple_lines_keep_duplicates():
                                    'self.theta',
                                    'self.W',
                                    'self.N_d']))})
+
+
+def test_substitute():
+    statement = 'C_d = C_d[-1]'
+    expected = 'self.C_d[period] = self.C_d[period-1]'
+    output = statement
+    output = FSIC.parser.code.substitute(
+        re.compile(r'(\b[A-z_]\w*)\b'),
+        lambda x: 'self.' + x.groups()[0],
+        output)
+    output = FSIC.parser.code.substitute(
+        re.compile(r'\[\s*([\d+-]+)\s*\]'),
+        lambda x: '[period' + x.groups()[0] + ']',
+        output)
+    output = FSIC.parser.code.substitute(
+        re.compile(r'(self[.][A-z_]\w*\b)(?!\[)'),
+        lambda x: x.groups()[0] + '[period]',
+        output)
+    assert output == expected
+
+
+def test_substitute_ignore_keywords():
+    statement = 'C_d is C_d[-1]'
+    expected = 'C_d is C_d[-1]'
+    output = FSIC.parser.code.substitute(
+        re.compile(r'\bis\b'),
+        lambda x: 'is not',
+        statement)
+    assert output == expected
+
+
+def test_substitute_include_keywords():
+    statement = 'C_d is C_d[-1]'
+    expected = 'C_d is not C_d[-1]'
+    output = FSIC.parser.code.substitute(
+        re.compile(r'\bis\b'),
+        lambda x: 'is not',
+        statement,
+        ignore_keywords=False)
+    assert output == expected
 
 
 if __name__ == '__main__':
