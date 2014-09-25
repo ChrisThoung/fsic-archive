@@ -16,12 +16,12 @@ def indent_lines(block, num_tabs=1, expand_tabs=True, tab_size=4, skip_first_lin
         Block to indent after newlines
     num_tabs : integer
         Number of tabs to indent by
-    expand_tabs : logical
+    expand_tabs : boolean
         If True, convert tabs to spaces
     tab_size : integer
         If `expand_tabs` is True, `tab_size` sets the number of spaces
         per tab
-    skip_first_line : logical
+    skip_first_line : boolean
         If True, don't indent the first line
 
     Returns
@@ -58,7 +58,7 @@ def wrap_lines(lines, line_length=80, word_sep=' ', line_sep='\n', strip_whitesp
     line_sep : string
         Line separator to identify individual lines in `lines` and to join the
         newly-wrapped lines back together
-    strip_whitespace : logical
+    strip_whitespace : boolean
         If True, strip leading and trailing whitespace from the newly-wrapped
         lines
 

@@ -189,11 +189,11 @@ def identify_variables(statement, prefix=r'self\.', suffix=r'', remove_duplicate
     suffix : string
         String each variable should end with, to be included in the search
         regular expression (use `r'\[.+?\]'` to preserve trailing time index)
-    remove_duplicates : logical
+    remove_duplicates : boolean
         If True, remove duplicate entries. Where a variable appears as both
         an endogenous and an exogenous variable, retain the variable as an
         endogenous variable
-    sort_variables : logical
+    sort_variables : boolean
         If True, sort the variables alphabetically before returning
 
     Returns
