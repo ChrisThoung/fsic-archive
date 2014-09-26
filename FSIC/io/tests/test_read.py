@@ -73,7 +73,7 @@ def test_read_csv():
     input = os.path.join(test_dir, 'data', 'table.csv')
     result = FSIC.io.read.read(input)
     expected = pd.read_csv(input)
-    assert_frame_equal(result, expected)
+    assert_frame_equal(result[0], expected)
 
 
 if __name__ == '__main__':

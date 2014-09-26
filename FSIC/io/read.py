@@ -14,6 +14,8 @@ import zipfile
 from pandas import Series, DataFrame
 import pandas as pd
 
+from FSIC.io.readers import functions as readers
+
 
 archive_extensions = ['zip']
 
@@ -54,12 +56,26 @@ def read(path, method=None, fail_on_error=True):
     # If method contains an archive file extension, loop through and call this
     # function again
     if 'compression' in method and method['compression'] in archive_extensions:
-        if method['compression'] == 'zip':
-            pass
+        compression = method['compression']
+        if compression == 'zip':
+            raise ValueError('Zip-file handling not yet implemented')
+        else:
+            raise ValueError(
+                'Currently no method to deal with archive format: %s' %
+                compression)
     # Otherwise, identify the relevant `reader` function, read `path` and return
     # its contents as a one-element list
     else:
-        pass
+        #
+        reader = readers[method['format']]
+        read_function = reader['function']
+        can_decompress = reader['can_decompress']
+        if 'compression' not in method or can_decompress:
+            data = read_function(path, method)
+        else:
+            raise ValueError('Unable to decompress file in: %s' % path)
+    # Return as a list
+    return [data]
 
 
 def filetype(path, compressed_exts=['gz'], archive_exts=archive_extensions):
