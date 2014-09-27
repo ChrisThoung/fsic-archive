@@ -1,5 +1,5 @@
-.. build
+.. solve
 
 *************
-Build a model
+Solve a model
 *************

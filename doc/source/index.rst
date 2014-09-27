@@ -15,8 +15,9 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   specify.rst
    build.rst
-   markdown.rst
+   solve.rst
 
 
 Indices and tables
