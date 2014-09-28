@@ -1,4 +1,4 @@
-.. specify
+.. _specify:
 
 ***************
 Specify a model

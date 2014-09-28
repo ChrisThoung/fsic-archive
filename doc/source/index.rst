@@ -1,4 +1,4 @@
-.. FSIC documentation master file
+.. _index:
 
 FSIC documentation
 ==================
@@ -18,6 +18,7 @@ Contents:
    specify.rst
    build.rst
    solve.rst
+   script.rst
 
 
 Indices and tables

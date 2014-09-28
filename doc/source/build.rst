@@ -1,4 +1,4 @@
-.. build
+.. _build:
 
 *************
 Build a model
