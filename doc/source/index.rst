@@ -15,6 +15,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   introduction.rst
    specify.rst
    build.rst
    solve.rst
