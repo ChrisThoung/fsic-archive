@@ -9,13 +9,13 @@ script to solve the model. Like the core ``fsic`` script, the model file is
 intended to be run from the command line.
 
 
-.. _command-format:
+.. _solve-command-format:
 
 Command format
 ==============
 
 As with ``fsic.py``, help on the model command-line arguments can be accessed
-with the ``-h`` argument. In the case of Godley and Lavoie's (2007) SIM model::
+with the ``-h`` argument. In the case of a model script with name ``sim.py``::
 
     usage: sim.py [-h] [-V] {solve} ...
 
@@ -29,14 +29,38 @@ with the ``-h`` argument. In the case of Godley and Lavoie's (2007) SIM model::
       {solve}
 	solve        solve the model
 
+Command-line arguments can be set either in the command itself, such as::
 
-.. _command-solve:
+    python sim.py --input data.csv --output results.csv
+
+or by specifying the path of a file that contains the arguments, preceded by
+``@``::
+
+    python sim.py @sim_args.txt
+
+where ``sim_args.txt`` is a text file containing one (sub)argument per line, as
+follows::
+
+    --input
+    data.csv
+    --output
+    results.csv
+
+.. important::
+   Arguments must be split up so as to be one per line.
+
+A combination of the two is also permitted::
+
+    python sim.py --input extra_data.csv @sim_args.txt
+
+
+.. _solve-command-solve:
 
 Command: Solve
 ==============
 
-A model's ``solve`` arguments are as follows, again using Godley and
-Lavoie's (2007) SIM model::
+A model's ``solve`` arguments are as follows, again using ``sim.py`` as an
+example::
 
     usage: sim.py solve [-h] [-v] [-f INPUT [INPUT ...]] [-o OUTPUT [OUTPUT ...]]
 			 [-D PARAMETER [PARAMETER ...]]

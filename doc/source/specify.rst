@@ -10,16 +10,73 @@ Specify a model
 Godley and Lavoie (2007): Model SIM
 ===================================
 
-This section presents Model SIM, from Chapter 3 of Godley and Lavoie (2007), to
-illustrate how to specify a model in Markdown format. A complete version of the
-Markdown-file code, along with further exposition, can be found in
-``examples/gl2007/3_SIM.md`` that accompanies the FSIC release distribution.
+This section illustrates how to specify a model using a Markdown-formatted text
+file. The example used is Model SIM, from Chapter 3 of Godley and Lavoie
+(2007). A complete version of the Markdown file, along with further explanation
+of the model's relationships, can be found in ``examples/gl2007/3_SIM.md``,
+which accompanies this release of FSIC.
+
+This section first presents the model, before explaining how to specify these
+relationships as a Markdown file.
+
+.. _gl2007-sim-model:
+
+The model
+---------
+
+.. _gl2007-flows:
+
+Behavioural (transactions) matrix
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The table below presents the behavioural transactions-flow matrix for the
+model. The columns indicate institutional sectors of the model economy while the
+rows indicate flows of funds between these sectors. For example, the first row
+shows how funds flow *from* Households *to* firms (Production) in exchange for
+consumption goods and services.
+
+Behavioural (transactions) matrix for Model SIM:
+
+================================  ==============  ==============  ==============
+Flow                               1. Households   2. Production   3. Government
+================================  ==============  ==============  ==============
+1. Consumption                              -C_d            +C_s
+2. Government expenditures                                  +G_s            -G_d
+3. [Output]                                                  [Y]
+4. Factor income (wages)                  +W.N_s          -W.N_d
+5. Taxes                                    -T_s                            +T_d
+6. Change in the stock of money          -D(H_h)                         +D(H_s)
+================================  ==============  ==============  ==============
+
+Source: Godley and Lavoie (2007), Table 3.3.
+
+As defined, it is a requirement of the transactions matrix that the elements in
+each row should sum to zero, indicating that every outflow from a sector is
+matched by a corresponding inflow to another sector. There are no 'black holes'.
+
+Similarly, within sectors (the columns), all inflows and outflows must sum to
+zero. In the case of the columns, this is achieved by any surpluses or
+shortfalls in funds translating into a change in a sector's stock of money (Row
+6). Thus, should Households' consumption exceed their disposable income,
+Households' stock of money must decrease, to cover the shortfall in
+income. Conversely, should Households' consumption be less than their income,
+their stock of money should rise as a consequence of their saving.
+
+Similarly, Government budget surpluses (a flow) translate into reductions in
+(the stock of) Government debt while a budget deficit will increase public
+debt. In this simple model, money is the only financial asset/liability,
+providing Households with a vehicle for saving and the Government with a means
+to issue debt.
+
+In this simple economy, firms are assumed to hold no cash: their receipts from
+sales equal their labour costs each period. As such, the Production sector holds
+neither assets or liabilities at the start or end of each period.
 
 
 .. _gl2007-sim-ds:
 
 Equations to equalise demand and supply
----------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Consumption expenditure:
 
@@ -40,3 +97,36 @@ Labour:
 
 .. math::
    N_s = N_d
+
+
+.. _gl2007-sim-markdown:
+
+Markdown
+--------
+
+Markdown_ is a formatting syntax that is intended to be easy to read even in its
+plain text form, while being suitable for conversion to other formats
+(principally HTML). Pandoc_ is a tool that implements a variant of Markdown and
+allows for conversion to a range of output formats, including PDF and Microsoft
+Word ``docx``.
+
+.. _Markdown: http://daringfireball.net/projects/markdown/
+.. _Pandoc: http://pandas.pydata.org/
+
+Markdown allows text to be interspersed by code blocks. For this reason,
+Markdown is the input-file format that has been chosen to specify models for
+FSIC:
+
+#. The user can document their model using text and LaTeX as necessary,
+   alongside the actual code blocks that will define the model i.e. all code and
+   documentation is in **one** place
+#. The model specification is easily converted to alternative formats for
+   publishing/dissemination
+#. As a text file, the model specification is easily shared and version
+   controlled
+
+In these respects, a model specified in this way facilitates replication and
+thus reproducible research. The rationale for ``R Markdown`` (which has informed
+some of the implementation of FSIC in this respect) is similar: to intersperse
+exposition and explanation with the actual code to carry out statistical
+analysis in ``R``.
