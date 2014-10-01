@@ -87,6 +87,48 @@ Comma-separated value            .csv                  No
    model run
 
 
+.. _solution-arguments:
+
+Solution arguments
+------------------
+
+Required
+~~~~~~~~
+
+In order to run the model, the user must, at a minimum, supply the span of the
+solution period, comprising:
+
+* A start period
+* An end period
+
+These can be set as follows::
+
+    python sim.py --span 0 100
+
+which sets the solution period from 0 to 100 inclusive.
+
+Optional
+~~~~~~~~
+
+In addition to the `--span`` argument, the user may optionally supply a start
+period for the 'past', the period(s) prior to the start period. The model will
+not solve over these periods, but they may be necessary to ensure enough lags
+for the early periods of a dynamic model e.g. in order to ensure the presence of
+values for period -1 when solving for period 0.
+
+For example::
+
+    python sim.py --span 0 100 --past -5
+
+sets the solution period from 0 to 100 inclusive, but also initialises the
+periods -5 to -1 inclusive. By default, these past periods are not solved; it is
+up to the user to supply data for these periods.
+
+.. important::
+   The ``-past`` period must come before the start period in the ``--span``
+   argument.
+
+
 .. _input-data:
 
 Input data
