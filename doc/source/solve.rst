@@ -125,7 +125,7 @@ periods -5 to -1 inclusive. By default, these past periods are not solved; it is
 up to the user to supply data for these periods.
 
 .. important::
-   The ``-past`` period must come before the start period in the ``--span``
+   The ``--past`` period must come before the start period in the ``--span``
    argument.
 
 
