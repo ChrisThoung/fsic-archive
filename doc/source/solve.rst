@@ -128,6 +128,45 @@ up to the user to supply data for these periods.
    The ``--past`` period must come before the start period in the ``--span``
    argument.
 
+Finally, the model script provides some limited functionality to set model
+parameters and data from the command line. This allows the user to quickly alter
+model inputs for small 'toy' models but is unsuitable for more complicated,
+data-driven models, where it is preferable to maintain a separate database (see
+next section).
+
+There are currently two commands available:
+
+* ``-D``/``--define``: to fix a variable over the entire solution period e.g. a
+  model parameter
+* ``--set``: to assign values to a variable using a Python expression
+
+The ``--D`` (or ``--define``) argument allows the user to fix the value of one
+or more variables with an expression of the form ``var_name = some_value``. For
+example::
+
+    alpha_1 = 0.6
+
+where ``var_name`` is ``alpha_1`` and ``some_value`` is ``0.6``.
+
+Multiple assignments are possible, such that the following is a valid
+command-line call::
+
+    python sim.py -D alpha_1=0.6 alpha_2=0.4
+
+The above statement sets:
+
+* The variable ``alpha_1`` to ``0.6``
+* The variable ``alpha_2`` to ``0.4``
+
+The ``--set`` argument differs because it allows the user to change a variable's
+value over the course of the solution period. The syntax in this case must
+resemble a statement that modifies selected elements of a pandas Series object,
+such as::
+
+    python sim.py --set G_d[1:]=20
+
+which sets the variable ``G_d`` to ``20`` from period 1 onwards.
+
 
 .. _input-data:
 
@@ -175,6 +214,11 @@ As a table, this would appear as follows:
 128.43  37.33  38.00  28.72  49.73
 131.71  38.28  39.14  29.22  51.02
 ======  =====  =====  =====  =====
+
+It is not necessary for the data to cover the entirety of the model span
+(allowing the user to alter the span of the solution period without necessarily
+having to extend the dataset). However, depending on the model specification,
+values may be necessary to achieve a (plausible) solution.
 
 Having saved an input file to, for example, ``data.csv``, the model can be
 solved from the command line using these data as follows::
