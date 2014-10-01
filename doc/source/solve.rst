@@ -58,6 +58,35 @@ Lavoie's (2007) SIM model::
       --past PERIOD         set the first historical period of the model run
 
 
+.. _output-results:
+
+Output results
+--------------
+
+In order to write the model results to one or more output files, supply ``-o``
+or ``--output`` and one or more filepaths to the command-line call::
+
+    python sim.py --output results.csv
+
+The call above saves the model results to ``results.csv``. The file extension of
+the output file determines the format of the output data. Multiple files can be
+passed::
+
+    python sim.py --output results1.csv results2.csv
+
+The following output-file formats are currently supported:
+
+=====================  ==============  ==================
+Type                   File extension  Can be compressed?
+=====================  ==============  ==================
+Comma-separated value            .csv                  No
+=====================  ==============  ==================
+
+.. important::
+   If no output file is specified, no results will be saved at the end of the
+   model run
+
+
 .. _input-data:
 
 Input data
@@ -104,3 +133,29 @@ As a table, this would appear as follows:
 128.43  37.33  38.00  28.72  49.73
 131.71  38.28  39.14  29.22  51.02
 ======  =====  =====  =====  =====
+
+Having saved an input file to, for example, ``data.csv``, the model can be
+solved from the command line using these data as follows::
+
+    python sim.py -f data.csv
+
+The user can specify multiple input files::
+
+    python sim.py -f data1.csv data2.csv
+
+and the files need not be of the same format::
+
+    python sim.py -f data1.csv data2.tsv
+
+``--input`` can be used instead of ``-f`` as an argument::
+
+    python sim.py --input data1.csv data2.tsv
+
+The following input-file formats are currently supported:
+
+=====================  ==============  ==================
+Type                   File extension  Can be compressed?
+=====================  ==============  ==================
+Comma-separated value            .csv                 Yes
+Tab-separated value              .tsv                 Yes
+=====================  ==============  ==================
