@@ -62,3 +62,45 @@ Lavoie's (2007) SIM model::
 
 Input data
 ----------
+
+In all but the simplest cases, it is infeasible to specify all input data to a
+model using the ``solve`` command's ``PARAMETER`` and ``EXPRESSION``
+arguments. Instead, it is normally preferable to supply one or more files of
+input data, indexed by time. This is purpose of the ``INPUT`` argument.
+
+The data that must eventually enter the model must be structured as a pandas
+DataFrame object but FSIC provides facilities to construct such a database from
+a variety of input-file formats. FSIC will attempt to automatically detect the
+file type based on the file extensions in the filepath.
+
+In the simplest case, the user can provide a file of delimiter-separated tabular
+data e.g. a CSV or TSV file::
+
+    C,I,G,X,M
+    105.00,30.50,30.00,25.00,40.50
+    107.68,31.29,30.90,25.44,41.55
+    110.42,32.09,31.83,25.88,42.63
+    113.24,32.92,32.78,26.34,43.74
+    116.13,33.76,33.77,26.80,44.88
+    119.09,34.63,34.78,27.27,46.05
+    122.12,35.51,35.82,27.74,47.24
+    125.24,36.41,36.90,28.23,48.47
+    128.43,37.33,38.00,28.72,49.73
+    131.71,38.28,39.14,29.22,51.02
+
+As a table, this would appear as follows:
+
+======  =====  =====  =====  =====
+     C      I      G      X      M
+======  =====  =====  =====  =====
+105.00  30.50  30.00  25.00  40.50
+107.68  31.29  30.90  25.44  41.55
+110.42  32.09  31.83  25.88  42.63
+113.24  32.92  32.78  26.34  43.74
+116.13  33.76  33.77  26.80  44.88
+119.09  34.63  34.78  27.27  46.05
+122.12  35.51  35.82  27.74  47.24
+125.24  36.41  36.90  28.23  48.47
+128.43  37.33  38.00  28.72  49.73
+131.71  38.28  39.14  29.22  51.02
+======  =====  =====  =====  =====
