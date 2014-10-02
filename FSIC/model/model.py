@@ -18,6 +18,23 @@ class Model:
         self.initialised = False
         self.solved = False
 
+    def read_data(self, path):
+        """Read and store the contents of the file in `path`.
+
+        Parameters
+        ==========
+        path : string
+            Location of data file
+
+        Returns
+        =======
+        N/A
+
+        """
+        from FSIC.io.read import read
+        data = read(path)
+        self.data = data[0]
+
     def update_data(self, data):
         """Store the contents of `data`.
 
