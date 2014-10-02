@@ -78,6 +78,8 @@ neither assets or liabilities at the start or end of each period.
 Equations to equalise demand and supply
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+The following equations equalise demands and supplies in the economy.
+
 Consumption expenditure:
 
 .. math::
@@ -88,6 +90,12 @@ Government expenditure:
 .. math::
    G_s = G_d
 
+The implicit assumption that underpins these first two equations is that of the
+Keynesian or Kaleckian quantity adjustment mechanism. By this mechanism,
+production is the flexible element in the market, providing as much output as is
+required, on demand. Furthermore, there are no inventories, such that output is
+equal to purchases.
+
 Taxes:
 
 .. math::
@@ -97,6 +105,13 @@ Labour:
 
 .. math::
    N_s = N_d
+
+This last equation, like the first two, implies no supply constraints in the
+economy. In the case of labour, the underlying assumption is that of a 'reserve
+army of unemployed workers, all eager to work at the going wage, whenever their
+labour services are demanded' (Godley and Lavoie 2007, Page 63). Godley and
+Lavoie (2007) stress that such a situation is *not* one of full employment in
+the economy; rather, the supply of labour adjusts to the demand for labour.
 
 
 .. _gl2007-sim-markdown:
