@@ -6,6 +6,7 @@ include REFERENCES.md
 
 # Sphinx documentation folder
 recursive-include doc *.rst conf.py Makefile make.bat
+prune doc/build
 
 # Examples folder
 recursive-include examples *.md
