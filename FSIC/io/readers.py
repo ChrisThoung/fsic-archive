@@ -7,6 +7,7 @@ FSIC module to define individual file readers.
 """
 
 
+import numpy as np
 from pandas import Series, DataFrame
 import pandas as pd
 
@@ -43,7 +44,11 @@ def read_csv(path, filetype):
     else:
         compression = None
     # Read and return
-    return pd.read_csv(path, sep=sep, compression=compression)
+    return pd.read_csv(
+        path,
+        sep=sep,
+        compression=compression,
+        dtype=np.float64)
 
 
 functions = {

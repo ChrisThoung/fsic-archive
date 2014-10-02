@@ -3,6 +3,7 @@
 
 import os
 
+import numpy as np
 import pandas as pd
 from pandas.util.testing import assert_frame_equal
 
@@ -72,7 +73,7 @@ def test_filetype():
 def test_read_csv():
     input = os.path.join(test_dir, 'data', 'table.csv')
     result = FSIC.io.read.read(input)
-    expected = pd.read_csv(input)
+    expected = pd.read_csv(input, dtype=np.float64)
     assert_frame_equal(result[0], expected)
 
 
