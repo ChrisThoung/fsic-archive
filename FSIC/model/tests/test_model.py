@@ -24,7 +24,7 @@ def setup():
 def test_read_data():
     input = os.path.join(test_dir, 'data', 'table.csv')
     model.read_data(input)
-    expected = pd.read_csv(input)
+    expected = pd.read_csv(input, dtype=np.float64)
     assert_frame_equal(model.data, expected)
 
 
