@@ -37,16 +37,16 @@ consumption goods and services.
 
 Behavioural (transactions) matrix for Model SIM:
 
-================================  ==============  ==============  ==============
-Flow                               1. Households   2. Production   3. Government
-================================  ==============  ==============  ==============
-1. Consumption                              -C_d            +C_s
-2. Government expenditures                                  +G_s            -G_d
-3. [Output]                                                  [Y]
-4. Factor income (wages)                  +W.N_s          -W.N_d
-5. Taxes                                    -T_s                            +T_d
-6. Change in the stock of money          -D(H_h)                         +D(H_s)
-================================  ==============  ==============  ==============
+=============================  ===========  ===========  ===========
+Flow                            Households   Production   Government
+=============================  ===========  ===========  ===========
+Consumption                           -C_d         +C_s
+Government expenditures                            +G_s         -G_d
+[Output]                                            [Y]
+Factor income (wages)               +W.N_s       -W.N_d
+Taxes                                 -T_s                      +T_d
+Change in the stock of money       -D(H_h)                   +D(H_s)
+=============================  ===========  ===========  ===========
 
 Source: Godley and Lavoie (2007), Table 3.3.
 
@@ -112,6 +112,43 @@ army of unemployed workers, all eager to work at the going wage, whenever their
 labour services are demanded' (Godley and Lavoie 2007, Page 63). Godley and
 Lavoie (2007) stress that such a situation is *not* one of full employment in
 the economy; rather, the supply of labour adjusts to the demand for labour.
+
+
+.. _gl2007-sim-yd:
+
+Disposable income
+~~~~~~~~~~~~~~~~~
+
+In Model SIM, disposable income is wage income to households less taxes:
+
+.. math::
+   YD = W.N_s - T_s
+
+with taxes set at a fixed proportion of that wage income:
+
+.. math::
+   T_d = \theta . W . N_s \qquad \theta < 1
+
+
+.. _gl2007-sim-c:
+
+Household consumption
+~~~~~~~~~~~~~~~~~~~~~
+
+Household consumption depends on the influences of:
+
+* Current disposable income, which is assumed to be accurately known by
+  households when they make their consumption decisions
+* Past accumulated wealth
+
+.. math::
+   C_d = \alpha_1 . YD + \alpha_2 . H_{h-1} \qquad 0 < \alpha_2 < \alpha_1 < 1
+
+
+.. _gl2007-sim-stocks:
+
+Changes in stocks
+~~~~~~~~~~~~~~~~~
 
 
 .. _gl2007-sim-markdown:

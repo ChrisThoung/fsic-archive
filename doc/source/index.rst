@@ -10,8 +10,6 @@ models in the tradition of Wynne Godley.
 .. _Python: https://www.python.org/
 
 
-Contents:
-
 .. toctree::
    :maxdepth: 2
 
