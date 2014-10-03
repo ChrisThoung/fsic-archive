@@ -7,6 +7,8 @@ import numpy as np
 import pandas as pd
 from pandas.util.testing import assert_frame_equal
 
+from nose.tools import raises
+
 import FSIC.io.read
 from FSIC.settings import dtype
 
@@ -76,6 +78,29 @@ def test_read_csv():
     result = FSIC.io.read.read(input)
     expected = pd.read_csv(input, index_col='index', dtype=dtype)
     assert_frame_equal(result[0], expected)
+
+
+def test_read_csv_specify_method():
+    input = os.path.join(test_dir, 'data', 'actually_tsv.csv')
+    result = FSIC.io.read.read(input, method='tsv')
+    expected = pd.read_csv(input, sep='\t', index_col='index', dtype=dtype)
+    assert_frame_equal(result[0], expected)
+
+
+def test_read_csv_specify_method_to_clean():
+    input = os.path.join(test_dir, 'data', 'actually_tsv.csv')
+    result = FSIC.io.read.read(input, method='.tsv')
+    expected = pd.read_csv(input, sep='\t', index_col='index', dtype=dtype)
+    assert_frame_equal(result[0], expected)
+
+
+@raises(ValueError)
+def test_read_csv_no_method_error():
+    FSIC.io.read.read('no_file_ext')
+
+
+def test_read_csv_no_method_no_error():
+    assert FSIC.io.read.read('no_file_ext', fail_on_error=False) is None
 
 
 if __name__ == '__main__':

@@ -52,7 +52,7 @@ def read(path, method=None, fail_on_error=True):
             else:
                 return None
     else:
-        method = clean_file_ext(method)
+        method = {'format': clean_file_ext(method)}
     # If method contains an archive file extension, loop through and call this
     # function again
     if 'compression' in method and method['compression'] in archive_extensions:
