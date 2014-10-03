@@ -11,6 +11,8 @@ import numpy as np
 from pandas import Series, DataFrame
 import pandas as pd
 
+from FSIC.settings import dtype
+
 
 def read_csv(path, filetype):
     """Return the contents of the delimiter-separated file in `path`.
@@ -48,7 +50,7 @@ def read_csv(path, filetype):
         path,
         sep=sep,
         compression=compression,
-        dtype=np.float64)
+        dtype=dtype)
 
 
 functions = {

@@ -333,7 +333,7 @@ self.FSIC_BUILD = \'%s\'
         variables = variables['endogenous'] + variables['exogenous']
         initialise = [v + (' = Series(default, '
                            'index=self.full_span, '
-                           'dtype=np.float64)')
+                           'dtype=dtype)')
                       for v in variables]
         initialise = '\n'.join(initialise)
         return initialise

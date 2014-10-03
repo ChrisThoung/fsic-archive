@@ -18,6 +18,7 @@ import pandas as pd
 from FSIC import __version__ as version
 
 from FSIC.model.model import Model
+from FSIC.settings import dtype
 
 
 # Define ___MODEL___ class
@@ -53,13 +54,17 @@ class ___MODEL___(Model):
         as an example):
             self.C_d = Series(default, index=self.full_span, dtype=np.float64)
 
+        Note that, in the calls below, the value passed as an argument to
+        `dtype` is imported from FSIC, to centralise the preferred numeric
+        variable type.
+
         """
         # Store function arguments
         self.span = span
         self.past = past
         # Form full span and initialise `iter`
         self.full_span = past + span
-        self.iter = Series(default, index=self.full_span, dtype=np.float64)
+        self.iter = Series(default, index=self.full_span, dtype=dtype)
         # Initialise model variables
         ___INITIALISE___
         # Update solution state variables
@@ -249,7 +254,7 @@ if __name__ == '__main__' and get_ipython() == None:
                 data = model.get_results()
                 for i in args.input:
                     if i.endswith('.csv'):
-                        data = pd.read_csv(i, dtype=np.float64)
+                        data = pd.read_csv(i, dtype=dtype)
                         data = data.fillna(0)
                     else:
                         ext = os.path.splitext(i)[1]

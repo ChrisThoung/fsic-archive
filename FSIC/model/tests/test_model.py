@@ -10,6 +10,7 @@ import pandas as pd
 from pandas.util.testing import assert_frame_equal
 
 from FSIC.model.model import Model
+from FSIC.settings import dtype
 
 
 test_dir = os.path.dirname(__file__)
@@ -24,7 +25,7 @@ def setup():
 def test_read_data():
     input = os.path.join(test_dir, 'data', 'table.csv')
     model.read_data(input)
-    expected = pd.read_csv(input, dtype=np.float64)
+    expected = pd.read_csv(input, dtype=dtype)
     assert_frame_equal(model.data, expected)
 
 

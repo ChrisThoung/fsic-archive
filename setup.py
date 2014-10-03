@@ -21,15 +21,30 @@ if not for_release:
 
 # Write package version.py
 with open(os.path.join('FSIC', 'version.py'), 'wt') as f:
-    version_to_write = """\
-MAJOR = '%d'
-MINOR = '%d'
-PATCH = '%d'
-VERSION = '%d.%d.%d"""
+    version_to_write = '''\
+# -*- coding: utf-8 -*-
+
+
+MAJOR = %d
+MINOR = %d
+PATCH = %d
+VERSION = \'%d.%d.%d'''
     if not for_release:
         version_to_write += '.dev'
-    version_to_write += '\''
+    version_to_write += '\'\n'
     f.write(version_to_write % (MAJOR, MINOR, PATCH, MAJOR, MINOR, PATCH))
+
+# Write other package settings
+with open(os.path.join('FSIC', 'settings.py'), 'wt') as f:
+    f.write('''\
+# -*- coding: utf-8 -*-
+
+
+import numpy as np
+
+
+dtype = np.float64
+''')
 
 # Call setup()
 setup(

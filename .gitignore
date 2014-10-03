@@ -41,3 +41,4 @@ nosetests.xml
 
 # Setup files
 FSIC/version.py
+FSIC/settings.py
