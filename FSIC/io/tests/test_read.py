@@ -74,7 +74,7 @@ def test_filetype():
 def test_read_csv():
     input = os.path.join(test_dir, 'data', 'table.csv')
     result = FSIC.io.read.read(input)
-    expected = pd.read_csv(input, dtype=dtype)
+    expected = pd.read_csv(input, index_col='index', dtype=dtype)
     assert_frame_equal(result[0], expected)
 
 

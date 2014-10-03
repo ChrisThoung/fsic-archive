@@ -14,7 +14,7 @@ import pandas as pd
 from FSIC.settings import dtype
 
 
-def read_csv(path, filetype):
+def read_csv(path, filetype, index_col='index'):
     """Return the contents of the delimiter-separated file in `path`.
 
     Parameters
@@ -27,6 +27,8 @@ def read_csv(path, filetype):
         file.
         May also contain 'compression' as a key, to indicate the compression
         format of the file, if applicable.
+    index_col : string
+        The column to use as the index of the final DataFrame
 
     Returns
     =======
@@ -50,6 +52,7 @@ def read_csv(path, filetype):
         path,
         sep=sep,
         compression=compression,
+        index_col=index_col,
         dtype=dtype)
 
 

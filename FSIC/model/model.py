@@ -33,7 +33,8 @@ class Model:
         """
         from FSIC.io.read import read
         data = read(path)
-        self.data = data[0]
+        for frame in data:
+            self.update_data(frame)
 
     def update_data(self, data):
         """Store the contents of `data`.
