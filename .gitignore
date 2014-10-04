@@ -42,3 +42,6 @@ nosetests.xml
 # Setup files
 FSIC/version.py
 FSIC/settings.py
+
+# Test files
+FSIC/io/tests/data/*.zip

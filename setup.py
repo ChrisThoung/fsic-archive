@@ -81,7 +81,7 @@ models in the tradition of Wynne Godley.
         ],
     package_data={
         'FSIC': ['templates/*.py'],
-        'FSIC.io.tests': ['data/*.*'],
+        'FSIC.io.tests': ['data/*.csv', 'data/*.tsv'],
         'FSIC.model.tests': ['data/*.*'],
         },
     scripts=[
