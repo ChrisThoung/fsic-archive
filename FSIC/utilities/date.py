@@ -75,3 +75,20 @@ class DateParser:
             self.period = int(self.period)
             # Identify number of periods from `freq_map`
             self.freq = self.freq_map[self.freq_id]
+
+    def to_datetime(self):
+        """Return the date information as a `datetime` object.
+
+        Returns
+        =======
+        dt : datetime object
+            Original date information as a datetime object
+
+        """
+        # Convert period information to the first month of that period
+        months_in_period = 12 / self.freq
+        first_month = 1 + (months_in_period * (self.period - 1))
+        first_month = int(first_month)
+        # Create datetime object and return
+        dt = datetime.datetime(self.year, first_month, 1)
+        return dt

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 
+import datetime
+
 from FSIC.utilities.date import DateParser
 
 
@@ -23,6 +25,22 @@ def test_parse():
                   parser.freq,
                   parser.freq_id]
         assert result == expected
+
+
+def test_to_datetime():
+    test_cases = {
+        '2000': datetime.datetime(2000, 1, 1),
+        '2000A1': datetime.datetime(2000, 1, 1),
+
+        '2005Q2': datetime.datetime(2005, 4, 1),
+        '2005Q02': datetime.datetime(2005, 4, 1),
+
+        '2010M9': datetime.datetime(2010, 9, 1),
+        '2010M09': datetime.datetime(2010, 9, 1),
+    }
+    for case, expected in test_cases.items():
+        parser = DateParser(case)
+        assert parser.to_datetime() == expected
 
 
 if __name__ == '__main__':
