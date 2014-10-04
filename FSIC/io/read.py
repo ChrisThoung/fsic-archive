@@ -9,6 +9,7 @@ of a path to process an input file, returning a pandas DataFrame.
 
 
 import os
+import tempfile
 import zipfile
 
 from pandas import Series, DataFrame
@@ -58,7 +59,22 @@ def read(path, method=None, fail_on_error=True):
     if 'compression' in method and method['compression'] in archive_extensions:
         compression = method['compression']
         if compression == 'zip':
-            raise ValueError('Zip-file handling not yet implemented')
+            data = []
+            with zipfile.ZipFile(path, 'r') as z:
+                for n in z.namelist():
+                    with tempfile.NamedTemporaryFile(delete=False) as t:
+                        t.write(z.open(n).read())
+                        t.flush()
+                        temp_path = t.name
+                    data.append(
+                        read(
+                            temp_path,
+                            method=filetype(n)['format'],
+                            fail_on_error=False)[0])
+                    try:
+                        os.remove(temp_path)
+                    except:
+                        pass
         else:
             raise ValueError(
                 'Currently no method to deal with archive format: %s' %
@@ -72,10 +88,11 @@ def read(path, method=None, fail_on_error=True):
         can_decompress = reader['can_decompress']
         if 'compression' not in method or can_decompress:
             data = read_function(path, method)
+            data = [data]
         else:
             raise ValueError('Unable to decompress file in: %s' % path)
-    # Return as a list
-    return [data]
+    # Return
+    return data
 
 
 def filetype(path, compressed_exts=['gz'], archive_exts=archive_extensions):

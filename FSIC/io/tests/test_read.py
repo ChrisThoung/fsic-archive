@@ -2,6 +2,7 @@
 
 
 import os
+import zipfile
 
 import numpy as np
 import pandas as pd
@@ -78,6 +79,33 @@ def test_read_csv():
     result = FSIC.io.read.read(input)
     expected = pd.read_csv(input, index_col='index', dtype=dtype)
     assert_frame_equal(result[0], expected)
+
+
+def test_read_zip():
+    # Create a new zip file
+    path = os.path.join(test_dir, 'data', 'test.zip')
+    try:
+        os.remove(path)
+    except:
+        pass
+    with zipfile.ZipFile(path, 'w') as z:
+        z.write(
+            os.path.join(test_dir, 'data', 'table.csv'),
+            arcname='table.csv')
+        z.write(
+            os.path.join(test_dir, 'data', 'table.tsv'),
+            arcname='table.tsv')
+    # Read
+    result = FSIC.io.read.read(path)
+    expected = [pd.read_csv(
+                    os.path.join(test_dir, 'data', 'table.csv'),
+                    index_col='index', dtype=dtype),
+                pd.read_csv(
+                    os.path.join(test_dir, 'data', 'table.csv'),
+                    index_col='index', dtype=dtype)]
+    assert len(result) == len(expected)
+    for r, e in zip(result, expected):
+        assert_frame_equal(r, e)
 
 
 def test_read_csv_specify_method():
