@@ -3,6 +3,8 @@
 
 import datetime
 
+from nose.tools import raises
+
 from FSIC.utilities.date import DateParser
 
 
@@ -25,6 +27,11 @@ def test_parse():
                   parser.freq,
                   parser.freq_id]
         assert result == expected
+
+
+@raises(ValueError)
+def test_parse_unrecognised_frequency():
+    DateParser('1995Z1')
 
 
 def test_to_datetime():

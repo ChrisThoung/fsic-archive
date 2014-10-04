@@ -63,7 +63,7 @@ class DateParser:
             pattern = re.compile(
                 r'''
                 (\d+)       # Year: One or more digits
-                ([AQM])     # Periodicity: One character
+                ([A-Z]+)    # Periodicity: Characters
                 (\d+)       # Period: One or more digits
                 ''',
                 re.VERBOSE)
@@ -74,7 +74,12 @@ class DateParser:
             self.year = int(self.year)
             self.period = int(self.period)
             # Identify number of periods from `freq_map`
-            self.freq = self.freq_map[self.freq_id]
+            try:
+                self.freq = self.freq_map[self.freq_id]
+            except:
+                raise ValueError(
+                    'Unrecognised period identifier: \'%s\'' %
+                    self.freq_id)
 
     def to_datetime(self):
         """Return the date information as a `datetime` object.
