@@ -3,9 +3,13 @@
 
 import datetime
 
+from pandas import DatetimeIndex
+from pandas.util.testing import assert_index_equal
+
 from nose.tools import raises
 
 from FSIC.utilities.date import DateParser
+import FSIC.utilities.date
 
 
 def test_parse():
@@ -48,6 +52,32 @@ def test_to_datetime():
     for case, expected in test_cases.items():
         parser = DateParser(case)
         assert parser.to_datetime() == expected
+
+
+def test_make_index_span():
+    assert_index_equal(
+        FSIC.utilities.date.make_index('2000Q1', '2005Q4'),
+        DatetimeIndex(start=datetime.datetime(2000, 1, 1),
+                      end=datetime.datetime(2005, 10, 1),
+                      freq='Q'))
+
+
+def test_make_index_periods():
+    assert_index_equal(
+        FSIC.utilities.date.make_index('2000Q1', periods=20),
+        DatetimeIndex(start=datetime.datetime(2000, 1, 1),
+                      periods=20,
+                      freq='Q'))
+
+
+@raises(ValueError)
+def test_make_index_insufficient_args():
+    FSIC.utilities.date.make_index('2000Q1')
+
+
+@raises(ValueError)
+def test_make_index_differing_frequencies():
+    FSIC.utilities.date.make_index('2000Q1', '2005M12')
 
 
 if __name__ == '__main__':

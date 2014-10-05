@@ -97,3 +97,50 @@ class DateParser:
         # Create datetime object and return
         dt = datetime.datetime(self.year, first_month, 1)
         return dt
+
+
+def make_index(start, end=None, periods=None):
+    """Return a pandas DatetimeIndex object from the arguments.
+
+    Parameters
+    ==========
+    start : string
+        Start period of the index e.g. '2000Q1'
+
+    One of (`periods` takes precedence):
+        end : string
+            End period of the index, following a similar form to `start`
+            e.g. '2005Q4'
+        periods : integer
+            Alternative to supplying an end period: the number of periods in
+            the index e.g. 20
+
+    Returns
+    =======
+    index : pandas DatetimeIndex object
+        Index to use to construct Series objects for modelling
+
+    """
+    # Raise error if insufficient number of arguments
+    if end is None and periods is None:
+        raise ValueError(
+            'Insufficient arguments: '
+            'Must supply either an `end` period or '
+            'an integer number of `periods`')
+    # `periods` argument takes precedence, consistent with pandas default
+    start = DateParser(start)
+    if periods is not None:
+        index = DatetimeIndex(
+            start=start.to_datetime(),
+            periods=periods,
+            freq=start.freq_id)
+    else:
+        end = DateParser(end)
+        if start.freq_id != end.freq_id:
+            raise ValueError('Frequency of start and end periods differs')
+        index = DatetimeIndex(
+            start=start.to_datetime(),
+            end=end.to_datetime(),
+            freq=start.freq_id)
+    # Return
+    return index
