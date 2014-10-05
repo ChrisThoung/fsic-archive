@@ -12,6 +12,7 @@ import argparse
 import os
 
 import numpy as np
+from pandas import Period, PeriodIndex
 from pandas import Series, DataFrame
 import pandas as pd
 
@@ -63,7 +64,9 @@ class ___MODEL___(Model):
         self.span = span
         self.past = past
         # Form full span and initialise `iter`
-        self.full_span = past + span
+        self.full_span = PeriodIndex(
+            start=min(self.past),
+            end=max(self.span))
         self.iter = Series(default, index=self.full_span, dtype=dtype)
         # Initialise model variables
         ___INITIALISE___
@@ -237,15 +240,17 @@ if __name__ == '__main__' and get_ipython() == None:
         model = ___MODEL___()
         if args.span:
             start, end = args.span
-            span = list(range(start, end + 1))
+            span = PeriodIndex(start=start, end=end)
             if args.past:
                 past = args.past
-                if past >= start:
+                past_date = Period(past)
+                start_date = Period(start)
+                if past_date >= start_date:
                     raise ValueError(
                         'First historical period (`past`) is %d, when it must '
                         'be *before* the first solution period (`start`) of %d'
                         % (past, start))
-                past = list(range(past, start))
+                past = PeriodIndex(start=past, end=start)
             else:
                 past = []
             model.initialise(span=span, past=past)

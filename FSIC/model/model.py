@@ -8,6 +8,7 @@ are implemented as derived classes from this one.
 """
 
 
+from pandas import PeriodIndex
 from pandas import Series
 
 
@@ -103,15 +104,11 @@ class Model:
             raise ValueError('Model not yet initialised: call `initialise()`')
         # Set start and end periods
         if start is None:
-            start = self.span[0]
+            start = min(self.span)
         if end is None:
-            end = self.span[-1]
-        # Index start and end periods
-        start = self.full_span.index(start)
-        end = self.full_span.index(end)
+            end = max(self.span)
         # Solve
-        for i in range(start, end + 1):
-            period = self.full_span[i]
+        for period in PeriodIndex(start=start, end=end):
             self.solve_period(
                 period=period,
                 max_iter=max_iter,
