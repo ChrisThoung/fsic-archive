@@ -125,11 +125,15 @@ solution period, comprising:
 * A start period
 * An end period
 
-These can be set as follows::
+FSIC models recognise standard period identifiers, such as::
 
-    python sim.py --span 0 100
+    python sim.py --span 1954 2014
+    python sim.py --span 1995Q1 2014Q3
 
-which sets the solution period from 0 to 100 inclusive.
+Note that periods are handled by pandas and restrictions on the period
+identifiers are those imposed by pandas. In particular year '1' is the earliest
+valid period.
+
 
 Optional
 ~~~~~~~~
@@ -142,7 +146,8 @@ values for period -1 when solving for period 0.
 
 For example::
 
-    python sim.py --span 0 100 --past -5
+    python sim.py --span 2013 2050 --past 1954
+    python sim.py --span 2005Q1 2014Q3 --past 1995Q1
 
 sets the solution period from 0 to 100 inclusive, but also initialises the
 periods -5 to -1 inclusive. By default, these past periods are not solved; it is
@@ -184,12 +189,25 @@ The above statement sets:
 
 The ``--set`` argument differs because it allows the user to change a variable's
 value over the course of the solution period. The syntax in this case must
-resemble a statement that modifies selected elements of a pandas Series object,
-such as::
+resemble a statement that modifies selected elements of a pandas Series
+object. Indexing is applied to pandas Series objects such that the user can
+either specify the location of the relevant period(s) in the index::
 
-    python sim.py --set G_d[1:]=20
+    python sim.py --span 2000 2010 --set G_d[1:]=20
+    python sim.py --span 2000 2010 --past 1990 --set G_d[1:]=20
 
-which sets the variable ``G_d`` to ``20`` from period 1 onwards.
+which set the variable ``G_d`` to ``20`` from period 2001 and 1991
+onwards. respectively.
+
+In general, it is more convenient to specify the period by name::
+
+    python sim.py --span 2000 2010 --set G_d['2005':'2007']=20
+    python sim.py --span 2000Q1 2010Q4 --past 1990Q1 --set G_d['2005Q1':'2007Q4']=20
+
+Note the quote marks around the period indexes in ``--set``. If running from the
+command line, the quote marks may need to be escaped::
+
+    python sim.py --span 2000 2010 --set G_d[\'2005\':\'2007\']=20
 
 
 .. _input-data:
