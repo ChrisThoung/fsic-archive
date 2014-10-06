@@ -96,7 +96,7 @@ class Model:
 
         See also
         ========
-        solve_period()
+        solve_period() : user-defined function in derived class
 
         """
         # Check for initialisation

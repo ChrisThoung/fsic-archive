@@ -34,15 +34,15 @@ class ___MODEL___(Model):
         Model.__init__(self)
         ___MODEL_VERSION___
 
-    def initialise(self, span, past=[], default=0):
+    def initialise(self, span, past=None, default=0.0):
         """Initialise the model for solution.
 
         Parameters
         ==========
-        span : list
+        span : pandas PeriodIndex object
             The index to set the principal span of the model (used as part of
             the index for individual variable Series objects)
-        past : list
+        past : pandas PeriodIndex object
             The index to set the preceding span of the model (may be necessary
             to supply enough lags for dynamic models; added to the beginning of
             `span`)
@@ -63,14 +63,19 @@ class ___MODEL___(Model):
         # Store function arguments
         self.span = span
         self.past = past
-        # Form full span and initialise `iter`
+        # Form full span
+        if past is None:
+            start = min(self.span)
+        else:
+            start = min(self.past)
         self.full_span = PeriodIndex(
-            start=min(self.past),
+            start=start,
             end=max(self.span))
+        # Initialise `iter`
         self.iter = Series(default, index=self.full_span, dtype=dtype)
         # Initialise model variables
         ___INITIALISE___
-        # Update solution state variables
+        # Update solution-state variables
         self.initialised = True
         self.solved = False
 

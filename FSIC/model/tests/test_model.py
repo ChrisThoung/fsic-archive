@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 
+from random import uniform
 import os
 
 from nose.tools import with_setup, raises
 
 import numpy as np
+from pandas import PeriodIndex
 from pandas import Series, DataFrame
 import pandas as pd
 from pandas.util.testing import assert_frame_equal
@@ -21,7 +23,7 @@ index_min = -50
 index_max = 50
 
 
-def setup():
+def setup_base():
     # Initialise a new Model object
     global model
     model = Model()
@@ -35,7 +37,80 @@ def setup():
              (c, index_min, index_max + 1))
 
 
-@with_setup(setup)
+class Derived(Model):
+
+    def initialise(self, span, past=None, default=0.0):
+        # Store function arguments
+        self.span = span
+        self.past = past
+        # Form full span
+        if past is None:
+            start = min(self.span)
+        else:
+            start = min(self.past)
+        self.full_span = PeriodIndex(
+            start=start,
+            end=max(self.span))
+        # Initialise `iter`
+        self.iter = Series(default, index=self.full_span, dtype=dtype)
+        # Initialise model variables
+        self.C = Series(default, index=self.full_span, dtype=dtype)
+        self.I = Series(default, index=self.full_span, dtype=dtype)
+        self.G = Series(default, index=self.full_span, dtype=dtype)
+        self.X = Series(default, index=self.full_span, dtype=dtype)
+        self.M = Series(default, index=self.full_span, dtype=dtype)
+        self.Y = Series(default, index=self.full_span, dtype=dtype)
+        # Update solution-state variables
+        self.initialised = True
+        self.solved = False
+
+    def get_endogenous_variable_values(self, period):
+        values = {}
+        values['Y'] = self.Y[period]
+        return Series(values)
+
+    def solve_equations(self, period):
+        self.Y[period] = (
+            self.C[period] +
+            self.I[period] +
+            self.G[period] +
+            self.X[period] -
+            self.M[period])
+
+def setup_derived():
+    global model
+    model = Derived()
+
+
+class DerivedNonConvergence(Derived):
+
+    def solve_equations(self, period):
+        self.X[period] = uniform(0, 100)
+        self.Y[period] = (
+            self.C[period] +
+            self.I[period] +
+            self.G[period] +
+            self.X[period] -
+            self.M[period])
+
+def setup_derived_non_convergence():
+    global model
+    model = DerivedNonConvergence()
+
+
+@with_setup(setup_base)
+def test_not_initialised_or_solved_base():
+    assert model.initialised is False
+    assert model.solved is False
+
+
+@with_setup(setup_derived)
+def test_not_initialised_or_solved_derived():
+    assert model.initialised is False
+    assert model.solved is False
+
+
+@with_setup(setup_base)
 def test_read_data():
     input = os.path.join(test_dir, 'data', 'table.csv')
     # Read input data directly
@@ -63,6 +138,45 @@ def test_read_data():
     del expected['index']
     # Test
     assert_frame_equal(result, expected)
+
+
+@with_setup(setup_derived)
+def test_initialise_and_solve():
+    # Initialise
+    model.initialise(span=PeriodIndex(start='1954', end='2014'))
+    assert model.initialised is True
+    assert model.solved is False
+    # Set values (note difference in Python list and pandas date indexing)
+    model.C.ix[10:15] = 50
+    model.M.ix['1964':'1968'] = 25
+    # Solve
+    model.solve()
+    assert model.initialised is True
+    assert model.solved is True
+    # Check
+    assert model.Y.ix[9] == 0
+    assert model.Y.ix[10] == 25
+    assert model.Y.ix[11] == 25
+    assert model.Y.ix[12] == 25
+    assert model.Y.ix[13] == 25
+    assert model.Y.ix[14] == 25
+    assert model.Y.ix[15] == 0
+    for i in model.iter:
+        assert not np.isnan(i)
+
+
+@with_setup(setup_derived_non_convergence)
+def test_no_convergence():
+    model.initialise(span=PeriodIndex(start='1954', end='2014'))
+    model.solve(max_iter=10)
+    for i in model.iter:
+        assert np.isnan(i)
+
+
+@with_setup(setup_derived)
+@raises(ValueError)
+def test_solve_not_initialised_error():
+    model.solve()
 
 
 if __name__ == '__main__':
