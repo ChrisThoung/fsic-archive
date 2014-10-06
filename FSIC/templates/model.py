@@ -20,6 +20,7 @@ from FSIC import __version__ as version
 
 from FSIC.model.model import Model
 from FSIC.settings import dtype
+import FSIC.cli.parsers
 
 
 # Define ___MODEL___ class
@@ -42,10 +43,11 @@ class ___MODEL___(Model):
         span : pandas PeriodIndex object
             The index to set the principal span of the model (used as part of
             the index for individual variable Series objects)
-        past : pandas PeriodIndex object
+        past : pandas PeriodIndex object or `None`
             The index to set the preceding span of the model (may be necessary
             to supply enough lags for dynamic models; added to the beginning of
             `span`)
+            If `None`, only use `span` to set the span of the model solution
         default : float
             Value to initialise variable Series objects with
 
@@ -165,68 +167,8 @@ del model_version
 subparsers = parser.add_subparsers(
     title='commands',
     dest='command')
-
 # 'Solve' sub-parser
-parser_build = subparsers.add_parser(
-    'solve',
-    help='solve the model')
-
-parser_build.add_argument(
-    '-v', '--verbose',
-    action='store_true',
-    help='print detailed solution output (not yet implemented)')
-
-parser_build.add_argument(
-    '-f', '--input',
-    nargs='+',
-    metavar='INPUT',
-    default=None,
-    type=str,
-    required=False,
-    help='input file(s) for model data')
-parser_build.add_argument(
-    '-o', '--output',
-    nargs='+',
-    metavar='OUTPUT',
-    default=None,
-    type=str,
-    required=False,
-    help='output file(s) for model results')
-
-parser_build.add_argument(
-    '-D', '--define',
-    action='append',
-    nargs='+',
-    metavar='PARAMETER',
-    default=None,
-    type=str,
-    required=False,
-    help='set (time-invariant) model parameters')
-parser_build.add_argument(
-    '--set',
-    action='append',
-    nargs='+',
-    metavar='EXPRESSION',
-    default=None,
-    type=str,
-    required=False,
-    help='set (time-varying) model variables prior to run')
-
-parser_build.add_argument(
-    '--span',
-    nargs=2,
-    metavar='PERIOD',
-    default=None,
-    type=int,
-    required=False,
-    help='set the start and end periods of the model run')
-parser_build.add_argument(
-    '--past',
-    metavar='PERIOD',
-    default=None,
-    type=int,
-    required=False,
-    help='set the first historical period of the model run')
+subparsers = FSIC.cli.parsers.add_subparser_solve(subparsers)
 
 
 # Import get_ipython() from IPython as a check for an interactive shell
