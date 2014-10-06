@@ -233,9 +233,9 @@ def identify_variables(statement, prefix=r'self\.', suffix=r'', remove_duplicate
     statement = statement.splitlines()
     endogenous = []
     exogenous = []
-    for l in statement:
+    for line in statement:
         # Split by equals sign and then parse
-        n, x = l.split('=', 1)
+        n, x = line.split('=', 1)
         endogenous = endogenous + list(pattern.findall(n))
         exogenous = exogenous + list(pattern.findall(x))
     # Check for duplicates, if required

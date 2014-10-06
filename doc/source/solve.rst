@@ -191,7 +191,7 @@ The ``--set`` argument differs because it allows the user to change a variable's
 value over the course of the solution period. The syntax in this case must
 resemble a statement that modifies selected elements of a pandas Series
 object. Indexing is applied to pandas Series objects such that the user can
-either specify the location of the relevant period(s) in the index::
+specify the location of the relevant period(s) in the index::
 
     python sim.py --span 2000 2010 --set G_d[1:]=20
     python sim.py --span 2000 2010 --past 1990 --set G_d[1:]=20

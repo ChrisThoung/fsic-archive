@@ -8,6 +8,8 @@ Example equations come from Model SIM, from Chapter 3 of Godley and Lavoie
 """
 
 
+from nose.tools import raises, assert_warns
+
 import FSIC.optimise.order
 
 
@@ -60,6 +62,25 @@ def test_recursive():
         'self.H_h[period] = self.H_h[period-1] + self.YD[period] - self.C_d[period]',
     ]
     assert FSIC.optimise.order.recursive(equations) == reordered
+
+
+@raises(ValueError)
+def test_make_graph_error_zero_endogenous_variables():
+    FSIC.optimise.order.make_graph([' = 0.0'])
+
+
+@raises(ValueError)
+def test_make_graph_error_multiple_endogenous_variables():
+    FSIC.optimise.order.make_graph(['self.C_d[period] self.G_s[period] = 0.0'])
+
+
+def test_make_graph_warning_duplicate_endogenous_variable():
+    with assert_warns(Warning) as cm:
+        FSIC.optimise.order.make_graph([
+            'self.H_s[period] = self.H_s[period-1] + self.G_d[period] - self.T_d[period]',
+            'self.H_h[period] = self.H_h[period-1] + self.YD[period] - self.C_d[period]',
+            'self.H_h[period] = self.H_s[period]'])
+    assert str(cm.warning) == 'An endogenous variable appears as the left hand-side variable in more than one equation'
 
 
 if __name__ == '__main__':
