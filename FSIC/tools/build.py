@@ -157,11 +157,12 @@ class Build:
         if optimise:
             try:
                 from FSIC.optimise.order import recursive
+            except:
+                pass
+            else:
                 equations = equations.splitlines()
                 equations = recursive(equations)
                 equations = '\n'.join(equations)
-            except:
-                pass
         initialise = self.build_initialise(equations)
         endogenous = self.build_endogenous_variables(equations)
         results = self.build_results(equations)

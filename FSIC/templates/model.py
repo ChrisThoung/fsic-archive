@@ -174,7 +174,7 @@ subparsers = FSIC.cli.parsers.add_subparser_solve(subparsers)
 # Import get_ipython() from IPython as a check for an interactive shell
 try:
     from IPython import get_ipython
-except:
+except ImportError:
     def get_ipython():
         return None
 
