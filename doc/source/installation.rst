@@ -4,37 +4,40 @@
 Installation
 ************
 
-The latest version of FSIC can be downloaded from GitHub_. This section sets out
-how to:
 
-* Install the package
-* Run the test suite
-* Build the documentation
+.. _installation-obtain:
+
+Obtaining FSIC
+==============
+
+The latest version of FSIC is available from GitHub_.
 
 .. _GitHub: https://github.com/cthoung/fsic
 
 
 .. _installation-install:
 
-Install package
+Installing FSIC
 ===============
 
-FSIC is provided as a standard Python package distribution. To install the
-package, while in the root folder, run ``setup.py`` as follows::
+After downloading the source code, FSIC can be installed from the command line,
+like any other standard Python package distribution, as follows::
 
     python setup.py install
 
 
 .. _installation-test:
 
-Test package code
-=================
+Running the test suite
+======================
 
-Code tests for FSIC are implemented in nose_ and can be run as follows::
+FSIC includes a test suite that uses nose_. These tests can be run as follows,
+while in the root folder of the source code::
 
     nosetests
 
-To also check the tests' coverage of the code base::
+Running the tests with the following further options also displays the tests'
+coverage of the code::
 
     nosetests --with-coverage --cover-package=FSIC
 
@@ -43,13 +46,16 @@ To also check the tests' coverage of the code base::
 
 .. _installation-doc:
 
-Build documentation
-===================
+Building the documentation
+==========================
 
-The documentation for FSIC is written in Sphinx_. It can be built from source
-using the ``makefile`` in the ``doc`` folder. For example, to build the html
-version of the documentation::
+The documentation for FSIC (this documentation) is written using Sphinx_. The
+``doc`` folder contains all the files necessary to build the documentation in a
+variety of output formats. For example, to build the html version of the
+documentation from the command line, run::
 
     make html
+
+See the ``makefile`` for further information on the available output formats.
 
 .. _Sphinx: http://sphinx-doc.org/
