@@ -35,15 +35,20 @@ meaningful model that can be built, with the following key features:
 Accounting matrices
 ===================
 
-The balance sheet for *Model SIM* consists of just one item: money. Money is an
-asset of households and a corresponding liability for the government.
+The balance sheet for *Model SIM* consists of just one item: money, which is
+printed by the government and assumed to consist entirely of banknotes. This is
+*cash* or *high-powered* money. Money (*H*) is an asset of households and a
+corresponding liability for the government.
 
 .. csv-table:: The balance sheet of Model *SIM*
    :header: "", Households, Production, Government
    :stub-columns: 1
    :widths: 30, 15, 15, 15
 
-   Money stock, +H, 0, -H
+   Money stock, |+H|, 0, |-H|
+
+.. |-H| replace:: :math:`-H`
+.. |+H| replace:: :math:`+H`
 
 The transactions matrix below sets out the flows of funds that drive changes in
 the money stock from year to year.
