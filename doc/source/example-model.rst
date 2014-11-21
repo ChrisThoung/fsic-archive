@@ -1,15 +1,18 @@
-.. _example:
+.. _example-model:
 
-************************************************
-An example: Godley and Lavoie's (2007) Model SIM
-************************************************
+************************************
+Godley and Lavoie's (2007) Model SIM
+************************************
 
-This section provides an example of how to generate a model from a Markdown file
-and run the resulting Python script. It uses *Model SIM* from Godley and
-Lavoie (2007) as an example.
+This section is the first of two, to illustrate how to build and run a model
+using FSIC. It uses Godley and Lavoie's (2007) *Model SIM* as an example.
+
+This first section sets out the structure and equations of the model. The next
+section goes on to describe how to specify and build the model, in order to
+conduct simulations.
 
 
-.. _example-intro:
+.. _example-model-intro:
 
 Introduction
 ============
@@ -30,71 +33,38 @@ meaningful model that can be built, with the following key features:
   the economy is demand-led, and *not* supply-constrained
 
 
-.. _example-accounts:
+.. _example-model-accounts:
 
 Accounting matrices
 ===================
 
+*Model SIM* is underpinned by a complete set of accounts that describe the
+transactions in each period (*flows* of funds between sectors) and the
+implications for sectors' balance sheets (their financial *stocks*).
+
 The balance sheet for *Model SIM* consists of just one item: money, which is
 printed by the government and assumed to consist entirely of banknotes. This is
 *cash* or *high-powered* money. Money (*H*) is an asset of households and a
-corresponding liability for the government.
+corresponding liability for the government, hence the positive and negative
+signs in the table below:
 
 .. csv-table:: The balance sheet of Model *SIM*
    :header: "", Households, Production, Government
    :stub-columns: 1
    :widths: 30, 15, 15, 15
 
-   Money stock, |+H|, "", |-H|
+   Money stock, |+H_h|, "", |-H_s|
 
-.. |-H| replace:: :math:`-H`
-.. |+H| replace:: :math:`+H`
+.. |+H_h| replace:: :math:`+H_h`
+.. |-H_s| replace:: :math:`-H_s`
 
-The transactions matrix below sets out the flows of funds that drive changes in
-the money stock from year to year.
+This balance sheet evolves through time through the accumulation and depletion
+of money holdings. These changes arise from excesses and shortfalls of funds
+each period, in the course of sectors' transactions.
 
-.. csv-table:: Accounting (transactions) matrix for Model *SIM*
-   :header: "", Households, Production, Government
-   :stub-columns: 1
-   :widths: 30, 15, 15, 15
-
-   Consumption, |-C|, |+C|, ""
-   Government expenditures, "", |+G|, |-G|
-   [Output], "", |[Y]|, ""
-   Factor income (wages), |+WB|, |-WB|, ""
-   Taxes, |-T|, "", |+T|
-   Change in the stock of money, |-D(H)|, "", |+D(H)|
-
-.. |-C| replace:: :math:`-C`
-.. |+C| replace:: :math:`+C`
-.. |-G| replace:: :math:`-G`
-.. |+G| replace:: :math:`+G`
-.. |[Y]| replace:: :math:`[Y]`
-.. |-WB| replace:: :math:`-WB`
-.. |+WB| replace:: :math:`+WB`
-.. |-T| replace:: :math:`-T`
-.. |+T| replace:: :math:`+T`
-.. |-D(H)| replace:: :math:`- \Delta H`
-.. |+D(H)| replace:: :math:`+ \Delta H`
-
-Reading horizontally, the rows describe the flows of funds between
-sectors. Every inflow (positive value; a *source*) must have a corresponding
-outflow (negative value; a *use*).
-
-Vertically, the columns describe the evolution of each sector's financial
-balance. The final row in each column describes the change in each sector's
-wealth as a result of excesses/shortfalls of funds. Note that the change in the
-stock of money is a negative value for households because, in the case of excess
-income (savings), the funds go toward wealth accumulation.
-
-The third row, output, is the national accounting identity that defines total
-production, *Y*, as equivalent to either final demand, or factor income:
-
-.. math::
-   Y = C + G = WB
-
-Godley and Lavoie (2007) then go on to develop a 'behavioural' version of the
-above:
+Godley and Lavoie's (2007) 'behavioural' version of the transactions matrix is
+as follows, where the columns represent institutional sectors of the model and
+the rows represent transactions between those sectors:
 
 .. csv-table:: Behavioural (transactions) matrix for Model *SIM*
    :header: "", Households, Production, Government
@@ -112,6 +82,7 @@ above:
 .. |+Cs| replace:: :math:`+C_s`
 .. |-Gd| replace:: :math:`-G_d`
 .. |+Gs| replace:: :math:`+G_s`
+.. |[Y]| replace:: :math:`[Y]`
 .. |+W.Ns| replace:: :math:`+W.N_s`
 .. |-W.Nd| replace:: :math:`-W.N_d`
 .. |-Ts| replace:: :math:`-T_s`
@@ -120,19 +91,36 @@ above:
 .. |+D(Hs)| replace:: :math:`+ \Delta H_s`
 
 The *d* and *s* suffixes denote *demand* and *supply* and the *h* suffix
-indicates household holdings of cash.
+indicates household holdings of cash. Factor income (the wage bill) is the
+product of the wage rate (*W*) and employment (*N*). The third row, output, is
+the national accounting identity that defines total production, *Y*, as
+equivalent to either final demand, or factor income:
 
-The table above expresses the wage bill as the product of the wage rate (*W*)
-and employment (*N*).
+.. math::
+   Y = C + G = WB
+
+Reading along the rows, every outflow of funds (a negative value; a *use*) must
+show up as an inflow to another (a positive value; a *source*), such that the
+sum of each row comes to zero.
+
+Each column describes a sector's uses and sources of funds. Where the sum of
+uses and the sum of sources in the first five rows are not equal, there must be
+an excess or shortfall of funds. This translates into a change in the stock of
+money in the sixth and final column. It is this final row that describes the
+evolution of the balance sheet.
+
+Note that the change in the stock of money is a negative value for households
+because, in the case of excess income (savings), the funds go toward wealth
+accumulation.
 
 
-.. _example-equations:
+.. _example-model-equations:
 
 Model equations
 ===============
 
 
-.. _example-equations-ds:
+.. _example-model-equations-ds:
 
 Equalising demand and supply
 ----------------------------
@@ -178,7 +166,7 @@ In summary, the above equations reflect the following behavioural assumptions:
 * Sales are equal to output, by virtue of there being no inventories
 
 
-.. _example-equations-income:
+.. _example-model-equations-income:
 
 Disposable income
 -----------------
@@ -201,7 +189,7 @@ Where taxes are levied as a fixed proportion of money income, at rate |theta|:
 .. |theta| replace:: :math:`\theta`
 
 
-.. _example-equations-consumption:
+.. _example-model-equations-consumption:
 
 Consumption function
 --------------------
@@ -218,7 +206,7 @@ section) and their accumulated wealth from the past (|H[-1]|):
 .. |H[-1]| replace:: :math:`H_{-1}`
 
 
-.. _example-balances:
+.. _example-model-balances:
 
 Financial balances
 ------------------
@@ -254,7 +242,7 @@ the vehicle by which households save:
    \Delta H_h = H_h - H_{h-1} = YD - C_d
 
 
-.. _example-output-employment:
+.. _example-model-output-employment:
 
 Output and employment
 ---------------------
@@ -280,3 +268,58 @@ This may be alternatively expressed as the following labour-demand equation:
    :label: labour
 
    N_d = \frac{Y}{W}
+
+
+.. _example-model-redundant:
+
+The redundant equation
+----------------------
+
+As set out above, household accumulation and government issuance of money are
+entirely separate processes. There is no explicit equilibrium condition that
+ensures equality between the two.
+
+However, by the design of the model's accounts, holdings and issuances of money
+*must* in fact be equal. The accounting principles that underpin the model, and
+the assumptions that equalise demand and supply.
+
+Godley and Lavoie (2007) refer to this result as a 'quasi-Walrasian' principle,
+by which any properly-constructed model must contain an equation that is
+'redundant', by virtue of it being logically implied by the others. Indeed, such
+an equation's exclusion is necessary, so as to ensure that the model's solution
+is not over-determined.
+
+In the current model, this redundant equation is:
+
+.. math::
+   \Delta H_h = \Delta H_s
+
+That is, the above equation reflects the Keynesian identity that states that
+investment must be equal to saving. In a model such as this, with no investment,
+there can be no social saving by the economy as a whole. As such, household
+saving is matched exactly by government dissaving.
+
+In contrast to conventional models, in which market clearing (or otherwise) is a
+*determinant* of macroeconomic phenomena, Godley and Lavoie (2007) stress that
+these equalities between demand and supply are a *consequence* of a model with a
+comprehensive system of accounts. A neo-classical model would instead
+incorporate an equilibrium condition that brings the demand for money in line
+with an exogenously-determined money supply.
+
+
+.. _example-model-summary:
+
+Summary
+=======
+
+As set out above, the model has 11 equations and 11 unknowns. Of the variables
+in the model, three are exogenous: |G_d|, |theta| and |W|. The first two,
+government expenditure and the tax rate, are fiscal policy variables while the
+third is assumed to be fully exogenous for the purposes of the example.
+
+As Godley and Lavoie (2007) note, a crucial feature of the model is its
+dependence on stock variables that affect the evolution of the economy through
+time.
+
+.. |G_d| replace:: :math:`G_d`
+.. |W| replace:: :math:`W`
