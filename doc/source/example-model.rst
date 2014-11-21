@@ -4,12 +4,12 @@
 Godley and Lavoie's (2007) Model SIM
 ************************************
 
-This section is the first of two, to illustrate how to build and run a model
+This section is the first of three, to illustrate how to build and run a model
 using FSIC. It uses Godley and Lavoie's (2007) *Model SIM* as an example.
 
 This first section sets out the structure and equations of the model. The next
-section goes on to describe how to specify and build the model, in order to
-conduct simulations.
+section goes on to describe how to specify and build the model, while the third
+explains how to conduct simulations.
 
 
 .. _example-model-intro:

@@ -1,7 +1,7 @@
-.. _example-run:
+.. _example-spec:
 
 ***********************************************
-Simulating Godley and Lavoie's (2007) Model SIM
+Specifying Godley and Lavoie's (2007) Model SIM
 ***********************************************
 
 This section is the second part of the example, to show how to specify Godley
@@ -35,7 +35,7 @@ Markdown file.
    user-written code is irrelevant.
 
 
-.. _example-run-equations:
+.. _example-spec-equations:
 
 Model equations
 ===============
@@ -44,7 +44,7 @@ Below are the 11 equations that make up *Model SIM*, as well as the twelfth
 'redundant' or 'hidden' equation.
 
 
-.. _example-run-equations-ds:
+.. _example-spec-equations-ds:
 
 Equalising demand and supply
 ----------------------------
@@ -99,7 +99,7 @@ that provide additional control over the creation of the final model. More
 information on these attributes is covered in a separate section.
 
 
-.. _example-run-equations-income:
+.. _example-spec-equations-income:
 
 Disposable income
 -----------------
@@ -130,7 +130,7 @@ previous one, with dots replaced with ``*`` for multiplication::
 	```
 
 
-.. _example-run-equations-consumption:
+.. _example-spec-equations-consumption:
 
 Consumption function
 --------------------
@@ -167,7 +167,7 @@ refers to household wealth and the previous period's value is denoted by the
    indicate leads (future periods).
 
 
-.. _example-run-balances:
+.. _example-spec-balances:
 
 Financial balances
 ------------------
@@ -200,7 +200,7 @@ specified as follows::
    equations. All relationships must use the untransformed variable name.
 
 
-.. _example-run-output-employment:
+.. _example-spec-output-employment:
 
 Output and employment
 ---------------------
@@ -225,7 +225,7 @@ and specified as::
 	```
 
 
-.. _example-run-redundant:
+.. _example-spec-redundant:
 
 The redundant equation
 ----------------------

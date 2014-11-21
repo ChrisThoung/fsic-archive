@@ -15,7 +15,8 @@ models in the tradition of Wynne Godley.
    introduction.rst
    installation.rst
    example-model.rst
-   example-run.rst
+   example-spec.rst
+   example-simulate.rst
 
 
 Indices and tables
