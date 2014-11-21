@@ -14,6 +14,10 @@ theory that underpins that model.
 
 .. _`Pandoc Markdown`: http://johnmacfarlane.net/pandoc/README.html#pandocs-markdown
 
+The example below first shows how the equations of the model should be specified
+as code blocks. This is followed by an explanation of the layout of the input
+Markdown file.
+
 .. Note::
 
    Strictly, the Markdown-specific features of FSIC only concern the format
@@ -44,6 +48,8 @@ Below are the 11 equations that make up *Model SIM*, as well as the twelfth
 
 Equalising demand and supply
 ----------------------------
+
+The first four equations of the model equalise demands and supplies:
 
 .. math::
    :label: sd-consumption
@@ -98,10 +104,15 @@ information on these attributes is covered in a separate section.
 Disposable income
 -----------------
 
+Disposable income (*YD*) is defined as the wage bill earned by households, less
+taxes:
+
 .. math::
    :label: income
 
    YD = W . N_s - T_s
+
+where taxes are levied as a fixed proportion of money income, at rate |theta|:
 
 .. math::
    :label: taxation
@@ -110,11 +121,22 @@ Disposable income
 
 .. |theta| replace:: :math:`\theta`
 
+The code block for these two equations follows a similar format to that of the
+previous one, with dots replaced with ``*`` for multiplication::
+
+	```{.python}
+	YD = W * N_s - T_s
+	T_d = theta * W * N_s
+	```
+
 
 .. _example-run-equations-consumption:
 
 Consumption function
 --------------------
+
+Household consumption is a function of current disposable income (*YD*, as
+described above) and past accumulated wealth (|H[-1]|):
 
 .. math::
    :label: consumption
@@ -123,11 +145,35 @@ Consumption function
 
 .. |H[-1]| replace:: :math:`H_{-1}`
 
+In the Markdown file, this should appear as follows::
+
+	```{.python}
+	C_d = alpha_1 * YD + alpha_2 * H_h[-1]
+	```
+
+This is the first equation to include variables that relate a period other than
+the current one (the lagged household wealth term |H[-1]|). The variable ``H_h``
+refers to household wealth and the previous period's value is denoted by the
+``[-1]`` index.
+
+.. Note::
+   Where a period index (such as ``H_h[-1]``) is *not* given, FSIC makes the
+   assumption that the variable referenced is the one for the current
+   period. This saves the user from having to write expressions such as
+   ``C_d[0]`` when ``C_d`` will do.
+
+   Period indices may be any integer value, where negative numbers indicate lags
+   (past periods), zeroes indicate the current period, and positive numbers
+   indicate leads (future periods).
+
 
 .. _example-run-balances:
 
 Financial balances
 ------------------
+
+The following two equations describe the evolution of household and government
+financial stocks.
 
 .. math::
    :label: government-debt
@@ -141,11 +187,25 @@ Financial balances
 
    \Delta H_h = H_h - H_{h-1} = YD - C_d
 
+Because FSIC does not yet support difference operators, these equations must be
+specified as follows::
+
+	```{.python}
+	H_s = H_s[-1] + G_d - T_d
+	H_h = H_h[-1] + YD - C_d
+	```
+
+.. important::
+   FSIC does not yet support the use of difference operators in model
+   equations. All relationships must use the untransformed variable name.
+
 
 .. _example-run-output-employment:
 
 Output and employment
 ---------------------
+
+The final two equations of the model are as follows:
 
 .. math::
    :label: output
@@ -157,11 +217,37 @@ Output and employment
 
    N_d = \frac{Y}{W}
 
+and specified as::
+
+	```{.python}
+	Y = C_s + G_s
+	N_d = Y / W
+	```
+
 
 .. _example-run-redundant:
 
 The redundant equation
 ----------------------
 
+The final equation is the 'redundant', or 'hidden' equation.
+
 .. math::
    \Delta H_h = \Delta H_s
+
+This equation does not feature in the model solution, but may be useful for
+diagnostic purposes (by verifying that the implicit equality does indeed hold).
+
+This can be specified as follows (again, without the difference operators)::
+
+	```{.python .hidden}
+	H_h = H_s
+	```
+
+.. Important::
+   There can only be one code block with the ``.hidden`` attribute. This code
+   block can only contain one expression, on a single line.
+
+.. Note::
+   Either ``.hidden`` or ``.redundant`` can be used as attributes to denote this
+   equation.

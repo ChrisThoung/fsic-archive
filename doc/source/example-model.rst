@@ -179,7 +179,7 @@ taxes:
 
    YD = W . N_s - T_s
 
-Where taxes are levied as a fixed proportion of money income, at rate |theta|:
+where taxes are levied as a fixed proportion of money income, at rate |theta|:
 
 .. math::
    :label: taxation
