@@ -25,7 +25,7 @@ model, including its:
 ~~~{.ini}
 NAME = SIM
 DESCRIPTION = The simplest model with government money
-REFERENCE = Godley, W. and Lavoie, M. (2007), *Monetary economics: an integrated approach to credit, money, income, production and wealth*, Palgrave Macmillan
+REFERENCE = Godley, W., Lavoie, M. (2007), *Monetary economics: an integrated approach to credit, money, income, production and wealth*, Palgrave Macmillan
 MAJOR = 0
 MINOR = 0
 PATCH = 0
