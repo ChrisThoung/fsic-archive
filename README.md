@@ -16,16 +16,10 @@ included examples.
   Version 0.14.1 or higher
     * See the `pandas` documentation for further dependencies
       (FSIC also uses [NumPy](http://www.numpy.org/) directly)
-
-### Optional
-
-#### Features
-
-* [NetworkX](http://networkx.github.io/) - required by the `optimise`
-  subpackage:
+* [NetworkX](http://networkx.github.io/):
   Version 1.8.1 or higher
 
-#### Other
+### Optional
 
 * [IPython](http://ipython.org/) for interactive modelling:
   Version 2.0.0 or higher

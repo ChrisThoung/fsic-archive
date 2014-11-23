@@ -11,11 +11,7 @@ of iterations to convergence by the Gauss-Seidel method.
 import warnings
 
 import numpy as np
-
-try:
-    import networkx as nx
-except:
-    raise ImportError('Unable to import NetworkX')
+import networkx as nx
 
 
 def recursive(equations, warn=True):
