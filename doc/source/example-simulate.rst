@@ -87,7 +87,7 @@ This runs the model and saves the results to ``results.csv``, which contains the
 .. csv-table:: Table 3.4: The impact of $20 of government expenditures, with perfect foresight
    :header: "", |1|, |2|, |3|, |Infinity|
    :stub-columns: 1
-   :widths: 15, 15, 15, 15, 15
+   :widths: 15, 5, 5, 5, 5
 
    |G|,      0.0, 20.0, 20.0,  20.0
    |Y|,      0.0, 38.5, 47.9, 100.0
