@@ -91,7 +91,7 @@ the rows represent transactions between those sectors:
 .. |+D(Hs)| replace:: :math:`+ \Delta H_s`
 
 The *d* and *s* suffixes denote *demand* and *supply* and the *h* suffix
-indicates household holdings of cash. Factor income (the wage bill) is the
+indicates *household holdings* of cash. Factor income (the wage bill) is the
 product of the wage rate (*W*) and employment (*N*). The third row, output, is
 the national accounting identity that defines total production, *Y*, as
 equivalent to either final demand, or factor income:

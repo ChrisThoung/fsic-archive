@@ -8,9 +8,13 @@ FSIC (Flows and Stocks Integrated Consistently) is a Python_ package for the
 specification, solution and analysis of Stock-Flow Consistent macroeconomic
 models in the tradition of Wynne Godley.
 
+.. _Python: https://www.python.org
+
 While FSIC provides a library of Python code to build macroeconomic models from
 scratch (by using the FSIC library's code directly), for most users, it is more
 convenient to specify a model in one or more files formatted in Markdown_.
+
+.. _Markdown: http://daringfireball.net/projects/markdown/
 
 Markdown files can contain both the code blocks that define the model and
 explanatory text. An excerpt from such a file might look as follows::
@@ -31,7 +35,7 @@ The opening paragraph of text explains the specification of the consumption
 function. This is followed by a mathematical representation of the
 relationships, in LaTeX. With an appropriate program, this will be rendered in
 the appropriate mathematical form. The final part of the example above is a
-fenced code block (bracketed by ```) that contains the equation itself, in
+fenced code block (bracketed by \`\`\`) that contains the equation itself, in
 Python, to be processed by FSIC.
 
 Thus, the files can simultaneously contain the model itself and its
@@ -40,6 +44,8 @@ converted to other formats for publication/distribution, such as HTML, Microsoft
 Word, and LaTeX. The recommended tool for Markdown conversion is
 Pandoc_. Indeed, the version of Markdown supported by FSIC is the version
 implemented in Pandoc.
+
+.. _Pandoc: http://johnmacfarlane.net/pandoc/
 
 Finally, because versions of FSIC are backward compatible within the same
 'family' of major releases, updates to FSIC, to correct bugs and incorporate
@@ -58,6 +64,9 @@ In this way, FSIC frees the user to focus on the economic relationships of their
 model, rather than the mechanics of model building. This is particularly useful
 for more rapid model prototyping.
 
-.. _Python: https://www.python.org
-.. _Markdown: http://daringfireball.net/projects/markdown/
-.. _Pandoc: http://johnmacfarlane.net/pandoc/
+FSIC is one of a number of efforts to provide tools to implement Stock-Flow
+Consistent macroeconomic models. The `sfc-models.net`_ website is an excellent
+resource for Stock-Flow Consistent modelling, and also provides links to a
+number of implementations of such models, in a variety of programming languages.
+
+.. _`sfc-models.net`: http://sfc-models.net/

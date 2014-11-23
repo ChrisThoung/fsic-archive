@@ -44,7 +44,7 @@ end periods, inclusively. In the case of a dynamic model, it is also necessary
 to specify a 'past' period, to ensure that there are values for period *t-1* in
 period *t*::
 
-    --span 1960 2010 --past 1959
+    --span 1960 2010 --past 1957
 
 Next, it is necessary to define the values of the parameters |alpha_1| and
 |alpha_2|, otherwise, the model values will default to zero. In the case of
@@ -80,7 +80,7 @@ argument ``--output`` (or, alternatively, ``-o``)::
 
 Putting it all together, the final command-line call is as follows::
 
-    python sim.py solve --span 1960 2010 --past 1959 --define alpha_1=0.6 alpha_2=0.4 -D theta=0.2 W=1 --set G_d[\'1960\':]=20 --output results.csv
+    python sim.py solve --span 1960 2010 --past 1957 --define alpha_1=0.6 alpha_2=0.4 -D theta=0.2 W=1 --set G_d[\'1960\':]=20 --output results.csv
 
 This runs the model and saves the results to ``results.csv``, which contains the information necessary to reproduce Table 3.4 from Godley and Lavoie (2007):
 
@@ -115,6 +115,49 @@ This runs the model and saves the results to ``results.csv``, which contains the
 .. Note::
    The rows |D(H_s)| and |D(H_h)| in the table above have to be calculated from
    the values in ``results.csv``, rather than extracted directly.
+
+Disposable income and consumption evolve as follows, replicating Figure 3.2 from
+Godley and Lavoie (2007):
+
+.. image:: _static/gl2007-fig-3.2.png
+
+.. _example-simulate-file-args:
+
+Files of arguments
+------------------
+
+The example above requires a relatively large number of command-line
+arguments. An alternative to providing the necessary arguments at the command
+line is to pass one or more files of arguments with ``@`` as a prefix. For
+example::
+
+    python sim.py @solve_args.txt
+
+would load the arguments from a file with name ``solve_args.txt``.
+
+If passing arguments in this way, the input file must contain one argument per
+line, as follows::
+
+    solve
+    --span
+    1960
+    2010
+    --past
+    1957
+    --define
+    alpha_1=0.6
+    alpha_2=0.4
+    -D
+    theta=0.2
+    W=1
+    --set
+    G_d[\'1960\':]=20
+    --output
+    results.csv
+
+A mix of command-line and file arguments is also possible::
+
+    python sim.py @solve_args.txt --set G_d[\'1960\':]=20 --output results.csv
 
 
 .. _example-simulate-solve-args:
