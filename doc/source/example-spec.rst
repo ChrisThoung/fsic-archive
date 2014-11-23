@@ -362,4 +362,14 @@ will display the help information::
       {solve}
         solve        solve the model
 
+While the following::
+
+    python sim.py -V
+
+will print version information about the current script::
+
+    Model version: 0.1.0
+    Built under FSIC version: 0.1.0
+    FSIC version installed: 0.1.0
+
 The next section explains how to run this model.
