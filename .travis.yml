@@ -7,4 +7,4 @@ install:
     - pip install pandas
     - pip install networkx
     - python setup.py install
-script: nosetests
+script: nosetests --with-coverage --cover-package=FSIC
