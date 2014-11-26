@@ -15,6 +15,8 @@ FSIC follows the conventions of
 
 ### Fixed
 
+* Add CHANGELOG.md to MANIFEST.in
+
 ### Security
 
 ## 0.1.0 - 2014-11-26

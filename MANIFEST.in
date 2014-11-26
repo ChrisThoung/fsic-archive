@@ -1,6 +1,7 @@
 # Root folder files
 include MANIFEST.in
 include README.md
+include CHANGELOG.md
 include LICENSE
 include REFERENCES.md
 
