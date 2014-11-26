@@ -13,7 +13,7 @@ from distutils.core import setup
 MAJOR = 0
 MINOR = 1
 PATCH = 0
-for_release = True
+for_release = False
 
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, PATCH)
 if not for_release:
