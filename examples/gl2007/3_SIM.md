@@ -29,7 +29,7 @@ REFERENCE = Godley, W., Lavoie, M. (2007), *Monetary economics: an integrated ap
 MAJOR = 0
 MINOR = 0
 PATCH = 0
-DEV = Yes
+DEV = No
 ~~~
 
 ## Equations of Model SIM
