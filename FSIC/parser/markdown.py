@@ -28,12 +28,13 @@ def extract(script):
     pattern = re.compile(
         r'''^[~`]{3,}   # Chunk begins with at least three tildes or backticks
                         # at the start of a line
-            \{.+?\}\n   # Immediately followed by attributes, in braces (non-greedy)
-            .*?         # Non-greedy quantifier (guards against blocks not separated
-                        # by a double newline)
+            \{.+?\}\n   # Immediately followed by attributes, in braces
+                        # (non-greedy)
+            .*?         # Non-greedy quantifier (guards against blocks not
+                        # separated by a double newline)
             ^[~`]{3,}$  # Chunk ends with at least three tildes or backticks
                         # at the start of a line
         ''',
-    re.DOTALL | re.MULTILINE | re.VERBOSE)
+        re.DOTALL | re.MULTILINE | re.VERBOSE)
     split = pattern.findall(script)
     return split

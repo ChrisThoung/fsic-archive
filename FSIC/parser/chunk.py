@@ -74,7 +74,7 @@ def parse_attributes_block_identifier(block):
             str(instances) +
             ' identifiers; expected at most one')
     s = pattern.search(block)
-    if s == None:
+    if s is None:
         return None
     else:
         return s.group('identifier')

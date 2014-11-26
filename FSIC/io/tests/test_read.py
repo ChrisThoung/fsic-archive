@@ -4,7 +4,6 @@
 import os
 import zipfile
 
-import numpy as np
 import pandas as pd
 from pandas.util.testing import assert_frame_equal
 
@@ -50,8 +49,8 @@ def test_filetype():
         # Archive files: Identify the compression type only
         'archive.zip': {'compression': 'zip'},
         # Compression formats in the middle of the path are ignored
-        'extracted.from.gz.csv' : {'format': 'csv'},
-        'extracted.from.zip.csv' : {'format': 'csv'},
+        'extracted.from.gz.csv': {'format': 'csv'},
+        'extracted.from.zip.csv': {'format': 'csv'},
         # No file extension: `None`
         'missing_file_ext': None,
         # Dot files: `None`
@@ -97,11 +96,10 @@ def test_read_zip():
             arcname='table.tsv')
     # Read
     result = FSIC.io.read.read(path)
-    expected = [pd.read_csv(
-                    os.path.join(test_dir, 'data', 'table.csv'),
+    expected = [
+        pd.read_csv(os.path.join(test_dir, 'data', 'table.csv'),
                     index_col='index', dtype=dtype),
-                pd.read_csv(
-                    os.path.join(test_dir, 'data', 'table.csv'),
+        pd.read_csv(os.path.join(test_dir, 'data', 'table.csv'),
                     index_col='index', dtype=dtype)]
     assert len(result) == len(expected)
     for r, e in zip(result, expected):

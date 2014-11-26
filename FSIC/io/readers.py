@@ -7,8 +7,6 @@ FSIC module to define individual file readers.
 """
 
 
-import numpy as np
-from pandas import Series, DataFrame
 import pandas as pd
 
 from FSIC.settings import dtype

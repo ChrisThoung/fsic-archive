@@ -7,7 +7,9 @@ FSIC utility functions to operate on strings.
 """
 
 
-def indent_lines(block, num_tabs=1, expand_tabs=True, tab_size=4, skip_first_line=False):
+def indent_lines(block,
+                 num_tabs=1, expand_tabs=True, tab_size=4,
+                 skip_first_line=False):
     """Return `block` indented with additional tabs on each line.
 
     Parameters
@@ -43,7 +45,10 @@ def indent_lines(block, num_tabs=1, expand_tabs=True, tab_size=4, skip_first_lin
     # Return
     return indented
 
-def wrap_lines(lines, line_length=80, word_sep=' ', line_sep='\n', strip_whitespace=True):
+
+def wrap_lines(lines, line_length=80,
+               word_sep=' ', line_sep='\n',
+               strip_whitespace=True):
     """Wrap the contents of `lines` to be `line_length` characters long.
 
     Parameters
@@ -70,8 +75,8 @@ def wrap_lines(lines, line_length=80, word_sep=' ', line_sep='\n', strip_whitesp
     Notes
     =====
     Where `word_sep` is not an empty string, this function attempts to split at
-    word boundaries while still having each line have a maximum character length
-    of `line_length`.
+    word boundaries while still having each line have a maximum character
+    length of `line_length`.
 
     Where this is not possible, the line is simply wrapped at `line_length`
     characters.

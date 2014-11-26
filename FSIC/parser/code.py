@@ -178,7 +178,9 @@ def substitute(pattern, repl, string, ignore_keywords=True):
     return modified
 
 
-def identify_variables(statement, prefix=r'self\.', suffix=r'', remove_duplicates=True, sort_variables=True):
+def identify_variables(statement,
+                       prefix=r'self\.', suffix=r'',
+                       remove_duplicates=True, sort_variables=True):
     """Identify the endogenous and exogenous variables in `statement`.
 
     Parameters
@@ -245,7 +247,7 @@ def identify_variables(statement, prefix=r'self\.', suffix=r'', remove_duplicate
         exogenous = list(set(exogenous))
         # Find the union of the two sets and remove from `exogenous`
         union = list(set(endogenous) & set(exogenous))
-        exogenous = [x for x in exogenous if x not in union]
+        exogenous = [var for var in exogenous if var not in union]
     # Sort alphabetically
     if sort_variables:
         endogenous = list(sorted(endogenous))

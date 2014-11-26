@@ -53,7 +53,7 @@ Generic:
 
 Language-specific:
 
-* `code`, to translate Python code blocks into compatible code and identify 
+* `code`, to translate Python code blocks into compatible code and identify
   model variables
 * `ini`, to handle INI-style configuration file strings
 

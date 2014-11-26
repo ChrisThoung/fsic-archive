@@ -2,8 +2,9 @@
 """
 read
 ====
-FSIC module to handle data input for models. By default, uses the file extension
-of a path to process an input file, returning a pandas DataFrame.
+
+FSIC module to handle data input for models. By default, uses the file
+extension of a path to process an input file, returning a pandas DataFrame.
 
 """
 
@@ -11,9 +12,6 @@ of a path to process an input file, returning a pandas DataFrame.
 import os
 import tempfile
 import zipfile
-
-from pandas import Series, DataFrame
-import pandas as pd
 
 from FSIC.io.readers import functions as readers
 
@@ -34,8 +32,8 @@ def read(path, method=None, fail_on_error=True):
         If a string, this variable specifies the file extensions to use for
         reading.
     fail_on_error : boolean
-        If `True`, raise a `ValueError` in the event that the filetype cannot be
-        identified. If False, return `None`
+        If `True`, raise a `ValueError` in the event that the filetype cannot
+        be identified. If False, return `None`
 
     Returns
     =======
@@ -79,8 +77,8 @@ def read(path, method=None, fail_on_error=True):
             raise ValueError(
                 'Currently no method to deal with archive format: %s' %
                 compression)
-    # Otherwise, identify the relevant `reader` function, read `path` and return
-    # its contents as a one-element list
+    # Otherwise, identify the relevant `reader` function, read `path` and
+    # return its contents as a one-element list
     else:
         #
         reader = readers[method['format']]

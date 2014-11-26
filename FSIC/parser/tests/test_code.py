@@ -102,7 +102,8 @@ C_d = alpha_1 * math.log(YD) + alpha_2 * math.log(H_h[-1])
 C_d = math.exp(C_d)'''
     expected = '''\
 import math
-self.C_d[period] = self.alpha_1[period] * math.log(self.YD[period]) + self.alpha_2[period] * math.log(self.H_h[period-1])
+self.C_d[period] = self.alpha_1[period] * math.log(self.YD[period]) + \
+self.alpha_2[period] * math.log(self.H_h[period-1])
 self.C_d[period] = math.exp(self.C_d[period])'''
     result = FSIC.parser.code.translate(block)
     assert result == expected
@@ -181,7 +182,7 @@ def test_identify_variables_multiple_lines():
         'self.C_s = self.C_d',
         'self.G_s = self.G_d',
         'self.T_s = self.T_d',
-        'self.N_s = self.N_d',])
+        'self.N_s = self.N_d', ])
     assert FSIC.parser.code.identify_variables(statement) == (
         {'endogenous': list(sorted(['self.C_s',
                                     'self.G_s',

@@ -27,7 +27,7 @@ def test_split():
             'C_s = C_d',
             'G_s = G_d',
             'T_s = T_d',
-            'N_s = N_d',])
+            'N_s = N_d', ])
         }
 
 
@@ -39,12 +39,12 @@ def test_parse_attributes_block_identifier():
 
 def test_parse_attributes_block_identifier_empty():
     identifier = FSIC.parser.chunk.parse_attributes_block_identifier('')
-    assert identifier == None
+    assert identifier is None
 
 
 @raises(ValueError)
 def test_parse_attributes_block_identifier_multiple():
-    identifier = FSIC.parser.chunk.parse_attributes_block_identifier(
+    FSIC.parser.chunk.parse_attributes_block_identifier(
         '#consumption #consumption')
 
 
@@ -102,7 +102,7 @@ def test_parse_attributes_block_attributes_empty():
 
 @raises(ValueError)
 def test_parse_attributes_block_attributes_duplicates():
-    attributes = FSIC.parser.chunk.parse_attributes_block_attributes(
+    FSIC.parser.chunk.parse_attributes_block_attributes(
         'type="not hydraulic" type="hydraulic"')
 
 
