@@ -43,7 +43,8 @@ def recursive(equations, warn=True):
     # Return `equations` unchanged if length is zero or one
     if len(equations) < 2:
         return equations
-    # 1. Translate `equations` into a directed graph object (a NetworkX DiGraph)
+    # 1. Translate `equations` into a directed graph object
+    #    (a NetworkX DiGraph)
     G = make_graph(equations, warn=warn)
     # 2. Extract equation list from node attributes
     node_equations = nx.get_node_attributes(G, 'equations')
@@ -64,8 +65,8 @@ def recursive(equations, warn=True):
         #    tie-breaker)
         else:
             pr = nx.pagerank(G)
-            # Get lowest PageRank in the system and identify all nodes with that
-            # PageRank
+            # Get lowest PageRank in the system and identify all nodes with
+            # that PageRank
             lowest_pr = min(pr.values())
             least_connected_nodes = [k for k, v in pr.items()
                                      if np.isclose(v, lowest_pr)]

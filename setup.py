@@ -28,11 +28,16 @@ with open(os.path.join('FSIC', 'version.py'), 'wt') as f:
 MAJOR = %d
 MINOR = %d
 PATCH = %d
+DEV = %s
 VERSION = \'%d.%d.%d'''
-    if not for_release:
+    if for_release:
+        in_development = 'False'
+    else:
+        in_development = 'True'
         version_to_write += '.dev'
     version_to_write += '\'\n'
-    f.write(version_to_write % (MAJOR, MINOR, PATCH, MAJOR, MINOR, PATCH))
+    f.write(version_to_write % (MAJOR, MINOR, PATCH, in_development,
+                                MAJOR, MINOR, PATCH))
 
 # Write other package settings
 with open(os.path.join('FSIC', 'settings.py'), 'wt') as f:
