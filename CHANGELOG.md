@@ -9,6 +9,8 @@ FSIC follows the conventions of
 
 ### Added
 
+### Changed
+
 ### Deprecated
 
 ### Removed
@@ -16,6 +18,7 @@ FSIC follows the conventions of
 ### Fixed
 
 * Add CHANGELOG.md to MANIFEST.in
+* Further improvements to Sphinx documentation from v0.1.0
 
 ### Security
 
@@ -36,6 +39,10 @@ Markdown parsing and code translation.
   (2007)
 * Equations from Almon (2014) AMI model
 * Minimal documentation, in [Sphinx](http://sphinx-doc.org/)
+
+### Changed
+
+N/A
 
 ### Deprecated
 
