@@ -21,23 +21,42 @@ def recursive(equations, warn=True):
     ==========
     equations : list of strings
         List of equations to reorder, one equation per element
+    warn : boolean
+        If `True`, print a warning if there is more than one equation with the
+        same endogenous variable
 
     Returns
     =======
     reordered : list of strings
         Reordered version of equations (unchanged if length of equation list is
         one or zero)
-    warn : boolean
-        If `True`, print a warning if there is more than one equation with the
-        same endogenous variable
 
     Notes
     =====
-    The procedure for reordering the equations is as follows:
+    The procedure for reordering the equations in the system is as follows:
 
-    1. Translate `equations` into a directed graph object (a NetworkX DiGraph)
-    2. Extract equation list from node attributes
-    3. While there are still nodes in `G`...
+    1. Translate the list of equation strings into a directed graph object (a
+       NetworkX DiGraph) with name `G`, where the nodes correspond to the
+       variables in the model. Endogenous variables have, as an attribute, the
+       original equation string in `equations`
+
+    2. 'Pop' variables from `G` and add the corresponding equations (where the
+       variables are endogenous) to `reordered` according to the following
+       algorithm:
+
+       While there are still nodes in `G`, calculate their in-degrees,
+       popping as follows:
+
+           a. Just one node remaining: Pop from `G` and finish
+           b. Pop all nodes with degree zero (are exogenous from the point of
+              view of the system); return to start i.e. by recalculating the
+              in-degrees of `G` after removing one or more nodes
+           c. More than one node with in-degree greater than zero: Pop the node
+              with the lowest PageRank, on the basis that this node is the
+              least endogenous/important, as defined by its PageRank. It has
+              the lowest probability of being passed through and is thus the
+              node with the lowest system-wide dependency. It is the 'most
+              exogenous' variable
 
     """
     # Return `equations` unchanged if length is zero or one
@@ -46,13 +65,12 @@ def recursive(equations, warn=True):
     # 1. Translate `equations` into a directed graph object
     #    (a NetworkX DiGraph)
     G = make_graph(equations, warn=warn)
-    # 2. Extract equation list from node attributes
     node_equations = nx.get_node_attributes(G, 'equations')
-    # 3. While there are still nodes in `G`...
+    # 2. While there are still nodes in `G`...
     reordered = []
     while True:
-        # Take the in-degree of the nodes in `G` and use to identify the next
-        # node(s) to delete
+        # ...take the in-degree of the nodes in `G` and use to identify the
+        # next node(s) to delete
         in_degree = G.in_degree()
         # a. One node remaining: Extract
         if len(in_degree) == 1:

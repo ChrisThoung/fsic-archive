@@ -9,6 +9,11 @@ FSIC follows the conventions of
 
 ### Added
 
+* Further improvements to Sphinx documentation from v0.1.0
+* Update documentationn in package code:
+    * Description of equation-ordering algorithm in
+      `FSIC.optimise.order.recursive()`
+
 ### Changed
 
 ### Deprecated
@@ -18,7 +23,6 @@ FSIC follows the conventions of
 ### Fixed
 
 * Add CHANGELOG.md to MANIFEST.in
-* Further improvements to Sphinx documentation from v0.1.0
 
 ### Security
 
