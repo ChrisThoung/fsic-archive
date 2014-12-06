@@ -31,8 +31,8 @@ explanatory text. An excerpt from such a file might look as follows::
     C_d = alpha_1 * YD + alpha_2 * H_h[-1]
     ```
 
-The opening paragraph of text explains the specification of the consumption
-function. This is followed by a mathematical representation of the
+The opening paragraph of the above text explains the specification of the
+consumption function. This is followed by a mathematical representation of the
 relationships, in LaTeX. With an appropriate program, this will be rendered in
 the appropriate mathematical form. The final part of the example above is a
 fenced code block (bracketed by \`\`\`) that contains the equation itself, in
