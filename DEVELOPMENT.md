@@ -16,6 +16,7 @@ The development workflow for FSIC follows the principles of Vincent Driessen's
       branch, in the form of a new tagged release
 	* New additions to the `development` branch should be noted in
       `CHANGELOG.md`
+	* Merged branches should be deleted after use
 
 ## Branch naming conventions
 
@@ -24,6 +25,7 @@ the nature of the development work in that branch:
 
 * New features (requiring additions to 'Added' in `CHANGELOG.md`): `feature/`
   e.g. `feature/io-sqlite`
+* Changes in functionality: `change/`
 * Fixes (requiring additions to at least one of 'Added', 'Deprecated',
   'Removed', 'Fixed' or 'Security'): `fix/`
 * Examples (requiring additions to 'Added'): `example/`
