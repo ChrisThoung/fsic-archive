@@ -74,14 +74,15 @@ def add_subparser_solve(subparsers):
         metavar='PERIOD',
         default=None,
         type=int,
-        required=False,
-        help='set the start and end periods of the model run')
+        required=True,
+        help='set the start and end periods that define the span of the model')
     parser_solve.add_argument(
-        '--past',
+        '--solve-from',
         metavar='PERIOD',
         default=None,
         type=int,
         required=False,
-        help='set the first historical period of the model run')
+        help=('set the first period (within the model\'s span) to solve; '
+              'default is the first period of the span'))
     # Return
     return subparsers

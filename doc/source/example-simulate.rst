@@ -40,11 +40,12 @@ In the current example, the run requires the following:
 .. |W| replace:: :math:`W`
 
 The span of the run is set by the ``--span`` argument, to define the start and
-end periods, inclusively. In the case of a dynamic model, it is also necessary
-to specify a 'past' period, to ensure that there are values for period *t-1* in
-period *t*::
+end periods, inclusively. In the case of a dynamic model, it may not be
+possible to solve the model from the very first period of the span. In such
+cases, it is also necessary to specify the first period to be solved by the
+model::
 
-    --span 1960 2010 --past 1957
+    --span 1957 2010 --solve-from 1960
 
 Next, it is necessary to define the values of the parameters |alpha_1| and
 |alpha_2|, otherwise, the model values will default to zero. In the case of
@@ -56,22 +57,23 @@ there is the ``--define`` argument (``-D`` serves the same purpose)::
 The above statement sets the value of |alpha_1| to ``0.6`` and |alpha_2| to
 ``0.4``.
 
-In same can be applied to |theta| and |W|, this time, using ``-D`` instead of
-``--define``::
+The same can be applied to |theta| and |W|. In the code below, ``-D`` is
+equivalent to ``--define``::
 
     -D theta=0.2 W=1
 
-The remaining value is for |G_d|, which differs from the previous four variables
-in this run because its value changes over the solution period, from zero in the
-first year, to 20 in the second and thereafter. This is possible with the
-``--set`` function, that allows the user to supply a Python expression to assign
-values to a list-like variable (specifically, a Pandas Series object)::
+The remaining value is for |G_d|, which differs from the previous four
+variables in this run because its value changes over the solution period, from
+zero to 20. This is possible with the ``--set`` function, that allows the user
+to supply a Python expression to assign values to a list-like variable
+(specifically, a Pandas Series object)::
 
     --set G_d[\'1960\':]=20
 
 .. Important::
-   The indexing argument must be quoted in the call. These quotes may need to be
-   escaped from the command line (but not if from an input file [see below]).
+   The indexing argument must be quoted in the call. These quotes may need to
+   be escaped from the command line, depending on the user's terminal program
+   (but not if from an input file [see below]).
 
 Finally, the model needs to save the results from the run. This requires the
 argument ``--output`` (or, alternatively, ``-o``)::
@@ -80,7 +82,7 @@ argument ``--output`` (or, alternatively, ``-o``)::
 
 Putting it all together, the final command-line call is as follows::
 
-    python sim.py solve --span 1960 2010 --past 1957 --define alpha_1=0.6 alpha_2=0.4 -D theta=0.2 W=1 --set G_d[\'1960\':]=20 --output results.csv
+    python sim.py solve --span 1957 2010 --solve-from 1960 --define alpha_1=0.6 alpha_2=0.4 -D theta=0.2 W=1 --set G_d[\'1960\':]=20 --output results.csv
 
 This runs the model and saves the results to ``results.csv``, which contains
 the information necessary to reproduce Table 3.4 from Godley and Lavoie (2007):
@@ -141,10 +143,10 @@ line, as follows::
 
     solve
     --span
-    1960
-    2010
-    --past
     1957
+    2010
+    --solve-from
+    1960
     --define
     alpha_1=0.6
     alpha_2=0.4
@@ -175,12 +177,12 @@ which then prints::
 
     usage: sim.py solve [-h] [-v] [-f INPUT [INPUT ...]] [-o OUTPUT [OUTPUT ...]]
                         [-D PARAMETER [PARAMETER ...]]
-                        [--set EXPRESSION [EXPRESSION ...]] [--span PERIOD PERIOD]
-                        [--past PERIOD]
+                        [--set EXPRESSION [EXPRESSION ...]] --span PERIOD PERIOD
+                        [--solve-from PERIOD]
 
     optional arguments:
       -h, --help            show this help message and exit
-      -v, --verbose         print detailed solution output
+      -v, --verbose         print detailed solution output (not yet implemented)
       -f INPUT [INPUT ...], --input INPUT [INPUT ...]
                             input file(s) for model data
       -o OUTPUT [OUTPUT ...], --output OUTPUT [OUTPUT ...]
@@ -189,5 +191,7 @@ which then prints::
                             set (time-invariant) model parameters
       --set EXPRESSION [EXPRESSION ...]
                             set (time-varying) model variables prior to run
-      --span PERIOD PERIOD  set the start and end periods of the model run
-      --past PERIOD         set the first historical period of the model run
+      --span PERIOD PERIOD  set the start and end periods that define the span of
+                            the model
+      --solve-from PERIOD   set the first period (within the model's span) to
+                            solve; default is the first period of the span

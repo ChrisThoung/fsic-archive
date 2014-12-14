@@ -81,18 +81,20 @@ class Model:
         Parameters
         ==========
         start : Series index
-            First period to solve (set to be the first period of `self.span` if
-            equal to None)
+            First period to solve. If `None`:
+             - If `self.solve_from` is also `None`, solve from the first period
+               in `self.span`
+             - If `self.solve_from` is not `None`, solve from `self.solve_from`
         end : Series index
-            Last period to solve (set to be the last period in `self.span` if
-            equal to None)
+            Last period to solve. If `None`, set to be the last period in
+            `self.span`
         max_iter : integer
             The maximum number of iterations to solve over
         min_iter : integer
             The minimum number of iterations to solve over
         tol : float
-            Tolerance to check convergence, based on the sum of squared
-            differences between the endogenous variables between iterations
+            Tolerance to check convergence, using the sum of the squared
+            differences between iterations of the endogenous variables
 
         See also
         ========
@@ -104,7 +106,10 @@ class Model:
             raise ValueError('Model not yet initialised: call `initialise()`')
         # Set start and end periods
         if start is None:
-            start = min(self.span)
+            if self.solve_from is None:
+                start = min(self.span)
+            else:
+                start = self.solve_from
         if end is None:
             end = max(self.span)
         # Solve
@@ -129,8 +134,8 @@ class Model:
         min_iter : integer
             The minimum number of iterations to solve over
         tol : float
-            Tolerance to check convergence, based on the sum of squared
-            differences between the endogenous variables between iterations
+            Tolerance to check convergence, using the sum of the squared
+            differences between iterations of the endogenous variables
 
         """
         for i in range(max_iter):

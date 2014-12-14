@@ -39,27 +39,19 @@ def setup_base():
 
 class Derived(Model):
 
-    def initialise(self, span, past=None, default=0.0):
-        # Store function arguments
+    def initialise(self, span, solve_from=None, default=0.0):
+        # Store arguments
         self.span = span
-        self.past = past
-        # Form full span
-        if past is None:
-            start = min(self.span)
-        else:
-            start = min(self.past)
-        self.full_span = PeriodIndex(
-            start=start,
-            end=max(self.span))
+        self.solve_from = solve_from
         # Initialise `iter`
-        self.iter = Series(default, index=self.full_span, dtype=dtype)
+        self.iter = Series(default, index=self.span, dtype=dtype)
         # Initialise model variables
-        self.C = Series(default, index=self.full_span, dtype=dtype)
-        self.I = Series(default, index=self.full_span, dtype=dtype)
-        self.G = Series(default, index=self.full_span, dtype=dtype)
-        self.X = Series(default, index=self.full_span, dtype=dtype)
-        self.M = Series(default, index=self.full_span, dtype=dtype)
-        self.Y = Series(default, index=self.full_span, dtype=dtype)
+        self.C = Series(default, index=self.span, dtype=dtype)
+        self.I = Series(default, index=self.span, dtype=dtype)
+        self.G = Series(default, index=self.span, dtype=dtype)
+        self.X = Series(default, index=self.span, dtype=dtype)
+        self.M = Series(default, index=self.span, dtype=dtype)
+        self.Y = Series(default, index=self.span, dtype=dtype)
         # Update solution-state variables
         self.initialised = True
         self.solved = False

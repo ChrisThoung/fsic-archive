@@ -16,9 +16,21 @@ FSIC follows the conventions of
 
 ### Changed
 
+* Handling of solution-period controls in model template:
+    * Version 0.1.0 specified a solution span (with the argument ``--span``)
+      and, optionally, a prior period to allow for lagged relationships but not
+      to be solved (using ``--past``)
+	* Updated version continues to specify a solution span (with ``--span``, as
+      before) but now uses an optional period *within* that span to solve from
+      (with a new ``--solve-from`` argument). Documentation updated accordingly
+
 ### Deprecated
 
 ### Removed
+
+* Remove ``--past`` period argument from model-script template. To solve a
+  (typically dynamic) model beginning in a period other than the first one, use
+  ``--solve-from`` instead
 
 ### Fixed
 
