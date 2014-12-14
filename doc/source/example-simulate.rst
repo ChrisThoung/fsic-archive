@@ -71,7 +71,7 @@ values to a list-like variable (specifically, a Pandas Series object)::
 
 .. Important::
    The indexing argument must be quoted in the call. These quotes may need to be
-   escaped from the command line.
+   escaped from the command line (but not if from an input file [see below]).
 
 Finally, the model needs to save the results from the run. This requires the
 argument ``--output`` (or, alternatively, ``-o``)::
@@ -82,7 +82,8 @@ Putting it all together, the final command-line call is as follows::
 
     python sim.py solve --span 1960 2010 --past 1957 --define alpha_1=0.6 alpha_2=0.4 -D theta=0.2 W=1 --set G_d[\'1960\':]=20 --output results.csv
 
-This runs the model and saves the results to ``results.csv``, which contains the information necessary to reproduce Table 3.4 from Godley and Lavoie (2007):
+This runs the model and saves the results to ``results.csv``, which contains
+the information necessary to reproduce Table 3.4 from Godley and Lavoie (2007):
 
 .. csv-table:: Table 3.4: The impact of $20 of government expenditures, with perfect foresight
    :header: "", |1|, |2|, |3|, |Infinity|
@@ -151,7 +152,7 @@ line, as follows::
     theta=0.2
     W=1
     --set
-    G_d[\'1960\':]=20
+    G_d['1960':]=20
     --output
     results.csv
 

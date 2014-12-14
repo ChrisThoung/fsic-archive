@@ -23,15 +23,15 @@ FSIC follows the conventions of
 ### Fixed
 
 * Add CHANGELOG.md to MANIFEST.in
+* Correct escaping of single quotes in input-argument file example in
+  documentation
 
 ### Security
 
 ## 0.1.0 - 2014-11-26
 
 First version of FSIC, implementing rudimentary script generation, with basic
-Markdown parsing and code translation.
-
-### Added
+Markdown parsing and code translation:
 
 * Main `fsic.py` script to build models from Markdown files
 * Core of code extractor for Markdown files
@@ -43,23 +43,3 @@ Markdown parsing and code translation.
   (2007)
 * Equations from Almon (2014) AMI model
 * Minimal documentation, in [Sphinx](http://sphinx-doc.org/)
-
-### Changed
-
-N/A
-
-### Deprecated
-
-N/A
-
-### Removed
-
-N/A
-
-### Fixed
-
-N/A
-
-### Security
-
-N/A
