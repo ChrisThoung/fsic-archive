@@ -13,6 +13,7 @@ FSIC follows the conventions of
 * Update documentationn in package code:
     * Description of equation-ordering algorithm in
       `FSIC.optimise.order.recursive()`
+* Additional tests to improve coverage
 
 ### Changed
 
