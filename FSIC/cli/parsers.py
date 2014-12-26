@@ -7,6 +7,35 @@ FSIC `argparse` ArgumentParsers for command-line operations.
 """
 
 
+import argparse
+
+
+def create_parser(description,
+                  file_prefix_char='@',
+                  formatter_class=argparse.RawDescriptionHelpFormatter):
+    """Return a basic FSIC parser object.
+
+    Parameters
+    ==========
+    description : string
+        The description to accompany the ArgumentParser
+    file_prefix_char : string
+        Character to use to denote files of arguments
+    formatter_class : formatting class
+        Formatting class to set the format of the help message
+
+    Returns
+    =======
+    parser : argparse ArgumentParser object
+
+    """
+    parser = argparse.ArgumentParser(
+        description=description,
+        fromfile_prefix_chars=file_prefix_char,
+        formatter_class=formatter_class)
+    return parser
+
+
 def add_subparser_solve(subparsers):
     """Add a 'solve' option to `subparsers`.
 
