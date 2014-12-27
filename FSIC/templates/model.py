@@ -232,7 +232,9 @@ if __name__ == '__main__' and get_ipython() == None:
         if args.output is not None:
             if model.initialised:
                 results = model.get_results()
-                for o in args.output:
+                output_files = args.output
+                output_files = [o.strip() for o in output_files]
+                for o in output_files:
                     if o.endswith('.csv'):
                         results.to_csv(o)
                     else:
