@@ -10,4 +10,4 @@ models in the tradition of Wynne Godley.
 
 
 from FSIC.version import MAJOR, MINOR, PATCH, DEV, VERSION as __version__  # noqa
-from FSIC.settings import dtype  # noqa
+from FSIC.settings import DTYPE  # noqa

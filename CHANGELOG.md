@@ -14,6 +14,8 @@ FSIC follows the conventions of
     * Description of equation-ordering algorithm in
       `FSIC.optimise.order.recursive()`
 * Additional tests to improve coverage
+* Specification for solution phases in model objects
+* Specification for data variables in model objects
 
 ### Changed
 

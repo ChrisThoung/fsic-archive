@@ -48,7 +48,7 @@ with open(os.path.join('FSIC', 'settings.py'), 'wt') as f:
 import numpy as np
 
 
-dtype = np.float64
+DTYPE = np.float64
 ''')
 
 # Call setup()

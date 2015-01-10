@@ -18,6 +18,7 @@ models in the tradition of Wynne Godley.
    example-spec.rst
    example-simulate.rst
    script-build.rst
+   bonnet-solution.rst
    bonnet-data.rst
 
 
