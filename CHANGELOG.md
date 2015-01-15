@@ -26,6 +26,7 @@ FSIC follows the conventions of
 	* Updated version continues to specify a solution span (with ``--span``, as
       before) but now uses an optional period *within* that span to solve from
       (with a new ``--solve-from`` argument). Documentation updated accordingly
+* `FSIC.dtype` variable renamed to `FSIC.DTYPE`
 
 ### Deprecated
 
