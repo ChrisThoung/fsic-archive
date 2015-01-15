@@ -9,7 +9,7 @@ FSIC module to define individual file readers.
 
 import pandas as pd
 
-from FSIC.settings import dtype
+from FSIC.settings import DTYPE
 
 
 def read_csv(path, filetype, index_col='index'):
@@ -51,7 +51,7 @@ def read_csv(path, filetype, index_col='index'):
         sep=sep,
         compression=compression,
         index_col=index_col,
-        dtype=dtype)
+        dtype=DTYPE)
 
 
 functions = {

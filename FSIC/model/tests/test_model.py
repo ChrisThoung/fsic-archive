@@ -13,7 +13,7 @@ import pandas as pd
 from pandas.util.testing import assert_frame_equal
 
 from FSIC.model.model import Model
-from FSIC.settings import dtype
+from FSIC.settings import DTYPE
 
 
 test_dir = os.path.dirname(__file__)
@@ -31,9 +31,9 @@ def setup_base():
     temp = pd.read_csv(
         os.path.join(test_dir, 'data', 'table.csv'),
         index_col='index',
-        dtype=dtype)
+        dtype=DTYPE)
     for c in temp.columns:
-        exec('model.%s = Series(0, index=range(%d, %d), dtype=dtype)' %
+        exec('model.%s = Series(0, index=range(%d, %d), dtype=DTYPE)' %
              (c, index_min, index_max + 1))
 
 
@@ -44,14 +44,14 @@ class Derived(Model):
         self.span = span
         self.solve_from = solve_from
         # Initialise `iter`
-        self.iter = Series(default, index=self.span, dtype=dtype)
+        self.iter = Series(default, index=self.span, dtype=DTYPE)
         # Initialise model variables
-        self.C = Series(default, index=self.span, dtype=dtype)
-        self.I = Series(default, index=self.span, dtype=dtype)
-        self.G = Series(default, index=self.span, dtype=dtype)
-        self.X = Series(default, index=self.span, dtype=dtype)
-        self.M = Series(default, index=self.span, dtype=dtype)
-        self.Y = Series(default, index=self.span, dtype=dtype)
+        self.C = Series(default, index=self.span, dtype=DTYPE)
+        self.I = Series(default, index=self.span, dtype=DTYPE)
+        self.G = Series(default, index=self.span, dtype=DTYPE)
+        self.X = Series(default, index=self.span, dtype=DTYPE)
+        self.M = Series(default, index=self.span, dtype=DTYPE)
+        self.Y = Series(default, index=self.span, dtype=DTYPE)
         # Update solution-state variables
         self.initialised = True
         self.solved = False
@@ -106,7 +106,7 @@ def test_not_initialised_or_solved_derived():
 def test_read_data():
     input = os.path.join(test_dir, 'data', 'table.csv')
     # Read input data directly
-    expected = pd.read_csv(input, index_col='index', dtype=dtype)
+    expected = pd.read_csv(input, index_col='index', dtype=DTYPE)
     # Read input data using `model`
     model.read_data(input)
     columns = ['\'%s\': model.%s' % (c, c) for c in expected.columns]

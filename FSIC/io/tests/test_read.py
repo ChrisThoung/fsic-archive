@@ -10,7 +10,7 @@ from pandas.util.testing import assert_frame_equal
 from nose.tools import raises
 
 import FSIC.io.read
-from FSIC.settings import dtype
+from FSIC.settings import DTYPE
 
 
 test_dir = os.path.dirname(__file__)
@@ -76,7 +76,7 @@ def test_filetype():
 def test_read_csv():
     input = os.path.join(test_dir, 'data', 'table.csv')
     result = FSIC.io.read.read(input)
-    expected = pd.read_csv(input, index_col='index', dtype=dtype)
+    expected = pd.read_csv(input, index_col='index', dtype=DTYPE)
     assert_frame_equal(result[0], expected)
 
 
@@ -98,9 +98,9 @@ def test_read_zip():
     result = FSIC.io.read.read(path)
     expected = [
         pd.read_csv(os.path.join(test_dir, 'data', 'table.csv'),
-                    index_col='index', dtype=dtype),
+                    index_col='index', dtype=DTYPE),
         pd.read_csv(os.path.join(test_dir, 'data', 'table.csv'),
-                    index_col='index', dtype=dtype)]
+                    index_col='index', dtype=DTYPE)]
     assert len(result) == len(expected)
     for r, e in zip(result, expected):
         assert_frame_equal(r, e)
@@ -109,14 +109,14 @@ def test_read_zip():
 def test_read_csv_specify_method():
     input = os.path.join(test_dir, 'data', 'actually_tsv.csv')
     result = FSIC.io.read.read(input, method='tsv')
-    expected = pd.read_csv(input, sep='\t', index_col='index', dtype=dtype)
+    expected = pd.read_csv(input, sep='\t', index_col='index', dtype=DTYPE)
     assert_frame_equal(result[0], expected)
 
 
 def test_read_csv_specify_method_to_clean():
     input = os.path.join(test_dir, 'data', 'actually_tsv.csv')
     result = FSIC.io.read.read(input, method='.tsv')
-    expected = pd.read_csv(input, sep='\t', index_col='index', dtype=dtype)
+    expected = pd.read_csv(input, sep='\t', index_col='index', dtype=DTYPE)
     assert_frame_equal(result[0], expected)
 
 
