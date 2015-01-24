@@ -369,7 +369,7 @@ While the following::
 will print version information about the current script::
 
     Model version: 0.1.0
-    Built under FSIC version: 0.1.0
-    FSIC version installed: 0.1.0
+    Built under FSIC version: 0.2.0
+    FSIC version installed: 0.2.0
 
 The next section explains how to run this model.
