@@ -4,9 +4,30 @@
 FSIC script: ``build``
 **********************
 
-This section provides further documentation on the FSIC ``build`` system. In
-most cases the user will interact with the system through the ``fsic.py``
-script.
+In most cases, the user will interact with the FSIC ``build`` system using the
+``fsic.py`` script. This script exposes minimal amounts of the underlying
+system to the user. This section provides further documentation on the
+internals of this system.
+
+
+.. _script-build-Build-class:
+
+``Build`` class
+===============
+
+The core of the ``build`` system is the ``Build`` class in
+``FSIC.tools.build``. The main steps in using this class are:
+
+1. Parse and store model information, whether from text files or strings
+2. Insert the model metadata into the relevant parts of the model template
+   (in ``/FSIC/template/model.py``)
+3. (Optionally) reorder the equations to improve Gauss-Seidel solution time
+   (see below)
+4. Insert the equations into the model template
+5. Return the modified template as a string
+
+The resulting string is then available to the user to evaluate or write to an
+output file.
 
 
 .. _script-build-optimise-order:
