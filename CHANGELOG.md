@@ -23,7 +23,7 @@ FSIC follows the conventions of
     * Version 0.1.0 specified a solution span (with the argument ``--span``)
       and, optionally, a prior period to allow for lagged relationships but not
       to be solved (using ``--past``)
-	* Updated version continues to specify a solution span (with ``--span``, as
+    * Updated version continues to specify a solution span (with ``--span``, as
       before) but now uses an optional period *within* that span to solve from
       (with a new ``--solve-from`` argument). Documentation updated accordingly
 * `FSIC.dtype` variable renamed to `FSIC.DTYPE`
