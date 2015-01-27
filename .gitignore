@@ -45,3 +45,6 @@ FSIC/settings.py
 
 # Test files
 FSIC/io/tests/data/*.zip
+
+# User files
+TODO.org
