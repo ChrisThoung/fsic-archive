@@ -11,6 +11,27 @@ extract code chunks.
 import re
 
 
+pattern = re.compile(
+    r'''
+
+    (?P<fence>~{3,}|`{3,})          # Fenced code blocks begin with a row
+                                    # of three or more tildes or backticks
+
+    \{(?P<attributes>.+?)\}         # Opening fence is followed by a set of
+                                    # attributes enclosed in braced
+
+    \n                              # End of fence line
+
+    (?P<code>.+?)                   # Main body contains the code itself
+
+    \n((?P=fence))$                 # Code block ends with a row of as many
+                                    # tildes or backticks as in the opening
+                                    # fence
+
+    ''',
+    re.DOTALL | re.MULTILINE | re.VERBOSE)
+
+
 def extract(script):
     """Return the code chunks from `script`.
 
