@@ -9,7 +9,7 @@ Godley, W., Cripps, F. (1983),
 Oxford University Press
 
 Godley, W., Lavoie, M. (2007),
-*Monetary economics: an integrated approach to
+*Monetary economics: An integrated approach to
 credit, money, income, production and wealth*,
 Palgrave Macmillan
 
@@ -19,4 +19,12 @@ Palgrave Macmillan
 
 Papadimitriou, D.B., Zezza, G. (eds) (2012),
 *Contributions in Stock-Flow Modeling: Essays in honor of Wynne Godley*,
+Palgrave Macmillan
+
+Romanchuk, B. (2015),
+*Understanding government finance*
+
+Wray, L. R. (2012),
+*Modern money theory:
+A primer on macroeconomics for sovereign monetary systems*,
 Palgrave Macmillan
