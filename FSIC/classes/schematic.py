@@ -48,11 +48,11 @@ class Equation:
         ==========
         string : string
             Equation to parse
-        sep : regular expression object or
+        sep : regular expression (string or compiled object) or
               `None` (defaults to `Equation.regex`)
             Regular expression to split `string` into an endogenous and
             exogenous component
-        regex :  regular expression object or
+        regex :  regular expression (string or compiled object) or
                  `None` (defaults to `Equation.regex`)
             Regular expression to terms in an equation
 
@@ -83,8 +83,12 @@ class Equation:
         """
         if sep is None:
             sep = Equation.sep
+        if type(sep) is str:
+            sep = re.compile(sep)
         if regex is None:
             regex = Equation.regex
+        if type(regex) is str:
+            regex = re.compile(regex)
         n, x = sep.split(string)
         n = regex.findall(n)
         x = regex.findall(x)

@@ -12,12 +12,26 @@ def test_parse_string_arg_default():
     assert eqn.n == ['C_d']
     assert eqn.x == ['alpha_1', 'YD', 'alpha_2', 'H_h[-1]']
 
+def test_parse_string_arg_sep_str():
+    eqn = Equation()
+    eqn.parse('C_d : alpha_1, YD, alpha_2, H_h[-1]',
+              sep=':')
+    assert eqn.n == ['C_d']
+    assert eqn.x == ['alpha_1', 'YD', 'alpha_2', 'H_h[-1]']
+
 def test_parse_string_arg_sep_re():
     eqn = Equation()
     eqn.parse('C_d : alpha_1, YD, alpha_2, H_h[-1]',
               sep=re.compile(r':'))
     assert eqn.n == ['C_d']
     assert eqn.x == ['alpha_1', 'YD', 'alpha_2', 'H_h[-1]']
+
+def test_parse_string_arg_regex_str():
+    eqn = Equation()
+    eqn.parse('C_d = alpha_1 * YD + alpha_2 * H_h[-1]',
+              regex=r'\b[A-Z][_0-z]+\b')
+    assert eqn.n == ['C_d']
+    assert eqn.x == ['YD', 'H_h']
 
 def test_parse_string_arg_regex_re():
     eqn = Equation()
