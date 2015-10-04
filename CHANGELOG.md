@@ -38,6 +38,7 @@ FSIC follows the conventions of
 * Remove ``--past`` period argument from model-script template. To solve a
   (typically dynamic) model beginning in a period other than the first one, use
   ``--solve-from`` instead
+* Break compatibility with Python 3.2
 
 ### Fixed
 
