@@ -9,6 +9,8 @@ FSIC follows the conventions of
 
 ### Added
 
+* New `schematic` module for classes to handle parsed model structure (`Model`,
+  `Function`, `Equation`)
 * Further improvements to Sphinx documentation from v0.1.0
 * Update documentationn in package code:
     * Description of equation-ordering algorithm in
