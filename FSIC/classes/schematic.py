@@ -35,7 +35,31 @@ class Equation:
         self.x = None
 
     def parse(self, string=None, sep=None, regex=None):
-        """
+        """Identify endogenous and exogenous terms in an equation string.
+
+        Parameters
+        ==========
+        ** Where arguments are not provided (or set to `None`), this function
+           defaults to class member variables. **
+
+        string : string
+            Equation to parse
+        sep : regular expression (string or compiled object) or
+              `None` (defaults to `Equation.regex`)
+            Regular expression to split `string` into an endogenous and
+            exogenous component
+        regex :  regular expression (string or compiled object) or
+                 `None` (defaults to `Equation.regex`)
+            Regular expression to terms in an equation
+
+        Returns
+        =======
+        N/A : Assigns results to `self.n` and `self.x`
+
+        See also
+        ========
+        FSIC.classes.schematic.Equation._parse()
+
         """
         if string is None:
             string = self.string
@@ -77,7 +101,7 @@ class Equation:
         # Alternative `regex` to only match variables whose identifier begins
         # with a capital letter
         >>> Equation._parse('C_d = alpha_1 * YD + alpha_2 * H_h[-1]',
-		            regex=re.compile(r'\b[A-Z][_0-z]+\b'))
+                            regex=re.compile(r'\b[A-Z][_0-z]+\b'))
         (['C_d'], ['YD', 'H_h'])
 
         """
