@@ -29,10 +29,14 @@ class Equation:
         ''',
         re.DOTALL | re.VERBOSE)
 
-    def __init__(self):
-        self.string = None
-        self.n = None
-        self.x = None
+    def __init__(self, string=None, sep=None, regex=None):
+        if string is None:
+            self.string = None
+            self.n = None
+            self.x = None
+        else:
+            self.string = string
+            self.parse(sep=sep, regex=regex)
 
     def parse(self, string=None, sep=None, regex=None):
         """Identify endogenous and exogenous terms in an equation string.

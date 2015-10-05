@@ -5,7 +5,7 @@ classes
 FSIC subpackage of class definitions.
 
 Defines:
- - Schematic classes: Model, Function, Equation
+ - Schematic classes: Equation, Function, Model
 
 """
 
