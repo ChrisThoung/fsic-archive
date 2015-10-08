@@ -3,6 +3,7 @@
 schematic
 =========
 Definitions for FSIC schematic classes:
+ - Variable
  - Equation
  - Function : A group of Equation objects
               e.g. a 'block' of equations specifying a consumption function
@@ -16,12 +17,117 @@ import re
 import networkx as nx
 
 
+class Variable:
+    """FSIC class to process a single variable expression.
+
+    """
+
+    match = re.compile(
+        r'''\b(?P<name>[_A-Za-z][_0-9A-Za-z]*)
+            \b(?:(?P<index>\[.*\]))?
+        ''',
+        re.VERBOSE)
+    replace = re.compile(
+        r'''\[(.*)\]
+        ''',
+        re.VERBOSE)
+
+    def __init__(self, string=None, match=None, replace=None):
+        self.string = None
+        self.name = None
+        self.index = None
+        self.mindex = None
+        self.expr = None
+
+        if match is None:
+            self.match = Variable.match
+        else:
+            self.match = match
+
+        if replace is None:
+            self.replace = Variable.replace
+        else:
+            self.replace = replace
+
+        if string is not None:
+            self.string = string
+            self.parse(self.string)
+
+    def parse(self, string=None, match=None, replace=None):
+        """Split `string` and derive a Python-compatible index expression.
+
+        Parameters
+        ==========
+        string : string or `None`
+            The variable string to process (e.g. 'C_d' or 'H_h[-1]'). If
+            `None`, use `self.string` instead
+        match : regular expression (as object or string) or `None`
+            Regular expression to identify the variable name and index as named
+            groups (see `Variable.match` for the default). If `None`, use
+            `Variable.match`
+        replace : regular expression (as object or string) or `None`
+            Regular expression to identify the inner part of an index
+            expression (see `Variable.replace` for the default). If `None`, use
+            `Variable.replace`
+
+        Returns
+        =======
+        N/A
+
+        Sets
+        ====
+        (For an example `string` argument, 'H_h[-1]'.)
+        self.name : string
+            The variable name in `string`, e.g. 'H_h'
+        self.index : string
+            The variable index in `string`, e.g. '[-1]'
+        self.mindex :
+            The variable index as a Python-compatible expression, e.g. '[period-1]'
+        self.expr : string
+            `self.name` + `self.mindex`, e.g. 'H_h[period-1]'
+
+        See also
+        ========
+        FSIC.classes.schematic.Variable._parse()
+
+        """
+        if string is None:
+            string = self.string
+        self.name, self.index, self.mindex = Variable._parse(
+            string, match=match, replace=replace)
+        self.expr = self.name + self.mindex
+
+    def _parse(string, match=None, replace=None):
+        if match is None:
+            match = Variable.match
+        if type(match) is str:
+            match = re.compile(match)
+
+        if replace is None:
+            replace = Variable.replace
+        if type(replace) is str:
+            replace = re.compile(replace)
+
+        m = match.search(string)
+        try:
+            index = m.group('index')
+        except:
+            index = None
+
+        if index is None or index == '[]' or re.match(r'\[0+\]', index):
+            mindex = '[period]'
+        else:
+            mindex = replace.sub(r'[period+\1]', index)
+            mindex = re.sub('[+]([+-])', r'\1', mindex)
+
+        return m.group('name'), index, mindex
+
+
 class Equation:
     """FSIC class to handle a single equation of a model.
 
     """
 
-    # Default regular expressions
     sep = re.compile(r'=')
     regex = re.compile(
         r'''[_A-z][_0-z]*
@@ -34,6 +140,8 @@ class Equation:
             self.string = None
             self.n = None
             self.x = None
+            self.expr = None
+            self.count = None
         else:
             self.string = string
             self.parse(sep=sep, regex=regex)
@@ -58,7 +166,19 @@ class Equation:
 
         Returns
         =======
-        N/A : Assigns results to `self.n` and `self.x`
+        N/A
+
+        Sets
+        ====
+        self.n : list of strings
+        self.x : list of strings
+            Endogenous and exogenous variables, respectively
+        self.expr : string
+            String expression version of `string`
+            e.g. '%s = %s' for 'C_s = C_d'
+        self.count : integer
+            The number of identified variables in `string` (equal to the number
+            of instances of '%s' in `self.expr`)
 
         See also
         ========
@@ -67,7 +187,8 @@ class Equation:
         """
         if string is None:
             string = self.string
-        self.n, self.x = Equation._parse(string, sep, regex)
+        self.n, self.x, self.expr, self.count = Equation._parse(
+            string, sep=sep, regex=regex)
 
     def _parse(string, sep=None, regex=None):
         """Separate `string` into a list of endogenous and exogenous terms.
@@ -89,38 +210,48 @@ class Equation:
         n : list of strings
         x : list of strings
             Endogenous and exogenous variables, respectively
+        self.expr : string
+            String expression version of `string`
+            e.g. '%s = %s' for 'C_s = C_d'
+        self.count : integer
+            The number of identified variables in `string` (equal to the number
+            of instances of '%s' in `self.expr`)
 
         Examples
         ========
         # Default usage
         >>> Equation._parse('C_d = alpha_1 * YD + alpha_2 * H_h[-1]')
-        (['C_d'], ['alpha_1', 'YD', 'alpha_2', 'H_h[-1]'])
+        (['C_d'], ['alpha_1', 'YD', 'alpha_2', 'H_h[-1]'], '%s = %s * %s + %s * %s', 5)
 
         # Alternative `sep` argument if, for example, only parsing an 'equation'
         # defined as an endogenous variable and a list of exogenous variables
         >>> Equation._parse('C_d : alpha_1, YD, alpha_2, H_h[-1]',
                             sep=re.compile(r':'))
-        (['C_d'], ['alpha_1', 'YD', 'alpha_2', 'H_h[-1]'])
+        (['C_d'], ['alpha_1', 'YD', 'alpha_2', 'H_h[-1]'], '%s : %s, %s, %s, %s', 5)
 
         # Alternative `regex` to only match variables whose identifier begins
         # with a capital letter
         >>> Equation._parse('C_d = alpha_1 * YD + alpha_2 * H_h[-1]',
                             regex=re.compile(r'\b[A-Z][_0-z]+\b'))
-        (['C_d'], ['YD', 'H_h'])
+        (['C_d'], ['YD', 'H_h'], '%s = alpha_1 * %s + alpha_2 * %s[-1]', 3)
 
         """
         if sep is None:
             sep = Equation.sep
         if type(sep) is str:
             sep = re.compile(sep)
+
         if regex is None:
             regex = Equation.regex
         if type(regex) is str:
             regex = re.compile(regex)
+
         n, x = sep.split(string)
         n = regex.findall(n)
         x = regex.findall(x)
-        return n, x
+
+        expr, count = regex.subn('%s', string)
+        return n, x, expr, count
 
 
 class Function:
