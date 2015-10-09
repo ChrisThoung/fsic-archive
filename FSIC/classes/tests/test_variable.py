@@ -64,15 +64,26 @@ def test_parse_lead_signed():
     assert var.expr == 'YD[period+1]'
 
 
-def test_parse_fortran():
+def test_parse_fortran_init():
     var = Variable(
-        string='C(1)',
+        string='YD(1)',
+        match=r'\b(?P<name>[_A-Za-z][_0-9A-Za-z]*)\b(?:(?P<index>\(.*\)))?',
+        replace=r'\((.*)\)')
+    assert var.name == 'YD'
+    assert var.index == '(1)'
+    assert var.mindex == '[period+1]'
+    assert var.expr == 'YD[period+1]'
+
+def test_parse_fortran_parse():
+    var = Variable()
+    var.parse(
+        string='C(-1)',
         match=r'\b(?P<name>[_A-Za-z][_0-9A-Za-z]*)\b(?:(?P<index>\(.*\)))?',
         replace=r'\((.*)\)')
     assert var.name == 'C'
-    assert var.index == '(1)'
-    assert var.mindex == '[period+1]'
-    assert var.expr == 'C[period+1]'
+    assert var.index == '(-1)'
+    assert var.mindex == '[period-1]'
+    assert var.expr == 'C[period-1]'
 
 
 if __name__ == '__main__':
