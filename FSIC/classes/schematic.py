@@ -93,8 +93,17 @@ class Variable:
         """
         if string is None:
             string = self.string
+        else:
+            self.string = string
+
+        if match is not None:
+            self.match = match
+
+        if replace is not None:
+            self.replace = replace
+
         self.name, self.index, self.mindex = Variable._parse(
-            string, match=match, replace=replace)
+            self.string, match=self.match, replace=self.replace)
         self.expr = self.name + self.mindex
 
     def _parse(string, match=None, replace=None):
@@ -109,10 +118,7 @@ class Variable:
             replace = re.compile(replace)
 
         m = match.search(string)
-        try:
-            index = m.group('index')
-        except:
-            index = None
+        index = m.group('index')
 
         if index is None or index == '[]' or re.match(r'\[0+\]', index):
             mindex = '[period]'
@@ -140,6 +146,7 @@ class Equation:
             self.string = None
             self.n = None
             self.x = None
+            self.vars = None
             self.expr = None
             self.count = None
         else:
@@ -170,15 +177,28 @@ class Equation:
 
         Sets
         ====
+        self.string : string
+            Set to match `string`
         self.n : list of strings
         self.x : list of strings
             Endogenous and exogenous variables, respectively
+        self.vars : tuple of strings
+            Tuple containing `self.n` and `self.x`
         self.expr : string
             String expression version of `string`
             e.g. '%s = %s' for 'C_s = C_d'
         self.count : integer
-            The number of identified variables in `string` (equal to the number
-            of instances of '%s' in `self.expr`)
+            The number of identified variables in `string`, equal to:
+             - the number of instances of '%s' in `self.expr`
+             - the sum of the lengths of `self.n` and `self.x`
+
+        Notes
+        =====
+        A successful parse should result in:
+
+            eqn.string == eqn.expr % eqn.vars
+
+        where `eqn` is the current `Equation` object
 
         See also
         ========
@@ -187,8 +207,11 @@ class Equation:
         """
         if string is None:
             string = self.string
+        else:
+            self.string = string
         self.n, self.x, self.expr, self.count = Equation._parse(
-            string, sep=sep, regex=regex)
+            self.string, sep=sep, regex=regex)
+        self.vars = tuple(self.n + self.x)
 
     def _parse(string, sep=None, regex=None):
         """Separate `string` into a list of endogenous and exogenous terms.

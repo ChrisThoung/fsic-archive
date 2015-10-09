@@ -1,12 +1,23 @@
 # -*- coding: utf-8 -*-
 
 
-from FSIC.classes import Variable
+import re
+
+from FSIC.classes.schematic import Variable
 
 
 def test_parse_current_no_index():
     var = Variable()
     var.parse('C_d')
+    assert var.name == 'C_d'
+    assert var.index == None
+    assert var.mindex == '[period]'
+    assert var.expr == 'C_d[period]'
+
+def test_parse_current_no_index_preload():
+    var = Variable()
+    var.string = 'C_d'
+    var.parse()
     assert var.name == 'C_d'
     assert var.index == None
     assert var.mindex == '[period]'
@@ -51,6 +62,17 @@ def test_parse_lead_signed():
     assert var.index == '[+1]'
     assert var.mindex == '[period+1]'
     assert var.expr == 'YD[period+1]'
+
+
+def test_parse_fortran():
+    var = Variable(
+        string='C(1)',
+        match=r'\b(?P<name>[_A-Za-z][_0-9A-Za-z]*)\b(?:(?P<index>\(.*\)))?',
+        replace=r'\((.*)\)')
+    assert var.name == 'C'
+    assert var.index == '(1)'
+    assert var.mindex == '[period+1]'
+    assert var.expr == 'C[period+1]'
 
 
 if __name__ == '__main__':
