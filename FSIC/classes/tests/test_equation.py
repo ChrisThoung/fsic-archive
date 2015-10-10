@@ -110,7 +110,7 @@ def test_to_graph_consumption():
     expected = nx.DiGraph()
     expected.add_node(
         'C_d[0]',
-        equation='C_d = alpha_1 * YD + alpha_2 * H_h[-1]')
+        equation='C_d[0] = alpha_1[0] * YD[0] + alpha_2[0] * H_h[-1]')
     for x in ['alpha_1[0]', 'YD[0]', 'alpha_2[0]', 'H_h[-1]']:
         expected.add_edge(x, 'C_d[0]')
 

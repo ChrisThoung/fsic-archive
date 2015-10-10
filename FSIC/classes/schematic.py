@@ -314,8 +314,9 @@ class Equation:
         x = [Variable(a).expr.replace('period', '').replace('[]', '[0]') for a in self.x]
 
         G = nx.DiGraph()
+        G.name = self.string
         for v in n:
-            G.add_node(v, equation=self.string)
+            G.add_node(v, equation=self.expr % tuple(n + x))
             for u in x:
                 G.add_edge(u, v)
 
@@ -323,8 +324,77 @@ class Equation:
 
 
 class Function:
-    def __init__(self):
-        pass
+    """FSIC class to handle a block of equations of a model.
+
+    """
+
+    count = 0
+
+    def __init__(self, name=None):
+        Function.count += 1
+        if name is None:
+            self.name = 'F' + str(Function.count)
+        else:
+            self.name = name
+        self.equations = None
+
+    def parse(self, equations):
+        """Parse the contents of `equations` to a list of `Equation` objects.
+
+        Parameters
+        ==========
+        equations : list of strings
+            One equation per string, which must be compatible with the
+            `Equation.parse()` function.
+
+        Returns
+        =======
+        N/A
+
+        Sets
+        ====
+        self.equations : Dictionary of `Equation` objects
+            Each item has a key matching the original equation string and, as
+            its value, a parsed `Equation` object
+
+        """
+        self.equations = {e: Equation(e) for e in equations}
+
+    def to_graph(self, name=None):
+        """Return the system of equations as a graph.
+
+        Returns
+        =======
+        G : NetworkX DiGraph object
+
+        Notes
+        =====
+
+        """
+        if self.equations is None:
+            raise ValueError
+
+        G = nx.DiGraph()
+        G.name = self.name
+        for k, v in self.equations.items():
+            G_e = v.to_graph()
+            for n, d in G_e.nodes(data=True):
+                # Update node attributes if variable is endogenous
+                if 'equation' in d:
+                    d['equations'] = [d.pop('equation')]
+                    d['functions'] = [self.name]
+                    # Combine attributes if endogenous node already found in `G`
+                    if n in G:
+                        a = G.node[n]
+                        d['equations'] = list(set(a.get('equations', []) +
+                                                  d['equations']))
+                        d['functions'] = list(set(a.get('functions', []) +
+                                                  d['functions']))
+                # Insert into `G`
+                G.add_node(n, d)
+            G.add_edges_from(G_e.edges())
+
+        return G
 
 
 class Model:
