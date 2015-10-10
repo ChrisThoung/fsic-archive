@@ -51,7 +51,7 @@ class Variable:
 
         if string is not None:
             self.string = string
-            self.parse(self.string)
+            self.parse()
 
     def parse(self, string=None, match=None, replace=None):
         """Split `string` and derive a Python-compatible index expression.
@@ -142,16 +142,26 @@ class Equation:
         re.DOTALL | re.VERBOSE)
 
     def __init__(self, string=None, sep=None, regex=None):
-        if string is None:
-            self.string = None
-            self.n = None
-            self.x = None
-            self.vars = None
-            self.expr = None
-            self.count = None
+        self.string = None
+        self.n = None
+        self.x = None
+        self.vars = None
+        self.expr = None
+        self.count = None
+
+        if sep is None:
+            self.sep = Equation.sep
         else:
+            self.sep = sep
+
+        if regex is None:
+            self.regex = Equation.regex
+        else:
+            self.regex = regex
+
+        if string is not None:
             self.string = string
-            self.parse(sep=sep, regex=regex)
+            self.parse()
 
     def parse(self, string=None, sep=None, regex=None):
         """Identify endogenous and exogenous terms in an equation string.
@@ -209,8 +219,14 @@ class Equation:
             string = self.string
         else:
             self.string = string
+
+        if sep is not None:
+            self.sep = sep
+        if regex is not None:
+            self.regex = regex
+
         self.n, self.x, self.expr, self.count = Equation._parse(
-            self.string, sep=sep, regex=regex)
+            self.string, sep=self.sep, regex=self.regex)
         self.vars = tuple(self.n + self.x)
 
     def _parse(string, sep=None, regex=None):
@@ -275,6 +291,35 @@ class Equation:
 
         expr, count = regex.subn('%s', string)
         return n, x, expr, count
+
+    def to_graph(self):
+        """Return the equation as a graph.
+
+        Returns
+        =======
+        G : NetworkX DiGraph object
+
+        Notes
+        =====
+        The DiGraph object has as many vertices as there are variables in the
+        equation. The edges run from the exogenous variable(s) (in `self.x`) to
+        the endogenous variable(s) (in `self.n`). Each endogenous variable has,
+        as an attribute, the original equation string (`self.string`).
+
+        """
+        if self.string is None:
+            raise ValueError
+
+        n = [Variable(a).expr.replace('period', '').replace('[]', '[0]') for a in self.n]
+        x = [Variable(a).expr.replace('period', '').replace('[]', '[0]') for a in self.x]
+
+        G = nx.DiGraph()
+        for v in n:
+            G.add_node(v, equation=self.string)
+            for u in x:
+                G.add_edge(u, v)
+
+        return G
 
 
 class Function:

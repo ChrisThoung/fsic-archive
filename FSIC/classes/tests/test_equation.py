@@ -3,6 +3,9 @@
 
 import re
 
+import networkx.algorithms.isomorphism as iso
+import networkx as nx
+
 from FSIC.classes.schematic import Equation
 
 
@@ -100,6 +103,21 @@ def test_parse_string_arg_regex_re():
     assert eqn.expr == '%s = alpha_1 * %s + alpha_2 * %s[-1]'
     assert eqn.count == 3
     assert eqn.string == eqn.expr % eqn.vars
+
+def test_to_graph_consumption():
+    eqn = Equation('C_d = alpha_1 * YD + alpha_2 * H_h[-1]')
+
+    expected = nx.DiGraph()
+    expected.add_node(
+        'C_d[0]',
+        equation='C_d = alpha_1 * YD + alpha_2 * H_h[-1]')
+    for x in ['alpha_1[0]', 'YD[0]', 'alpha_2[0]', 'H_h[-1]']:
+        expected.add_edge(x, 'C_d[0]')
+
+    G = eqn.to_graph()
+
+    nm = iso.categorical_node_match('equation', '')
+    assert nx.is_isomorphic(G, expected, node_match=nm)
 
 
 if __name__ == '__main__':
