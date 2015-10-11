@@ -306,6 +306,11 @@ class Equation:
         the endogenous variable(s) (in `self.n`). Each endogenous variable has,
         as an attribute, the original equation string (`self.string`).
 
+        See also
+        ========
+        FSIC.classes.schematic.Function.to_graph()
+        FSIC.classes.schematic.Model.to_graph()
+
         """
         if self.string is None:
             raise ValueError
@@ -369,6 +374,25 @@ class Function:
 
         Notes
         =====
+        The DiGraph object has a similar structure to that of the DiGraph
+        produced by the `Equation` class. That is, the vertices of the graph
+        correspond to variables in the system (whether endogenous or exogenous)
+        and endogenous variables have further attributes assigned to them.
+
+        In the case of the `Function` class, endogenous variables have two
+        attributes:
+         - 'equations' : list of strings
+           Consolidated list of equations that solve for this variable
+           (combined from individual `Equation` objects)
+         - 'functions' : list of strings
+           List of functions that contain the current variable (just the name
+           of the current function; may be combined with other functions by the
+           `Model` class)
+
+        See also
+        ========
+        FSIC.classes.schematic.Equation.to_graph()
+        FSIC.classes.schematic.Model.to_graph()
 
         """
         if self.equations is None:
@@ -398,5 +422,90 @@ class Function:
 
 
 class Model:
-    def __init__(self):
-        pass
+    """FSIC class to handle a complete system of model equations.
+
+    """
+
+    def __init__(self, name=None):
+        self.name = None
+        self.functions = None
+
+    def add_function(self, equations, name=None):
+        """Add a new function (list of equations) to the model.
+
+        Parameters
+        ==========
+        ** These arguments match the `equation` and `name` members of the
+           `Function` class **
+
+        equations : list of strings
+            List of equations that comprises the new function
+        name : string (or `None`)
+            Name to assign to the function (otherwise, use `Function` class
+            default)
+
+        Returns
+        =======
+        N/A
+
+        Sets
+        ====
+        self.functions : Dictionary of `Function` objects
+            Initialises `self.functions` to a Dictionary (if currently `None`)
+            and adds the data as a new `Function` object.
+
+        See also
+        ========
+        FSIC.classes.schematic.Function.parse()
+
+        """
+        if self.functions is None:
+            self.functions = {}
+        fn = Function(name)
+        fn.parse(equations)
+        self.functions[fn.name] = fn
+
+    def to_graph(self):
+        """Return the model as a graph.
+
+        Returns
+        =======
+        G : NetworkX DiGraph object
+
+        Notes
+        =====
+        The DiGraph object has an identical structure to that of the DiGraph
+        produced by the `Function` class. That is, the vertices of the graph
+        correspond to variables in the system (whether endogenous or exogenous)
+        and endogenous variables have further attributes assigned to them.
+
+        The endogenous variables have two attributes:
+         - 'equations' : list of strings
+           Consolidated list of equations that solve for this variable
+           (across all functions and equations)
+         - 'functions' : list of strings
+           List of functions that contain the current variable
+
+        See also
+        ========
+        FSIC.classes.schematic.Equation.to_graph()
+        FSIC.classes.schematic.Function.to_graph()
+
+        """
+        if self.functions is None:
+            raise ValueError
+
+        G = nx.DiGraph()
+        for fn in self.functions.values():
+            G_fn = fn.to_graph()
+            for n, d in G_fn.nodes(data=True):
+                if n in G and len(d):
+                    a = G.node[n]
+                    d['equations'] = list(set(a.get('equations', []) +
+                                              d.get('equations', [])))
+                    d['functions'] = list(set(a.get('functions', []) +
+                                              d.get('functions', [])))
+                G.add_node(n, d)
+            G.add_edges_from(G_fn.edges())
+
+        return G
