@@ -19,30 +19,30 @@ def test_to_graph():
     expected = nx.DiGraph()
 
     expected.add_node(
-        'Y[0]',
-        equations=['Y[0] = C[0] + G[0]'], functions=[name])
-    expected.add_edge('C[0]', 'Y[0]')
-    expected.add_edge('G[0]', 'Y[0]')
+        'Y[period]',
+        equations=['Y[period] = C[period] + G[period]'], functions=[name])
+    expected.add_edge('C[period]', 'Y[period]')
+    expected.add_edge('G[period]', 'Y[period]')
 
     expected.add_node(
-        'YD[0]',
-        equations=['YD[0] = Y[0] - T[0]'], functions=[name])
-    expected.add_edge('Y[0]', 'YD[0]')
-    expected.add_edge('T[0]', 'YD[0]')
+        'YD[period]',
+        equations=['YD[period] = Y[period] - T[period]'], functions=[name])
+    expected.add_edge('Y[period]', 'YD[period]')
+    expected.add_edge('T[period]', 'YD[period]')
 
     expected.add_node(
-        'T[0]',
-        equations=['T[0] = theta[0] * Y[0]'], functions=[name])
-    expected.add_edge('theta[0]', 'T[0]')
-    expected.add_edge('Y[0]', 'T[0]')
+        'T[period]',
+        equations=['T[period] = theta[period] * Y[period]'], functions=[name])
+    expected.add_edge('theta[period]', 'T[period]')
+    expected.add_edge('Y[period]', 'T[period]')
 
     expected.add_node(
-        'C[0]',
-        equations=['C[0] = alpha_1[0] * YD[0] + alpha_2[0] * H[-1]'], functions=[name])
-    expected.add_edge('alpha_1[0]', 'C[0]')
-    expected.add_edge('YD[0]', 'C[0]')
-    expected.add_edge('alpha_2[0]', 'C[0]')
-    expected.add_edge('H[-1]', 'C[0]')
+        'C[period]',
+        equations=['C[period] = alpha_1[period] * YD[period] + alpha_2[period] * H[period-1]'], functions=[name])
+    expected.add_edge('alpha_1[period]', 'C[period]')
+    expected.add_edge('YD[period]', 'C[period]')
+    expected.add_edge('alpha_2[period]', 'C[period]')
+    expected.add_edge('H[period-1]', 'C[period]')
 
     assert nx.is_isomorphic(G, expected, node_match=dict.__eq__)
 

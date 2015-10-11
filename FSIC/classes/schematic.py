@@ -315,8 +315,8 @@ class Equation:
         if self.string is None:
             raise ValueError
 
-        n = [Variable(a).expr.replace('period', '').replace('[]', '[0]') for a in self.n]
-        x = [Variable(a).expr.replace('period', '').replace('[]', '[0]') for a in self.x]
+        n = [Variable(a).expr for a in self.n]
+        x = [Variable(a).expr for a in self.x]
 
         G = nx.DiGraph()
         G.name = self.string
