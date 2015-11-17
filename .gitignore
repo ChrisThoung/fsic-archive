@@ -48,3 +48,6 @@ FSIC/io/tests/data/*.zip
 
 # User files
 TODO.org
+
+# Temporary files
+.#*
