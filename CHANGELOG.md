@@ -17,6 +17,7 @@ FSIC follows the conventions of
 * Specification for `build` system
 * Specification for solution phases in model objects
 * Specification for data variables in model objects
+* Support for YAML frontmatter in delimiter-separated data files
 
 ### Changed
 
