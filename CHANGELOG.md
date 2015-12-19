@@ -9,8 +9,10 @@ FSIC follows the conventions of
 
 ### Added
 
-* New schematic class to represent model structure:
+* New schematic classes to represent model structure:
     * `Variable`: to parse individual variable expressions e.g. 'C_d'
+    * `Equation`: to parse a single equation expression
+	  e.g. 'C_d = alpha_1 * YD + alpha_2 * H_h[-1]'
 * Further improvements to Sphinx documentation from v0.1.0
 * Update documentationn in package code:
     * Description of equation-ordering algorithm in
