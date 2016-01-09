@@ -19,7 +19,7 @@ import pandas as pd
 from FSIC import __version__ as version
 
 from FSIC.model.model import Model
-from FSIC.settings import dtype
+from FSIC.settings import DTYPE
 import FSIC.cli.parsers
 
 
@@ -65,7 +65,7 @@ class ___MODEL___(Model):
         self.span = span
         self.solve_from = solve_from
         # Initialise `iter`
-        self.iter = Series(default, index=self.span, dtype=dtype)
+        self.iter = Series(default, index=self.span, dtype=DTYPE)
         # Initialise model variables
         ___INITIALISE___
         # Update solution-state variables
@@ -186,7 +186,7 @@ if __name__ == '__main__' and get_ipython() == None:
                 data = model.get_results()
                 for i in args.input:
                     if i.endswith('.csv'):
-                        data = pd.read_csv(i, dtype=dtype)
+                        data = pd.read_csv(i, dtype=DTYPE)
                         data = data.fillna(0)
                     else:
                         ext = os.path.splitext(i)[1]
