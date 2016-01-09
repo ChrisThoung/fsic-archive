@@ -43,6 +43,7 @@ FSIC follows the conventions of
 * Add CHANGELOG.md to MANIFEST.in
 * Correct escaping of single quotes in input-argument file example in
   documentation
+* Call to equation-order optimisation function in build script
 
 ### Security
 
