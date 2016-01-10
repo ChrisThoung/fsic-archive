@@ -31,11 +31,12 @@ class ___MODEL___(Model):
 
     """
 
+    ___MODEL_VERSION___
+
     def __init__(self):
         Model.__init__(self)
-        ___MODEL_VERSION___
 
-    def initialise(self, span, solve_from=None, default=0.0):
+    def initialise(self, span, solve_from=None, solve_to=None, default=0.0):
         """Initialise the model for solution.
 
         Parameters
@@ -46,6 +47,9 @@ class ___MODEL___(Model):
         solve_from : pandas PeriodIndex object or `None`
             The index to set the first period of the model to be solved. This
             may be necessary to supply enough lags for dynamic models
+        solve_to : pandas PeriodIndex object or `None`
+            The index to set the last period of the model to be solved. This
+            may be necessary for forward-looking solutions
         default : float
             Value to initialise variable Series objects with
 
@@ -64,6 +68,11 @@ class ___MODEL___(Model):
         # Store arguments
         self.span = span
         self.solve_from = solve_from
+        if self.solve_from is not None:
+            self.solve_from = Period(self.solve_from)
+        self.solve_to = solve_to
+        if self.solve_to is not None:
+            self.solve_to = Period(self.solve_to)
         # Initialise `iter`
         self.iter = Series(default, index=self.span, dtype=DTYPE)
         # Initialise model variables
@@ -148,10 +157,12 @@ parser.add_argument(
     '-V', '--version',
     action='version',
     version='''\
-Model version: %s
-Built under FSIC version: %s
-FSIC version installed: %s
-''' % (model_version.VERSION, model_version.FSIC_BUILD, version))
+Model version: {model_version}
+Built under FSIC version: {fsic_version}
+FSIC version installed: {fsic_installed}
+'''.format(model_version=model_version.VERSION,
+           fsic_version=model_version.FSIC_BUILD,
+           fsic_installed=version))
 del model_version
 
 # Add sub-parsers
@@ -170,7 +181,7 @@ except ImportError:
         return None
 
 
-if __name__ == '__main__' and get_ipython() == None:
+if __name__ == '__main__' and get_ipython() is None:
     # Parse arguments
     args = parser.parse_args()
 
@@ -179,7 +190,9 @@ if __name__ == '__main__' and get_ipython() == None:
         model = ___MODEL___()
         start, end = args.span
         span = PeriodIndex(start=start, end=end)
-        model.initialise(span=span, solve_from=Period(args.solve_from))
+        model.initialise(span=span,
+                         solve_from=args.solve_from,
+                         solve_to=args.solve_to)
 
         if args.input is not None:
             if model.initialised:
@@ -191,8 +204,8 @@ if __name__ == '__main__' and get_ipython() == None:
                     else:
                         ext = os.path.splitext(i)[1]
                         raise ValueError(
-                            'Unrecognised input file extension: \'%s\''
-                            % (ext))
+                            'Unrecognised input file extension: \'{ext}\''.format(
+                            ext=ext))
                     # Update data frame index
                     data.index = data['period']
                     del data['period']
@@ -206,11 +219,14 @@ if __name__ == '__main__' and get_ipython() == None:
                     d = d.split('=')
                     if len(d) != 2:
                         raise ValueError(
-                            'Error in `define` argument: \'%s\'; '
+                            'Error in `define` argument: \'{arg}\'; '
                             'must be a parameter name and value '
-                            'separated by an equals sign e.g. W=1' % (d))
+                            'separated by an equals sign with no spaces '
+                            'e.g. W=1'.format(arg=d))
                     p, v = d
-                    c = 'model.%s.ix[:] = %f' % (p, float(v))
+                    c = 'model.{variable}.ix[:] = {value}'.format(
+                        variable=p,
+                        value=float(v))
                     parameters.append(c)
             parameters = '\n'.join(parameters)
             exec(parameters)
@@ -240,8 +256,8 @@ if __name__ == '__main__' and get_ipython() == None:
                     else:
                         ext = os.path.splitext(o)[1]
                         raise ValueError(
-                            'Unrecognised output file extension: \'%s\''
-                            % (ext))
+                            'Unrecognised output file extension: \'{ext}\''.format(
+                                ext=ext))
             else:
                 raise ValueError(
                     'Model not solved: no results to save')
