@@ -69,6 +69,8 @@ models in the tradition of Wynne Godley.
     url='https://github.com/cthoung/fsic',
     packages=[
         'FSIC',
+        'FSIC.classes',
+        'FSIC.classes.tests',
         'FSIC.cli',
         'FSIC.cli.tests',
         'FSIC.io',
@@ -86,6 +88,7 @@ models in the tradition of Wynne Godley.
         ],
     package_data={
         'FSIC': ['templates/*.py'],
+        'FSIC': ['templates/*.pyt'],
         'FSIC.io.tests': ['data/*.csv', 'data/*.tsv'],
         'FSIC.model.tests': ['data/*.*'],
         },

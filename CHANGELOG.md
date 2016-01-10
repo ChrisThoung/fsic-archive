@@ -21,6 +21,10 @@ FSIC follows the conventions of
 
 ### Changed
 
+* Overhaul of build and templating system
+    * New `classes` sub-package containing new, simplified `Model` class
+    * New template, 'derived.py', to use new `Model` class
+    * Update 'fsic.py' script with new `template` command
 * Handling of solution-period controls in model template:
     * Version 0.1.0 specified a solution span (with the argument ``--span``)
       and, optionally, a prior period to allow for lagged relationships but not
