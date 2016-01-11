@@ -12,5 +12,5 @@ import os
 
 package_path = os.path.split(os.path.dirname(__file__))[0]
 templates = {
-    'model': os.path.join('templates', 'derived.py'),
+    'model': os.path.join('templates', 'derived.pyt'),
     }

@@ -21,8 +21,8 @@ class {class_name}(Model):
     VERSION = '.'.join(str(i) for i in [MAJOR, MINOR, PATCH]) + DEV
     FSIC_VERSION = {fsic_version}
 
-    variables = [{model_variables}]
-    convergence_variables = [{model_convergence_variables}]
+    variables = {model_variables}
+    convergence_variables = {model_convergence_variables}
 
     def initialise(self, *args, **kwargs):
         self._initialise(
