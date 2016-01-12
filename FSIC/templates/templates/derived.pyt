@@ -33,7 +33,3 @@ class {class_name}(Model):
 
     def solve_system(self, period):
         {model_equations}
-
-
-if __name__ == '__main__':
-    pass

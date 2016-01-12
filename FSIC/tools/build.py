@@ -24,8 +24,8 @@ class Build:
         template_path = os.path.join(
             os.path.dirname(os.path.dirname(__file__)),
             'templates')
-        self.model_template = os.path.join(template_path, 'model.py')
-        self.linker_template = os.path.join(template_path, 'linker.py')
+        self.model_template = os.path.join(template_path, 'templates', 'model.pyt')
+        self.linker_template = os.path.join(template_path, 'templates', 'linker.pyt')
         # Initialise variables
         self.chunks = []
 
