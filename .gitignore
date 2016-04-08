@@ -1,0 +1,10 @@
+# Python
+*.py[cod]
+__pycache__
+*.egg-info
+
+# Sphinx
+doc/build
+
+# Temporary files
+.#*
