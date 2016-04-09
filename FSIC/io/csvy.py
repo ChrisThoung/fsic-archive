@@ -11,7 +11,7 @@ import pandas as pd
 import yaml
 
 
-def read_csvy(filepath_or_buffer, *args, return_frontmatter=False, **kwargs):
+def read_csvy(filepath_or_buffer, return_frontmatter=False, *args, **kwargs):
     """Wrapper for `pandas.read_csv()`, to allow for YAML frontmatter.
 
     Parameters

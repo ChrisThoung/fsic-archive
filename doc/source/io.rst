@@ -15,7 +15,7 @@ functions are available for direct use.
 call to ``pandas.read_csv()``. However, if the input file has YAML frontmatter,
 :func:`FSIC.read_csvy()` can distinguish this frontmatter from the CSV data.
 
-.. function:: FSIC.read_csvy(filepath_or_buffer, *args, return_frontmatter=False, **kwargs)
+.. function:: FSIC.read_csvy(filepath_or_buffer, return_frontmatter=False, *args, **kwargs)
 
    Wrapper for ``pandas.read_csv()``, to allow for YAML frontmatter.
 
