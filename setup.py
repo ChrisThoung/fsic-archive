@@ -44,4 +44,4 @@ setup(
     url=URL,
     packages=['FSIC'],
     scripts=[os.path.join('scripts', 'fsic.py')],
-)
+    platforms='any')
