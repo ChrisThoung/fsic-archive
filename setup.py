@@ -13,10 +13,6 @@ import os
 from distutils.core import setup
 
 
-AUTHOR = 'Chris Thoung'
-AUTHOR_EMAIL = 'chris.thoung@gmail.com'
-URL = 'https://github.com/cthoung/fsic'
-
 # Read some metadata from FSIC
 exec(open(os.path.join('FSIC', 'metadata.py')).read())
 LONG_DESCRIPTION = open('README.md').read()
