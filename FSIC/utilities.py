@@ -6,8 +6,47 @@ Generic FSIC utility functions.
 
 """
 
+from pandas import DataFrame
+import pandas as pd
+
 from FSIC.exceptions import SpecificationError
 
+
+def merge_frames(frames_to_merge, comparison_functions):
+    """Merge the DataFrames in `frames_to_merge` according to the functions in `comparison_functions`.
+
+    Parameters
+    ----------
+    frames_to_merge : list of DataFrames
+        Objects to merge
+    comparison_functions : dictionary
+         - keys should match the columns in the individual items in
+           `frames_to_merge`
+         - values should be functions that take pairs of inputs and return the
+           highest-priority one
+
+    Returns
+    -------
+    merged : DataFrame
+        Columns match those of the individual DataFrames, with values
+        overwritten according to `comparison_functions`. The index (rows) is
+        the union of the objects' indexes.
+
+    """
+    merged = None
+    for df in frames_to_merge:
+        if merged is None:
+            merged = df.copy()
+            continue
+        for row, entry in zip(df.index, df.itertuples(index=False)):
+            entry = dict(zip(df.columns, entry))
+            if row in merged.index:
+                for column, new_value in entry.items():
+                    merged.ix[row, column] = comparison_functions[column](
+                        new_value, merged.ix[row, column])
+            else:
+                merged = pd.concat([merged, DataFrame(entry, index=[row])])
+    return merged
 
 def merge_dicts(dicts_to_merge, comparison_functions):
     """Merge the items in `dicts_to_merge` according to the functions in `comparison_functions`.
@@ -24,8 +63,8 @@ def merge_dicts(dicts_to_merge, comparison_functions):
     Returns
     -------
     merged : dict-like
-        Object with keys matching those of the items in `dicts_to_merge` but
-        with values overwritten according to `comparison_functions`
+        Object with keys matching those of the items in `dicts_to_merge`, with
+        values overwritten according to `comparison_functions`
 
     """
     merged = None
