@@ -48,9 +48,13 @@ def test_equation_magic():
     a = Equation('H_h = H_h[-1] + YD - C_d')
     b = Equation('H_h[0] = H_h[-1] + YD[0] - C_d[0]')
     c = Equation('H_s = H_s + G_d - T_d')
+    d = Equation('C_s = C_d')
     assert a == b
-    assert b != c
     assert not a.__eq__(b, strict=True)
+    b.symbols.ix[0, 'max'] = 1
+    assert a != b
+    assert b != c
+    assert c != d
 
 
 if __name__ == '__main__':
