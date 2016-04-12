@@ -44,6 +44,14 @@ def test_equation():
     assert eqn.template == xp_template
     assert_frame_equal(eqn.symbols, xp_symbols.reindex(columns=eqn.symbols.columns))
 
+def test_equation_magic():
+    a = Equation('H_h = H_h[-1] + YD - C_d')
+    b = Equation('H_h[0] = H_h[-1] + YD[0] - C_d[0]')
+    c = Equation('H_s = H_s + G_d - T_d')
+    assert a == b
+    assert b != c
+    assert not a.__eq__(b, strict=True)
+
 
 if __name__ == '__main__':
     nose.runmodule()

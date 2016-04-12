@@ -116,3 +116,35 @@ class Equation(object):
                                      'max': max})
             symbols[name] = entry
         return symbols
+
+    def __eq__(self, other, strict=False):
+        """Test for equality with `other` in terms of derived (parsed)
+           variables. `strict=True` will also test the original inputs (rarely
+           useful).
+
+        Parameters
+        ----------
+        other : object to compare with `self`
+            Must have the following attributes (matching those of the current
+            object):
+             - template : str
+             - terms : DataFrame
+             - symbols : DataFrame
+            If `strict=True`, also requires `raw` (str).
+        strict : bool, default `False`
+            If `True`, also test that the original inputs are identical.
+
+        """
+        if strict:
+            if self.raw != other.raw:
+                return False
+
+        if self.template != other.template:
+            return False
+        elif not (self.terms.drop('raw', axis=1) ==
+                  other.terms.drop('raw', axis=1)).all().all():
+            return False
+        elif not (self.symbols == other.symbols).all().all():
+            return False
+
+        return True
