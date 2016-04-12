@@ -93,9 +93,11 @@ def make_comparison_function(precedence, exclusive=None):
         exclusive = ()
 
     def compare(a, b):
-        if ((a in exclusive and a != b) or
-            (b in exclusive and a != b)):
-            raise SpecificationError
+        if a in exclusive or b in exclusive:
+            if a != b:
+                raise SpecificationError
+            else:
+                return a
         selected = min(precedence.index(a), precedence.index(b))
         return precedence[selected]
 
