@@ -12,3 +12,4 @@ from FSIC.metadata import VERSION as __version__
 
 from FSIC.classes.api import *
 from FSIC.io.api import *
+from FSIC.parser.api import *
