@@ -91,5 +91,23 @@ def test_initialise_errors_end():
     model = Model().initialise(start=-10)
 
 
+def test_property_get_set():
+    model = Model(0, 10, variables=list('YCIG'))
+
+    model.Y = 10
+    assert model.Y.sum() == 110
+
+    model.Y[5] = 50
+    assert model.Y.sum() == 150
+
+    model.G[3:5] = 20
+    assert model.G.sum() == 40
+
+@raises(RuntimeError)
+def test_property_del_error():
+    model = Model(0, 10, variables=list('YCIG'))
+    del model.Y
+
+
 if __name__ == '__main__':
     nose.runmodule()
