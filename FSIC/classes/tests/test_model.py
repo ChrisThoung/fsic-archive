@@ -74,6 +74,14 @@ def test_initialise_integer_index():
     model.initialise(data=xp)
     assert_frame_equal(model.data.reindex(columns=xp.columns), xp)
 
+def test_initialise_integer_index_with_zero():
+    model = Model(0, 5)
+    assert list(model.data.index) == list(range(6))
+
+    model = Model(-5, 0)
+    assert list(model.data.index) == list(range(-5, 1))
+
+
 @raises(ValueError)
 def test_initialise_errors_start():
     model = Model().initialise(end=10)

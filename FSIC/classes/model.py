@@ -326,7 +326,7 @@ class Model(object):
         RangeIndex(start=0, stop=5, step=1)
 
         """
-        if start:
+        if start is not None:
             pass
         elif solve_from:
             try:
@@ -345,7 +345,7 @@ class Model(object):
                              'either explicitly '
                              '(`start` or the index of `data`) '
                              'or implicitly (`solve_from`)')
-        if end:
+        if end is not None:
             pass
         elif solve_to:
             try:
