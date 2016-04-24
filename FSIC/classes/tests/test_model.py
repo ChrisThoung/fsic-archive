@@ -24,6 +24,13 @@ class TestModel(Model):
 class TestModelConv(TestModel):
     CONVERGENCE_VARIABLES = list('Y')
 
+    def _solve_python_iteration(self, row):
+        self.Y.values[row] = (self.C.values[row] +
+                              self.I.values[row] +
+                              self.G.values[row] +
+                              self.X.values[row] -
+                              self.M.values[row])
+
 
 def test_initialise_period_index():
     xp = DataFrame({'Y': 0.0, 'C': 0.0, 'I': 0.0, 'G': 0.0, 'X': 0.0, 'M': 0.0,
@@ -107,6 +114,27 @@ def test_property_get_set():
 def test_property_del_error():
     model = Model(0, 10, variables=list('YCIG'))
     del model.Y
+
+
+@raises(RuntimeError)
+def test_solve_before_initialise():
+    model = Model()
+    model.solve()
+
+@raises(ValueError)
+def test_solve_period_argument_error():
+    model = Model(0, 10)
+    model.solve(first=2, last=8, single=5)
+
+def test_solve():
+    model = TestModelConv('2000Q1', '2005Q4')
+    model.G = 20
+    model.M = 10
+    model.solve(single='2000Q1')
+    model.solve(single='2005Q4', verbosity=1)
+    model.solve()
+    model.solve('2000Q2', '2000Q4', verbosity=1)
+    assert sum(model.Y * model.iterations) == 380
 
 
 if __name__ == '__main__':

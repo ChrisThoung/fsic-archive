@@ -6,11 +6,15 @@ Base `Model` class for `FSIC` models.
 
 """
 
+import sys
+
 from pandas import Index, Period, PeriodIndex
 from pandas import Series, DataFrame
 
 import pandas as pd
 pd.set_option('mode.chained_assignment', None)
+
+from FSIC.utilities import locate_in_index
 
 
 class Model(object):
@@ -74,6 +78,9 @@ class Model(object):
         self.end_offset = None
 
         self.data = None
+
+        # Default to Python solver
+        self._solver = self._python_solver
 
         if len(args) or len(kwargs):
             self.initialise(*args, **kwargs)
@@ -180,18 +187,19 @@ class Model(object):
                                  solve_from, solve_to,
                                  data)
         if solve_from:
-            self.start_offset = self._locate_in_index(index, solve_from)
+            self.start_offset = locate_in_index(index, solve_from)
         else:
             self.start_offset = self.START_OFFSET
 
         if solve_to:
-            self.end_offset = self._locate_in_index(index, solve_from)
+            self.end_offset = locate_in_index(index, solve_from)
         else:
             self.end_offset = self.END_OFFSET
 
         # Form combined list of variables, using class attributes as defaults
         def assign_or_use_default(arg, default):
-            if arg:
+            """Return default (or empty list) if `arg` not set."""
+            if arg is not None:
                 return arg
             else:
                 return default or []
@@ -370,28 +378,6 @@ class Model(object):
             index = Index(range(start, end + 1))
         return index
 
-    def _locate_in_index(self, index, period) -> int:
-        """Return the location of `period` in `index`.
-
-        Parameters
-        ----------
-        index : `pandas` `Index`-like
-            Array to search in (an object with a `get_loc()` method)
-        period : int or valid argument to `pandas` `Period` class
-            Item to search for
-
-        Returns
-        -------
-        : int
-            The location of `period` in `index`
-
-        """
-        if index.holds_integer():
-            period = int(period)
-        else:
-            period = Period(period)
-        return index.get_loc(period)
-
     def _make_property(self, name):
         """Return a property attribute for the column `name`.
 
@@ -436,3 +422,153 @@ class Model(object):
                                'after initialisation')
 
         return property(fget=getter, fset=setter, fdel=deleter, doc=None)
+
+
+    def solve(self,
+              first=None, last=None, single=None,
+              min_iter=0, max_iter=100, tol=1e-06,
+              verbosity=0) -> None:
+        """Solve the model for one or more periods.
+
+        Parameters
+        ----------
+        first, last : int or valid arguments to `pandas` `Period` class,
+                      default `None`
+            Specify the *range* of periods to solve, beginning with `first` and
+            ending with `last` (inclusive). If either is `None` (and `single`
+            is also `None`), use the periods implied by `self.start_offset` and
+            `self.end_offset`, respectively
+
+        single : int or valid arguments to `pandas` `Period` class,
+                 default `None`
+            Specify a single period to solve. Is mutually exclusive with
+            `first` and `last` (both *must* be `None`, if `single` is not
+            `None`)
+
+        min_iter, max_iter : int, defaults 0 and 100
+            The minimum and maximum number of iterations per period when
+            attempting to solve the model:
+             - if the model solves in fewer than `min_iter` iterations, there
+               will be additional iterations up to `min_iter`
+             - if the model does not converge within `max_iter` iterations,
+               solution for that period will stop and the period will be
+               recorded as a failed convergence
+        tol : float, default 1e-06
+            Error tolerance to check convergence during solution each period,
+            based on the sum of the squared differences between iterations for
+            the variables in `self.convergence_variables`
+
+        verbosity : int, default 0
+            The level of detail to report on solution progress. Prints no
+            output if zero; higher values report progressively more detail
+
+        """
+        if self.data is None:
+            raise RuntimeError(
+                'Model database must be initialised before solution')
+
+        if single is not None and (first is not None or last is not None):
+            raise ValueError('The arguments (`first`, `last`) and `single` '
+                             'are mutually exclusive; cannot have non-`None` '
+                             'values for both sets of arguments')
+
+        # Form tuple of periods to solve, expressed as index slices (rather
+        # than period identifiers)
+        if single is not None:
+            rows_to_solve = (locate_in_index(self.data.index, single), )
+        else:
+            if first is None:
+                first = self.data.index[self.start_offset]
+            if last is None:
+                last = self.data.index[-1 - self.end_offset]
+            rows_to_solve = tuple(range(
+                locate_in_index(self.data.index, first),
+                locate_in_index(self.data.index, last) + 1))
+
+        # Set `verbosity` to be no higher than the (hardcoded) maximum
+        # permitted value
+        verbosity = min(1, verbosity)
+
+        # Initial report of periods to solve, depending on `verbosity` value
+        info = {'first': str(self.data.index[rows_to_solve[0]]),
+                'last': str(self.data.index[rows_to_solve[-1]]),
+                'length': len(rows_to_solve)}
+
+        if verbosity == 0:
+            pass
+        elif verbosity == 1:
+            if info['length'] == 1:
+                print('{first}[{length}] '.format(**info), end='')
+            else:
+                print('{first}:{last}[{length}] '.format(**info), end='')
+        else:
+            raise ValueError(
+                'Invalid value for `verbosity`: {}'.format(verbosity))
+        sys.stdout.flush()
+
+        # Solve model
+        self._solver(rows_to_solve,
+                     min_iter, max_iter, tol,
+                     verbosity)
+
+
+    def _python_solver(self,
+                       rows_to_solve,
+                       min_iter, max_iter, tol,
+                       verbosity):
+        """Solve the model in Python.
+
+        Parameters
+        ----------
+        rows_to_solve : tuple of ints
+        min_iter, max_iter : ints
+        tol : float
+        verbosity : int
+
+        """
+        for i, row in enumerate(rows_to_solve):
+            status = '-'
+            converged = False
+
+            current = self.data[self.convergence_variables].values[row]
+            for iteration in range(1, max_iter + 1):
+                previous = current
+
+                self._solve_python_iteration(row)
+
+                current = self.data[self.convergence_variables].values[row]
+                if iteration >= min_iter:
+                    diff = current - previous
+                    sum_sq_diff = sum(diff ** 2)
+                    if sum_sq_diff < tol:
+                        converged = True
+                        status = '.'
+                        break
+
+            if not converged:
+                status = 'F'
+
+            self.data['status'].values[row] = status
+            self.data['iterations'].values[row] = iteration
+            self.data['converged'].values[row] = converged
+
+            if verbosity == 0:
+                pass
+            elif verbosity == 1:
+                print(status, end='')
+            else:
+                raise ValueError(
+                    'Invalid value for `verbosity`: {}'.format(verbosity))
+            sys.stdout.flush()
+
+        if verbosity == 0:
+            pass
+        elif verbosity == 1:
+            print('')
+        else:
+            raise ValueError(
+                'Invalid value for `verbosity`: {}'.format(verbosity))
+        sys.stdout.flush()
+
+    def _solve_python_iteration(self, row):
+        raise NotImplementedError
