@@ -487,7 +487,7 @@ class Model(object):
 
         # Set `verbosity` to be no higher than the (hardcoded) maximum
         # permitted value
-        verbosity = min(1, verbosity)
+        verbosity = min(2, verbosity)
 
         # Initial report of periods to solve, depending on `verbosity` value
         info = {'first': str(self.data.index[rows_to_solve[0]]),
@@ -496,7 +496,7 @@ class Model(object):
 
         if verbosity == 0:
             pass
-        elif verbosity == 1:
+        elif verbosity in (1, 2):
             if info['length'] == 1:
                 print('{first}[{length}] '.format(**info), end='')
             else:
@@ -526,6 +526,10 @@ class Model(object):
         verbosity : int
 
         """
+        spacing = [False] * len(rows_to_solve)
+        if verbosity == 2:
+            spacing = self._make_spacing(rows_to_solve)
+
         for i, row in enumerate(rows_to_solve):
             status = '-'
             converged = False
@@ -554,7 +558,9 @@ class Model(object):
 
             if verbosity == 0:
                 pass
-            elif verbosity == 1:
+            elif verbosity in (1, 2):
+                if verbosity == 2 and spacing[i]:
+                    print(' ', end='')
                 print(status, end='')
             else:
                 raise ValueError(
@@ -563,12 +569,38 @@ class Model(object):
 
         if verbosity == 0:
             pass
-        elif verbosity == 1:
+        elif verbosity in (1, 2):
             print('')
         else:
             raise ValueError(
                 'Invalid value for `verbosity`: {}'.format(verbosity))
         sys.stdout.flush()
+
+    def _make_spacing(self, rows):
+        spacing = [False] * len(rows)
+        periods = list(self.data.index[[rows]])
+
+        try:
+            freq = self.data.index.freqstr
+            periods = [p.year for p in periods]
+        except AttributeError:
+            freq = 'A'
+
+        if freq.startswith('A'):
+            if len(rows) > 25:
+                blocks = (10, )
+            else:
+                blocks = (5, 10)
+            spacing = [any([(year % b) == 0 for b in blocks])
+                       for year in periods]
+        else:
+            for i in range(1, len(periods)):
+                if periods[i] != periods[i-1]:
+                    spacing[i] = True
+
+        spacing[0] = False
+        return spacing
+
 
     def _solve_python_iteration(self, row):
         raise NotImplementedError
