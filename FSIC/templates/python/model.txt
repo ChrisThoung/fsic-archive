@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+{name}
+{underline}
+{description}
+
+"""
+
+from FSIC import Model
+
+
+class {name}(Model):
+    """{docstring}
+
+    """
+
+    VARIABLES = {variables}
+    PARAMETERS = {parameters}
+    ERRORS = {errors}
+
+    CONVERGENCE_VARIABLES = {convergence_variables}
+
+    START_OFFSET = {start_offset}
+    END_OFFSET = {end_offset}
+
+    def _solve_python_iteration(self, row):
+        {python_code}

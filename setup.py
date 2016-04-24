@@ -39,5 +39,6 @@ setup(
     author_email=AUTHOR_EMAIL,
     url=URL,
     packages=['FSIC'],
+    package_data={'FSIC.templates': [os.path.join('python', '*.txt')]},
     scripts=[os.path.join('scripts', 'fsic.py')],
     platforms='any')
