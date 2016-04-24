@@ -10,4 +10,5 @@ doc/build
 .coverage
 
 # Temporary files
+.ipynb_checkpoints/
 .#*
