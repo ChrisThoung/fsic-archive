@@ -100,6 +100,11 @@ def build_model(schematic, output='class', reorder_equations=None, **kwargs):
     contents['underline'] = '=' * len(contents['name'])
 
     # Create script
+    for k in contents.keys():
+        try:
+            contents[k] = contents[k].rstrip()
+        except AttributeError:
+            pass
     script = MODEL.format(**contents)
 
     if output == 'class':
