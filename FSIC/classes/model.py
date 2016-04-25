@@ -194,7 +194,7 @@ class Model(object):
             self.start_offset = self.START_OFFSET
 
         if solve_to:
-            self.end_offset = locate_in_index(index, solve_from)
+            self.end_offset = (len(index) - 1) - locate_in_index(index, solve_to)
         else:
             self.end_offset = self.END_OFFSET
 
