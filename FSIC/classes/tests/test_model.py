@@ -88,6 +88,12 @@ def test_initialise_integer_index_with_zero():
     model = Model(-5, 0)
     assert list(model.data.index) == list(range(-5, 1))
 
+    model = Model(solve_from=0, solve_to=10)
+    assert list(model.data.index) == list(range(11))
+
+    model = Model(solve_from=-10, solve_to=0)
+    assert list(model.data.index) == list(range(-10, 1))
+
 
 @raises(ValueError)
 def test_initialise_errors_start():

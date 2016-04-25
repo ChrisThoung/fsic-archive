@@ -336,7 +336,7 @@ class Model(object):
         """
         if start is not None:
             pass
-        elif solve_from:
+        elif solve_from is not None:
             try:
                 solve_from = Period(solve_from)
             except ValueError:
@@ -355,7 +355,7 @@ class Model(object):
                              'or implicitly (`solve_from`)')
         if end is not None:
             pass
-        elif solve_to:
+        elif solve_to is not None:
             try:
                 solve_to = Period(solve_to)
             except ValueError:
