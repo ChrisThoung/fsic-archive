@@ -9,8 +9,8 @@ models in the tradition of Wynne Godley.
 
 """
 
-from FSIC.cli.script import PARSER, process_args
+from FSIC.cli.script import PARSER, handle_args
 
 
 if __name__ == '__main__':
-    process_args(PARSER.parse_args())
+    handle_args(PARSER.parse_args())

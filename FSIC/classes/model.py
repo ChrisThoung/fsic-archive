@@ -66,6 +66,8 @@ class Model(object):
     START_OFFSET = 0
     END_OFFSET = 0
 
+    VERSION = '0.1.0.dev'
+
 
     def __init__(self, *args, **kwargs):
         self.variables = None

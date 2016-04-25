@@ -39,7 +39,7 @@ PARSER_BUILD.add_argument('-o', '--output',
                           help='output file (otherwise print to stdout)')
 
 
-def process_args(args):
+def handle_args(args):
     """Main argument handler for FSIC script."""
     try:
         args = args.__dict__

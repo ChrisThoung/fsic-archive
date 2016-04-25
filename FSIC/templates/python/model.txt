@@ -24,5 +24,8 @@ class {name}(Model):
     START_OFFSET = {start_offset}
     END_OFFSET = {end_offset}
 
+    VERSION = {version}
+
+
     def _solve_python_iteration(self, row):
         {python_code}
