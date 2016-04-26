@@ -342,7 +342,7 @@ class Model(object):
             try:
                 solve_from = Period(solve_from)
             except ValueError:
-                pass
+                solve_from = int(solve_from)
             start = solve_from - self.START_OFFSET
 
             if data is not None:
@@ -361,7 +361,7 @@ class Model(object):
             try:
                 solve_to = Period(solve_to)
             except ValueError:
-                pass
+                solve_to = int(solve_to)
             end = solve_to + self.END_OFFSET
 
             if data is not None:
@@ -377,7 +377,7 @@ class Model(object):
         try:
             index = PeriodIndex(start=start, end=end)
         except ValueError:
-            index = Index(range(start, end + 1))
+            index = Index(range(int(start), int(end) + 1))
         return index
 
     def _make_property(self, name):

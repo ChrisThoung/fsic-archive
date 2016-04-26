@@ -21,7 +21,7 @@ PARSER.add_argument('-V', '--version',
 
 
 SUBPARSERS = PARSER.add_subparsers(title='commands',
-                                   dest='command')
+                                   dest='cmd')
 
 
 PARSER_BUILD = SUBPARSERS.add_parser('build')
@@ -43,14 +43,14 @@ def handle_args(args):
     """Main argument handler for FSIC script."""
     try:
         args = args.__dict__
-    except:
+    except AttributeError:
         pass
 
-    command = args['command']
-    if command == 'build':
+    cmd = args['cmd']
+    if cmd == 'build':
         _build(args)
     else:
-        raise ValueError('Unrecognised command: {}'.format(command))
+        raise ValueError('Unrecognised command: {}'.format(cmd))
 
 
 def _build(args):
@@ -62,7 +62,9 @@ def _build(args):
         raise NotImplementedError(
             'Currently, can only process one file at a time')
 
-    script = build_model(read_markdown(input_files[0]), 'script')
+    script = build_model(read_markdown(input_files[0]),
+                         'script',
+                         with_main=True)
 
     output = args['output']
     if output is None:

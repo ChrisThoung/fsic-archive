@@ -7,10 +7,10 @@
 
 """
 
-from FSIC import Model
+import FSIC
 
 
-class {name}(Model):
+class {name}(FSIC.Model):
     """{docstring}
 
     """
