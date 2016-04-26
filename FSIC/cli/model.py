@@ -10,7 +10,7 @@ import argparse
 import itertools
 import os
 
-from FSIC.io.csvy import read_csvy
+from FSIC.io.csvy import read_csvy, write_csvy
 
 
 def make_cli(cls):
@@ -132,8 +132,8 @@ def _solve(args, cls):
     output = args['output']
     if output:
         for path in output:
-            if path.endswith('.csv'):
-                model.data.to_csv(path)
+            if os.path.splitext(path)[1] in ('.csv', '.csvy'):
+                write_csvy(model.data, path)
             else:
                 raise ValueError(
                     'Unrecognised file extension in: {}'.format(path))
