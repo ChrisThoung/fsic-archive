@@ -10,6 +10,7 @@ from io import StringIO
 
 from pandas import DataFrame
 from pandas.util.testing import assert_frame_equal
+import pandas as pd
 
 import nose
 import FSIC.io.csvy as csvy
@@ -22,10 +23,8 @@ a,1,one
 b,2,two
 c,3,three
 '''
-    xp = DataFrame({'First': ['a', 'b', 'c'],
-                    'Second': [1, 2, 3],
-                    'Third': ['one', 'two', 'three']})
     df = csvy.read_csvy(StringIO(data))
+    xp = pd.read_csv(StringIO(data))
     assert_frame_equal(df, xp.reindex(columns=df.columns))
 
 def test_read_csvy():
@@ -59,6 +58,39 @@ c,3,three
     df, fm = csvy.read_csvy(StringIO(data), return_frontmatter=True)
     assert_frame_equal(df, xp_df.reindex(columns=df.columns))
     assert fm == xp_fm
+
+
+def test_write_csv():
+    df = DataFrame({'First': ['a', 'b', 'c'],
+                    'Second': [1, 2, 3],
+                    'Third': ['one', 'two', 'three']})
+    assert csvy.write_csvy(df) == df.to_csv()
+
+def test_write_csvy():
+    df = DataFrame({'First': ['a', 'b', 'c'],
+                    'Second': [1, 2, 3],
+                    'Third': ['one', 'two', 'three']})
+    fm = {'title': 'Test CSV file with YAML frontmatter',
+          'variables': [{'name': 'First', 'description': 'Column 1'},
+                        {'name': 'Second', 'description': 'Column 2'},
+                        {'name': 'Third', 'description': 'Column 3'}]}
+    xp = '''\
+---
+title: Test CSV file with YAML frontmatter
+variables:
+- description: Column 1
+  name: First
+- description: Column 2
+  name: Second
+- description: Column 3
+  name: Third
+---
+First,Second,Third
+a,1,one
+b,2,two
+c,3,three
+'''
+    assert csvy.write_csvy(df, frontmatter=fm, index=False) == xp
 
 
 if __name__ == '__main__':

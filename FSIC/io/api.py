@@ -6,4 +6,4 @@ FSIC data I/O API.
 
 """
 
-from FSIC.io.csvy import read_csvy
+from FSIC.io.csvy import read_csvy, write_csvy

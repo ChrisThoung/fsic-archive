@@ -2,8 +2,9 @@
 """
 csvy
 ====
-FSIC I/O module for files with CSV data, possibly with YAML frontmatter. Wraps
-`pandas` `read_csv()` function.
+FSIC I/O module for files with CSV data, possibly with YAML
+frontmatter. Provides wrappers for `pandas` `read_csv()` function and
+`to_csv()` method.
 
 """
 
@@ -50,3 +51,46 @@ def read_csvy(filepath_or_buffer, return_frontmatter=False, *args, **kwargs):
         return df, fm
     else:
         return df
+
+
+def write_csvy(data, path_or_buf=None, frontmatter=None, *args, **kwargs):
+    """Wrapper for `pandas` `to_csv()`, to allow for YAML frontmatter.
+
+    Parameters
+    ----------
+    data : object to write (must have a `to_csv()` method)
+    path_or_buf : as for object's `to_csv()` method, default `None`
+        Destination for output
+    frontmatter : other data to write, typically list- or dict-like,
+                  default `None`
+        Optional frontmatter to store as YAML
+    args, kwargs : further arguments for object's `to_csv()` method
+
+    Returns
+    -------
+    If `path_or_buf` is `None`: the result as a string
+
+    """
+    mode = kwargs.pop('mode', 'w')
+
+    header = ''
+    if frontmatter is not None:
+        header = '''\
+---
+{}
+---
+'''.format(yaml.dump(frontmatter, default_flow_style=False).strip())
+
+        if path_or_buf is not None:
+            if hasattr(path_or_buf, 'write'):
+                path_or_buf.write(header)
+            else:
+                with open(path_or_buf, mode) as f:
+                    print(header, file=f, end='')
+
+        mode = 'a'
+
+    result = data.to_csv(path_or_buf, *args, mode=mode, **kwargs)
+
+    if path_or_buf is None:
+        return header + result
