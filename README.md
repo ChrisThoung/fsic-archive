@@ -25,6 +25,9 @@ included examples.
   Version 2.0.0 or higher
 * [Sphinx](http://sphinx-doc.org/) to build the documentation:
   Version 1.2.2 or higher
+* [PyYAML](http://pyyaml.org/wiki/PyYAML) for support for
+  [files with YAML frontmatter](http://csvy.org/):
+  Version 3.11 or higher
 
 ## Other useful software
 

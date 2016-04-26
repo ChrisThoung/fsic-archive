@@ -4,6 +4,7 @@ python:
     - 3.4
     - 3.5
 install:
+    - pip install PyYAML
     - pip install pandas
     - pip install networkx
     - pip install coverage

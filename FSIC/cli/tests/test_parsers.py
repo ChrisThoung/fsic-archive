@@ -14,6 +14,7 @@ def test_solve_parser():
                               '--span', '1957', '2010'])
     assert args.__dict__ == {
         'solve_from': None,
+        'solve_to': None,
         'verbose': False,
         'set': None,
         'input': None,

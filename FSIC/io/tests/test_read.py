@@ -104,6 +104,11 @@ def test_read_zip():
     assert len(result) == len(expected)
     for r, e in zip(result, expected):
         assert_frame_equal(r, e)
+    # Cleanup
+    try:
+        os.remove(path)
+    except:
+        pass
 
 
 def test_read_csv_specify_method():
@@ -127,6 +132,52 @@ def test_read_csv_no_method_error():
 
 def test_read_csv_no_method_no_error():
     assert FSIC.io.read.read('no_file_ext', fail_on_error=False) is None
+
+
+def test_read_csvy_with_meta():
+    input = os.path.join(test_dir, 'data', 'table.csv')
+    expected_data = pd.read_csv(input, index_col='index')
+    expected_meta = {
+        'name': 'FSIC .csvy test data',
+        'description': 'For more information, see http://csvy.org/',
+        'fields': [
+            {'name': 'C',
+             'title': 'HHFCE',
+             'type': 'float',
+             'description': 'Household Final Consumption Expenditure',
+             'units': 'pounds sterling 2012m (chained volume measures)', },
+            {'name': 'I',
+             'title': 'GCF',
+             'type': 'float',
+             'description': 'Gross Capital Formation',
+             'units': 'pounds sterling 2012m (chained volume measures)', },
+            {'name': 'G',
+             'title': 'GFCE',
+             'type': 'float',
+             'description': 'Government Final Consumption Expenditure',
+             'units': 'pounds sterling 2012m (chained volume measures)', },
+            {'name': 'X',
+             'title': 'Exports',
+             'type': 'float',
+             'description': 'Exports of goods and services',
+             'units': 'pounds sterling 2012m (chained volume measures)', },
+            {'name': 'M',
+             'title': 'Imports',
+             'type': 'float',
+             'description': 'Imports of goods and services',
+             'units': 'pounds sterling 2012m (chained volume measures)', }, ], }
+
+    data, meta = FSIC.io.readers.read_ycsv(
+        input + 'y',
+        filetype={'format': 'csv'},
+        with_meta=True)
+    assert_frame_equal(data, expected_data)
+    assert meta == expected_meta
+
+def test_read_csvy_without_meta():
+    input = os.path.join(test_dir, 'data', 'table.csv')
+    assert_frame_equal(FSIC.io.read.read(input + 'y')[0],
+                       pd.read_csv(input, index_col='index'))
 
 
 if __name__ == '__main__':

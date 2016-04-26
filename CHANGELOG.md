@@ -9,8 +9,10 @@ FSIC follows the conventions of
 
 ### Added
 
-* New `schematic` module for classes to handle parsed model structure
-  (`Variable`, `Equation`, `Function`, `Model`)
+* New schematic classes to represent model structure:
+    * `Variable`: to parse individual variable expressions e.g. 'C_d'
+    * `Equation`: to parse a single equation expression
+	  e.g. 'C_d = alpha_1 * YD + alpha_2 * H_h[-1]'
 * Further improvements to Sphinx documentation from v0.1.0
 * Update documentationn in package code:
     * Description of equation-ordering algorithm in
@@ -19,9 +21,14 @@ FSIC follows the conventions of
 * Specification for `build` system
 * Specification for solution phases in model objects
 * Specification for data variables in model objects
+* Support for YAML frontmatter in delimiter-separated data files
 
 ### Changed
 
+* Overhaul of build and templating system
+    * New `classes` sub-package containing new, simplified `Model` class
+    * New template, 'derived.py', to use new `Model` class
+    * Update 'fsic.py' script with new `template` command
 * Handling of solution-period controls in model template:
     * Version 0.1.0 specified a solution span (with the argument ``--span``)
       and, optionally, a prior period to allow for lagged relationships but not
@@ -45,6 +52,7 @@ FSIC follows the conventions of
 * Add CHANGELOG.md to MANIFEST.in
 * Correct escaping of single quotes in input-argument file example in
   documentation
+* Call to equation-order optimisation function in build script
 
 ### Security
 
