@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-io
-==
-FSIC package for data I/O.
+build
+=====
+FSIC build tools.
 
 """

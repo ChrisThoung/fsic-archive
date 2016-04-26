@@ -20,8 +20,9 @@ The development workflow for FSIC follows the principles of Vincent Driessen's
 
 ## Branch naming conventions
 
-All branches other than `master` or `development` must have a prefix to denote
-the nature of the development work in that branch:
+All branches other than `master`, `development` and `archive` (which stores
+defunct and/or experimental code) must have a prefix to denote the nature of
+the development work in that branch:
 
 * New features (requiring additions to 'Added' in `CHANGELOG.md`): `feature/`
   e.g. `feature/io-sqlite`

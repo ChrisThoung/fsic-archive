@@ -1,7 +1,7 @@
 # References
 
-Almon, C. (2014),
-*The craft of economic modeling*, 5th edition:
+Almon, C. (2016),
+*The craft of economic modeling*, 6th edition:
 http://www.inforum.umd.edu/papers/TheCraft.html
 
 Godley, W., Cripps, F. (1983),

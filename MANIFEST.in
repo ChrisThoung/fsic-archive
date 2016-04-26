@@ -1,9 +1,13 @@
 # Root folder files
 include MANIFEST.in
 include README.md
+include DEVELOPMENT.md
 include CHANGELOG.md
 include LICENSE
 include REFERENCES.md
+
+graft FSIC
+global-exclude *.pyc
 
 # Sphinx documentation folder
 recursive-include doc *.rst conf.py Makefile make.bat *.png

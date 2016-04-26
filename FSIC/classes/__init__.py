@@ -2,12 +2,6 @@
 """
 classes
 =======
-FSIC subpackage of class definitions.
-
-Defines:
- - Schematic classes: Variable, Equation, Function, Model
+FSIC class definitions.
 
 """
-
-
-from FSIC.classes.schematic import Variable, Equation, Function, Model

@@ -2,15 +2,17 @@
 """
 FSIC
 ====
-FSIC (Flows and Stocks Integrated Consistently) is a Python package for the
+**FSIC** (Flows and Stocks Integrated Consistently) is a Python package for the
 specification, solution and analysis of Stock-Flow Consistent macroeconomic
 models in the tradition of Wynne Godley.
 
 """
 
+from FSIC.metadata import VERSION as __version__
 
-from FSIC.version import MAJOR, MINOR, PATCH, DEV, VERSION as __version__  # noqa
-from FSIC.settings import DTYPE  # noqa
-
-from FSIC.classes.model import Model  # noqa
-from FSIC.classes.schematic import Variable, Equation
+from FSIC.build.api import *
+from FSIC.classes.api import *
+from FSIC.cli.api import *
+from FSIC.io.api import *
+from FSIC.parser.api import *
+from FSIC.templates.api import *

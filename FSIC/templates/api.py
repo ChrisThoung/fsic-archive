@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-cli
+api
 ===
-FSIC command-line interfaces.
+FSIC templates API.
 
 """

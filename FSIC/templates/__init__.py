@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""
+templates
+=========
+Template code for FSIC models.
 
-
-from FSIC.templates.helpers import model_path, model, model_dict
+"""
