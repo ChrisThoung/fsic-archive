@@ -105,6 +105,7 @@ def add_subparser_solve(subparsers):
         type=int,
         required=True,
         help='set the start and end periods that define the span of the model')
+    # Add solve span arguments
     parser_solve.add_argument(
         '--solve-from',
         metavar='PERIOD',
@@ -113,5 +114,13 @@ def add_subparser_solve(subparsers):
         required=False,
         help=('set the first period (within the model\'s span) to solve; '
               'default is the first period of the span'))
+    parser_solve.add_argument(
+        '--solve-to',
+        metavar='PERIOD',
+        default=None,
+        type=int,
+        required=False,
+        help=('set the last period (within the model\'s span) to solve; '
+              'default is the last period of the span'))
     # Return
     return subparsers

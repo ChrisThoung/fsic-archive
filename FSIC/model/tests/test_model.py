@@ -39,10 +39,11 @@ def setup_base():
 
 class Derived(Model):
 
-    def initialise(self, span, solve_from=None, default=0.0):
+    def initialise(self, span, solve_from=None, solve_to=None, default=0.0):
         # Store arguments
         self.span = span
         self.solve_from = solve_from
+        self.solve_to = solve_to
         # Initialise `iter`
         self.iter = Series(default, index=self.span, dtype=DTYPE)
         # Initialise model variables

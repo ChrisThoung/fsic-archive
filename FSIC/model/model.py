@@ -86,8 +86,10 @@ class Model:
                in `self.span`
              - If `self.solve_from` is not `None`, solve from `self.solve_from`
         end : Series index
-            Last period to solve. If `None`, set to be the last period in
-            `self.span`
+            Last period to solve. If `None`:
+             - If `self.solve_to` is also `None`, solve to the last period in
+               `self.span`
+             - If `self.solve_to` is not `None`, solve to `self.solve_to`
         max_iter : integer
             The maximum number of iterations to solve over
         min_iter : integer
@@ -111,7 +113,10 @@ class Model:
             else:
                 start = self.solve_from
         if end is None:
-            end = max(self.span)
+            if self.solve_to is None:
+                end = max(self.span)
+            else:
+                end = self.solve_to
         # Solve
         for period in PeriodIndex(start=start, end=end):
             self.solve_period(
