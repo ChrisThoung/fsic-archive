@@ -377,7 +377,9 @@ class Model(object):
         try:
             index = PeriodIndex(start=start, end=end)
         except ValueError:
-            index = Index(range(int(start), int(end) + 1))
+            start = int(str(start))
+            end = int(str(end))
+            index = Index(range(start, end + 1))
         return index
 
     def _make_property(self, name):

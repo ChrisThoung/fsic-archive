@@ -78,6 +78,9 @@ def test_initialise_integer_index():
     model = TestModelConv(solve_from=-5, solve_to=5)
     assert_frame_equal(model.data.reindex(columns=xp.columns), xp)
 
+    model = Model(solve_from=1, solve_to=1000)
+    assert list(model.data.index.values) == list(range(1, 1001))
+
     model.initialise(data=xp)
     assert_frame_equal(model.data.reindex(columns=xp.columns), xp)
 
