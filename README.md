@@ -11,4 +11,5 @@ included examples.
 ## Dependencies
 
 * [pandas](http://pandas.pydata.org/)
+* [NetworkX](https://networkx.github.io/)
 * [PyYAML](http://pyyaml.org/wiki/PyYAML)

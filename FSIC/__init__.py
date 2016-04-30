@@ -10,6 +10,7 @@ models in the tradition of Wynne Godley.
 
 from FSIC.metadata import VERSION as __version__
 
+from FSIC.analysis.api import *
 from FSIC.build.api import *
 from FSIC.classes.api import *
 from FSIC.cli.api import *
