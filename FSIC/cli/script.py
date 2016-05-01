@@ -8,6 +8,7 @@ Interface for main 'fsic.py' script.
 
 import argparse
 
+from FSIC.build.model import ORDER_METHODS
 from FSIC.metadata import VERSION
 
 
@@ -38,6 +39,16 @@ PARSER_BUILD.add_argument('-o', '--output',
                           type=str,
                           help='output file (otherwise print to stdout)')
 
+METHODS = list(ORDER_METHODS.keys())
+PARSER_BUILD.add_argument('--order-method',
+                          metavar='METHOD',
+                          type=str,
+                          choices=METHODS,
+                          default=METHODS[0],
+                          help='method to use to order '
+                          'the equations of the system {}'.format(
+                              '{' + ','.join(METHODS) + '}'))
+
 
 def handle_args(args):
     """Main argument handler for FSIC script."""
@@ -64,7 +75,8 @@ def _build(args):
 
     script = build_model(read_markdown(input_files[0]),
                          'script',
-                         with_main=True)
+                         with_main=True,
+                         order_method=args['order_method'])
 
     output = args['output']
     if output is None:
