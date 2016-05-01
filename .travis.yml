@@ -6,6 +6,7 @@ python:
 install:
     - pip install PyYAML
     - pip install pandas
+    - pip install networkx
     - pip install coverage
     - python setup.py install
 script: nosetests --with-coverage --cover-package=FSIC -v
