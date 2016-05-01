@@ -6,13 +6,25 @@ Build FSIC models from `Schematic` objects.
 
 """
 
+from collections import OrderedDict
+import itertools
 import yaml
 
+from FSIC.analysis.graph import make_graph, topological_sort
 from FSIC.classes.model import Model
 from FSIC.templates.python import MODEL, DEFAULT_FIELDS, MAIN_BLOCK
 
 
-def build_model(schematic, output='class', with_main=False, reorder_equations=None, **kwargs):
+def order_method_topological(equations):
+    return itertools.chain.from_iterable(
+        topological_sort(make_graph(equations)))
+
+ORDER_METHODS = OrderedDict(
+    topological=order_method_topological,
+    none=lambda x: x, )
+
+
+def build_model(schematic, output='class', with_main=False, order_method='topological', **kwargs):
     """Create a FSIC model class from `schematic`.
 
     ** Warning: if `output`='class', this function uses `exec()` and `eval()`
@@ -27,9 +39,10 @@ def build_model(schematic, output='class', with_main=False, reorder_equations=No
     with_main : bool
         If `True`, add a command-line interface as an
         `if __name__ == '__main__'`-type block. No effect if `output`='class'
-    reorder_equations : string, default `None`
-        If not `None`, apply the specified algorithm to reorder the system of
-        equations
+    order_method : string, default 'topological'
+        The method to use to reorder the system of equations before assembling
+        the final output. If `None`, preserve the order as it appears in the
+        original input
     **kwargs : other keyword arguments to insert into class definition
 
     Returns
@@ -72,12 +85,20 @@ def build_model(schematic, output='class', with_main=False, reorder_equations=No
     for k, v in kwargs.items():
         contents[k] = v
 
-    # Create code for Python solution
-    if reorder_equations is not None:
-        raise NotImplementedError
+    # Order the system of equations using the selected method
+    try:
+        order_method = str(order_method.lower())
+        order_function = ORDER_METHODS[order_method]
+        order = order_function(schematic.equations)
+    except KeyError:
+        raise ValueError(
+            'Unrecognised value passed to `order_method`: {}'.format(
+                order_method))
 
+    # Create final code for Python solution
     lines = []
-    for equation in schematic.equations.values():
+    for item in order:
+        equation = schematic.equations[item]
         format_dict = {}
         for i, t in equation.terms.iterrows():
             key = t.name
