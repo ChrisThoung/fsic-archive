@@ -19,9 +19,10 @@ def order_method_topological(equations):
     return itertools.chain.from_iterable(
         topological_sort(make_graph(equations)))
 
-ORDER_METHODS = OrderedDict(
-    topological=order_method_topological,
-    none=lambda x: x, )
+
+ORDER_METHODS = OrderedDict(zip(*zip(
+    ['topological', order_method_topological],
+    ['none', lambda x: x])))
 
 
 def build_model(schematic, output='class', with_main=False, order_method='topological', **kwargs):
