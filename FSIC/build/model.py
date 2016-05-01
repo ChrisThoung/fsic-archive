@@ -88,7 +88,7 @@ def build_model(schematic, output='class', with_main=False, order_method='topolo
 
     # Order the system of equations using the selected method
     try:
-        order_method = str(order_method.lower())
+        order_method = str(order_method).lower()
         order_function = ORDER_METHODS[order_method]
         order = order_function(schematic.equations)
     except KeyError:
