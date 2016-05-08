@@ -96,7 +96,7 @@ class Equation(object):
     def _make_template(self, expression, terms):
         """Form clean template from `expression` using the keys in `terms`."""
         template = re.sub(r'\s+', '', self.PATTERN.sub('{}', expression))
-        template = re.sub('([=*/+-])', r' \1 ', template).replace(',', ', ')
+        template = re.sub('([*]{2}|[=*/+-])', r' \1 ', template).replace(',', ', ')
         template = template.format(*['{' + k + '}' for k in terms.keys()])
         return template.strip()
 

@@ -44,6 +44,12 @@ def test_equation():
     assert eqn.template == xp_template
     assert_frame_equal(eqn.symbols, xp_symbols.reindex(columns=eqn.symbols.columns))
 
+def test_equation_power():
+    # Check that '**' is left unchanged, not converted to '* *'
+    expression = 'y = x ** 2'
+    eqn = Equation(expression)
+    assert eqn.template.format(**eqn.terms['normalised']) == expression
+
 def test_equation_magic():
     a = Equation('H_h = H_h[-1] + YD - C_d')
     b = Equation('H_h[0] = H_h[-1] + YD[0] - C_d[0]')
