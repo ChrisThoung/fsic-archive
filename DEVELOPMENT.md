@@ -48,3 +48,4 @@ made. The following are accepted prefixes:
 * BUG: Bug fix
 * DOC: New/updated documentation
 * ENH: Enhancement (new functionality)
+* TST: New/updated test
