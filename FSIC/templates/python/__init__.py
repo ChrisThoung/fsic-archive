@@ -25,11 +25,12 @@ import FSIC.cli.model
 parser, handle_args = FSIC.cli.model.make_cli({name})
 
 try:
-    import IPython.get_ipython
-    _ipython = IPython.get_ipython()
+    from IPython import get_ipython
+    _ipython = get_ipython()
 except ImportError:
-    _ipython = None
+    _ipython = False
 
 
 if __name__ == '__main__' and not _ipython:
-    handle_args(parser.parse_args())'''
+    handle_args(parser.parse_args())
+'''
