@@ -45,6 +45,7 @@ commit messages to the
 convention of starting with a prefix to summarise the type of the change
 made. The following are accepted prefixes:
 
+* API: API changes
 * BUG: Bug fix
 * DOC: New/updated documentation
 * ENH: Enhancement (new functionality)
