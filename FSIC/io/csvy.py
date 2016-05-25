@@ -25,11 +25,13 @@ def read_csvy(filepath_or_buffer, return_frontmatter=False, *args, **kwargs):
     Returns
     -------
     df : `DataFrame`
-    fm : `dict`, in a 2-tuple, (`df`, `tm`), if `return_frontmatter` is `True`
+    fm : `dict`, in a 2-tuple, (`df`, `fm`), if `return_frontmatter` is `True`
 
     """
     if isinstance(filepath_or_buffer, str):
         filepath_or_buffer = open(filepath_or_buffer, 'r')
+
+    start_pos = filepath_or_buffer.tell()
 
     fm = None
     # If found, parse YAML frontmatter...
@@ -40,9 +42,9 @@ def read_csvy(filepath_or_buffer, return_frontmatter=False, *args, **kwargs):
                 break
             fm.append(line)
         fm = yaml.load('\n'.join(fm))
-    # ...otherwise, return to start of file
+    # ...otherwise, return to original starting position
     else:
-        filepath_or_buffer.seek(0)
+        filepath_or_buffer.seek(start_pos)
 
     df = pd.read_csv(filepath_or_buffer, *args, **kwargs)
     filepath_or_buffer.close()
