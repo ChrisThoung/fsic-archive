@@ -6,5 +6,10 @@ FSIC custom errors and warnings.
 
 """
 
-class SpecificationError(Exception):
+
+class FSICError(Exception):
+    pass
+
+
+class SpecificationError(FSICError):
     pass
