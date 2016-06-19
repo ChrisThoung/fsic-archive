@@ -64,6 +64,13 @@ def test_initialise_period_index():
     model.initialise(1990, 2020, data=xp.ix[1995:2000, :])
     assert_frame_equal(model.data.reindex(columns=xp.columns), xp)
 
+def test_initialise_period_index_from_int():
+    data = DataFrame({'Y': 0.0, 'C': 0.0, 'I': 0.0, 'G': 0.0, 'X': 0.0, 'M': 0.0, },
+                     index=range(1995, 2006))
+    data.ix[2000, 'G'] = 20
+    model = TestModel(data=data)
+    assert model.data.ix['2000', 'G'] == 20
+
 def test_initialise_integer_index():
     xp = DataFrame({'Y': 0.0, 'C': 0.0, 'I': 0.0, 'G': 0.0, 'X': 0.0, 'M': 0.0,
                     'iterations': -1, 'converged': False, 'status': '-'},

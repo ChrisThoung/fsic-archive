@@ -217,6 +217,12 @@ class Model(object):
 
         # Form model `DataFrame`
         if data is not None:
+            # Match index types
+            if type(data.index) != type(index):
+                assert type(index) is PeriodIndex
+                data.index = self._make_index(start=data.index[0],
+                                              end=data.index[-1])
+                assert type(data.index) is PeriodIndex
             # Preserve all columns in `data`, even if not in the list of model
             # variables
             for col in data.columns:
