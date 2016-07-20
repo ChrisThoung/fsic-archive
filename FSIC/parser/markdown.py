@@ -16,6 +16,7 @@ from pandas import DataFrame
 from FSIC.classes.equation import Equation
 from FSIC.classes.schematic import Schematic
 from FSIC.utilities import merge_frames, make_comparison_function
+from FSIC.exceptions import SpecificationError
 
 
 FRONTMATTER = re.compile(
