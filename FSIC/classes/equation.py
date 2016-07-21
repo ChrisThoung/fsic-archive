@@ -58,8 +58,9 @@ class Equation(object):
 
         self.template = self._make_template(self.raw, terms)
         self.terms = DataFrame.from_dict(terms, orient='index')
+        symbols = self._make_symbols(self.terms)
         self.symbols = DataFrame.from_dict(self._make_symbols(self.terms),
-                                           orient='index')
+                                           orient='index').ix[symbols.keys(), :]
 
     def _parse_terms(self, expression):
         """Extract `OrderedDict` of parsed terms from `expression`."""
@@ -103,7 +104,7 @@ class Equation(object):
     def _make_symbols(self, terms):
         """Form `dict` of symbol information from `terms`."""
         compare_types = make_comparison_function(self.PRECEDENCE, self.EXCLUSIVE)
-        symbols = {}
+        symbols = OrderedDict()
         for _, term in terms.iterrows():
             name = term['name']
             entry = {'type': term['type'],

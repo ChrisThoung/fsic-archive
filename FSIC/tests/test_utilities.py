@@ -39,7 +39,7 @@ def test_merge_frames():
     symbols = merge_frames([e.symbols for e in equations],
                            comparison_functions)
 
-    assert_frame_equal(symbols, xp.reindex(columns=symbols.columns))
+    assert_frame_equal(symbols.reindex(index=xp.index, columns=xp.columns), xp)
 
 
 def test_make_comparison_function():

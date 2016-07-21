@@ -75,7 +75,8 @@ def build_model(schematic, output='class', with_main=False, order_method='topolo
     for key, type_ in variable_types.items():
         contents[key] = [v for v, t in schematic.symbol_table['type'].items()
                          if t == type_]
-    contents['variables'] = contents['endogenous'] + contents['exogenous']
+    contents['variables'] = [v for v, t in schematic.symbol_table['type'].items()
+                             if t in ('endogenous', 'exogenous')]
     contents['convergence_variables'] = contents['endogenous']
 
     # Add offset values
@@ -108,6 +109,8 @@ def build_model(schematic, output='class', with_main=False, order_method='topolo
                 index = t['index']
                 if index == 0:
                     index = ''
+                else:
+                    index = '{:+d}'.format(index)
                 term = 'self.{variable}.values[row{index}]'.format(
                     variable=t['name'], index=index)
             format_dict[key] = term

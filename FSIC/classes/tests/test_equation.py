@@ -42,7 +42,8 @@ def test_equation():
     eqn = Equation(expression)
     assert_frame_equal(eqn.terms, xp_terms.reindex(columns=eqn.terms.columns))
     assert eqn.template == xp_template
-    assert_frame_equal(eqn.symbols, xp_symbols.reindex(columns=eqn.symbols.columns))
+    assert_frame_equal(eqn.symbols.reindex(index=xp_symbols.index, columns=xp_symbols.columns),
+                       xp_symbols)
 
 def test_equation_power():
     # Check that '**' is left unchanged, not converted to '* *'
