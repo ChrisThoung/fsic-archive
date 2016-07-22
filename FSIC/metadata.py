@@ -28,6 +28,6 @@ LICENSE = 'BSD'
 
 AUTHOR = 'Chris Thoung'
 AUTHOR_EMAIL = 'chris.thoung@gmail.com'
-URL = 'https://github.com/cthoung/fsic'
+URL = 'https://github.com/ChrisThoung/fsic'
 
 COPYRIGHT = '2014-16, Chris Thoung'
