@@ -7,7 +7,11 @@ FSIC follows the conventions of
 
 ## 0.2.0 - YYYY-MM-DD (unreleased)
 
-Version 0.2.0 of FSIC is a complete rewrite of the codebase.
+Version 0.2.0 of FSIC is a complete rewrite of the codebase, comprising:
+
+* A new algorithm for equation re-ordering, based on a reduction of the model
+  graph into an alternating sequence of Directed Acyclic Graphs and
+  Strongly-Connected Components
 
 ### Added
 
