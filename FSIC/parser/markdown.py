@@ -14,7 +14,6 @@ import yaml
 from pandas import DataFrame
 
 from FSIC.classes.equation import Equation
-from FSIC.classes.schematic import Schematic
 from FSIC.utilities import merge_frames, make_comparison_function
 from FSIC.exceptions import SpecificationError
 
@@ -79,8 +78,8 @@ COMMENT = re.compile(
 def read_markdown(filepath_or_string):
     """Read the model specification in `filepath_or_string`.
 
-    Parameters
-    ----------
+    Parameter
+    ---------
     filepath_or_buffer : str
         Markdown input to read. Can be either a path to the input file or a
         string of formatted Markdown.
@@ -91,23 +90,50 @@ def read_markdown(filepath_or_string):
         The parsed model specification
 
     """
+    # TODO: Consider an alternative way to work around the circular dependency
+    #       between the `Schematic` class and `process_block_table()`
+    from FSIC.classes.schematic import Schematic
+
     if os.path.exists(filepath_or_string):
         filepath_or_string = open(filepath_or_string, 'r').read()
 
     blocks = parse_blocks(filepath_or_string)
-
-    schematic = Schematic()
-    schematic.block_table = DataFrame.from_dict(
+    block_table = DataFrame.from_dict(
         blocks, orient='index').reindex(index=blocks.keys())
 
-    schematic.equations, block_mapping = make_equations_dicts(
-        schematic.block_table)
-    schematic.equation_table = DataFrame.from_dict(
-        block_mapping, orient='index').reindex(block_mapping.keys())
+    schematic = Schematic()
+    (schematic.block_table,
+     schematic.equation_table,
+     schematic.symbol_table,
+     schematic.equations) = process_block_table(block_table)
 
-    schematic.symbol_table = make_symbol_table(schematic.equations)
     return schematic
 
+def process_block_table(block_table):
+    """Create a `Schematic` object from a block table `DataFrame`.
+
+    Parameter
+    ---------
+    block_table : `pandas` `DataFrame`
+        Input `DataFrame` of code blocks; one code block per row
+
+    Returns
+    -------
+    As a tuple:
+        block_table
+        equation_table
+        symbol_table
+        equations
+
+    """
+    equations, block_mapping = make_equations_dicts(
+        block_table)
+    equation_table = DataFrame.from_dict(
+        block_mapping, orient='index').reindex(block_mapping.keys())
+
+    symbol_table = make_symbol_table(equations)
+
+    return block_table, equation_table, symbol_table, equations
 
 def parse_blocks(string):
     """Return the parsed blocks of the Markdown `string` as an `OrderedDict` of `dicts`.
