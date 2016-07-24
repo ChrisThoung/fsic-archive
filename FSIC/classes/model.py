@@ -586,7 +586,10 @@ class Model(object):
                 'Invalid value for `verbosity`: {}'.format(verbosity))
         sys.stdout.flush()
 
-    def _make_spacing(self, rows):
+    def _make_spacing(self, rows=None):
+        if rows is None:
+            rows = range(len(self.data.index))
+
         spacing = [False] * len(rows)
         periods = list(self.data.index[[rows]])
 

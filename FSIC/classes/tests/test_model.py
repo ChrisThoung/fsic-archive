@@ -153,5 +153,28 @@ def test_solve():
     assert sum(model.Y * model.iterations) == 380
 
 
+def test_make_spacing():
+    model = Model(-10, 11)
+    assert model._make_spacing() == ([False] * 5 + [True] +
+                                     [False] * 4 + [True] +
+                                     [False] * 4 + [True] +
+                                     [False] * 4 + [True] +
+                                     [False])
+    model = Model(1990, 2011)
+    assert model._make_spacing() == ([False] * 5 + [True] +
+                                     [False] * 4 + [True] +
+                                     [False] * 4 + [True] +
+                                     [False] * 4 + [True] +
+                                     [False])
+    model = Model('1990', '2011')
+    assert model._make_spacing() == ([False] * 5 + [True] +
+                                     [False] * 4 + [True] +
+                                     [False] * 4 + [True] +
+                                     [False] * 4 + [True] +
+                                     [False])
+    model = Model('2000Q1', '2002Q4')
+    assert model._make_spacing(range(4, 12)) == ([False] * 4 + [True] + [False] * 3)
+
+
 if __name__ == '__main__':
     nose.runmodule()
