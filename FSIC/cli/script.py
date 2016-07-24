@@ -66,14 +66,11 @@ def handle_args(args):
 
 def _build(args):
     from FSIC.parser.markdown import read_markdown
+    from FSIC.classes.schematic import Schematic
     from FSIC.build.model import build_model
 
-    input_files = args['files']
-    if len(input_files) != 1:
-        raise NotImplementedError(
-            'Currently, can only process one file at a time')
-
-    script = build_model(read_markdown(input_files[0]),
+    schematics = [read_markdown(f) for f in args['files']]
+    script = build_model(Schematic.merge(schematics),
                          'script',
                          with_main=True,
                          order_method=args['order_method'])
