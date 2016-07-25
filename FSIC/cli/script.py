@@ -81,3 +81,7 @@ def _build(args):
     else:
         with open(output[0], 'w') as f:
             print(script, file=f)
+
+
+def interface():
+    handle_args(PARSER.parse_args())

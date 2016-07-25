@@ -10,7 +10,7 @@ models in the tradition of Wynne Godley.
 """
 
 import os
-from distutils.core import setup
+from setuptools import setup
 
 
 # Read some metadata from FSIC
@@ -38,10 +38,13 @@ setup(
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     license=LICENSE,
+    classifiers=CLASSIFIERS,
+    platforms='any',
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
     url=URL,
     packages=['FSIC'],
     package_data={'FSIC.templates': [os.path.join('python', '*.txt')]},
-    scripts=[os.path.join('scripts', 'fsic.py')],
-    platforms='any')
+    entry_points={
+        'console_scripts': [
+            'fsic=FSIC.cli.script:interface', ], })
