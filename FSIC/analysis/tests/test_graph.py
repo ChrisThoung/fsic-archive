@@ -89,6 +89,10 @@ def test_make_graph_list():
     G = FSIC.analysis.graph.make_graph(SIM.split('\n'))
     assert nx.is_isomorphic(G, XP_G, node_match=nm)
 
+def test_make_graph_disconnected():
+    G = FSIC.analysis.graph.make_graph(['Y = C + I + G + X - M',
+                                        'pi = 0.02'])
+    assert sorted(G.nodes()) == ['C', 'G', 'I', 'M', 'X', 'Y', 'pi']
 
 def test_topological_sort():
     order = list(itertools.chain.from_iterable(

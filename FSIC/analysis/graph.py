@@ -113,11 +113,15 @@ def _make_graph_from_list(list_, key='normalised', ignore_self_loops=False):
                 raise ValueError(
                     'Unrecognised variable type: {}'.format(type_))
 
-            for n in endogenous:
+        for n in endogenous:
+            if len(exogenous):
                 for x in exogenous:
                     if ignore_self_loops and x == n:
                         continue
                     G.add_edge(x, n)
+            else:
+                G.add_node(n)
+
     return G
 
 def _map_equations_to_nodes(list_, key='normalised'):
