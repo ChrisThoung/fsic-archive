@@ -8,6 +8,7 @@ Generic FSIC utility functions.
 
 from pandas import Period
 from pandas import DataFrame
+from pandas.tslib import DateParseError
 import pandas as pd
 
 from FSIC.exceptions import SpecificationError
@@ -112,7 +113,7 @@ def locate_in_index(index, period) -> int:
     ----------
     index : `pandas` `Index`-like
         Array to search in (an object with a `get_loc()` method)
-    period : int or valid argument to `pandas` `Period` class
+    period : int, str or valid argument to `pandas` `Period` class
         Item to search for
 
     Returns
@@ -124,5 +125,8 @@ def locate_in_index(index, period) -> int:
     if index.holds_integer():
         period = int(period)
     else:
-        period = Period(period)
+        try:
+            period = Period(period)
+        except DateParseError:
+            pass
     return index.get_loc(period)

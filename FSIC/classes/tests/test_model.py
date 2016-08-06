@@ -14,14 +14,13 @@ import nose
 from nose.tools import raises
 
 from FSIC.classes.model import Model
+from FSIC.exceptions import FSICError
 
 
-class TestModel(Model):
+class Variables(Model):
     VARIABLES = list('YCIGXM')
-    START_OFFSET = 5
-    END_OFFSET = 5
 
-class TestModelConv(TestModel):
+class Accounting(Variables):
     CONVERGENCE_VARIABLES = list('Y')
 
     def _solve_python_iteration(self, row):
@@ -31,13 +30,17 @@ class TestModelConv(TestModel):
                               self.X.values[row] -
                               self.M.values[row])
 
+class Dynamic(Accounting):
+    START_OFFSET = 5
+    END_OFFSET = 5
+
 
 def test_initialise_period_index():
     xp = DataFrame({'Y': 0.0, 'C': 0.0, 'I': 0.0, 'G': 0.0, 'X': 0.0, 'M': 0.0,
                     'iterations': -1, 'converged': False, 'status': '-'},
                    index=PeriodIndex(start=1990, end=2020))
 
-    model = TestModel(1990, 2020)
+    model = Dynamic(1990, 2020)
     assert_frame_equal(model.data.reindex(columns=xp.columns), xp)
 
     model.initialise(solve_from=1995, solve_to=2015)
@@ -68,7 +71,7 @@ def test_initialise_period_index_from_int():
     data = DataFrame({'Y': 0.0, 'C': 0.0, 'I': 0.0, 'G': 0.0, 'X': 0.0, 'M': 0.0, },
                      index=range(1995, 2006))
     data.ix[2000, 'G'] = 20
-    model = TestModel(data=data)
+    model = Variables(data=data)
     assert model.data.ix['2000', 'G'] == 20
 
 def test_initialise_integer_index():
@@ -76,13 +79,13 @@ def test_initialise_integer_index():
                     'iterations': -1, 'converged': False, 'status': '-'},
                    index=range(-10, 11))
 
-    model = TestModel(-10, 10)
+    model = Variables(-10, 10)
     assert_frame_equal(model.data.reindex(columns=xp.columns), xp)
 
     model.initialise(-10, 10, convergence_variables=['Y'])
     assert_frame_equal(model.data.reindex(columns=xp.columns), xp)
 
-    model = TestModelConv(solve_from=-5, solve_to=5)
+    model = Dynamic(solve_from=-5, solve_to=5)
     assert_frame_equal(model.data.reindex(columns=xp.columns), xp)
 
     model = Model(solve_from=1, solve_to=1000)
@@ -103,6 +106,15 @@ def test_initialise_integer_index_with_zero():
 
     model = Model(solve_from=-10, solve_to=0)
     assert list(model.data.index) == list(range(-10, 1))
+
+
+def test_initialise_static_index():
+    model = Model(index=['before', 'after'])
+    assert model.data.index.tolist() == ['before', 'after']
+
+@raises(FSICError)
+def test_initialise_static_index_error():
+    model = Dynamic(index=['before', 'after'])
 
 
 @raises(ValueError)
@@ -143,7 +155,7 @@ def test_solve_period_argument_error():
     model.solve(first=2, last=8, single=5)
 
 def test_solve():
-    model = TestModelConv('2000Q1', '2005Q4')
+    model = Dynamic('2000Q1', '2005Q4')
     model.G = 20
     model.M = 10
     model.solve(single='2000Q1')
@@ -151,6 +163,21 @@ def test_solve():
     model.solve()
     model.solve('2000Q2', '2000Q4', verbosity=1)
     assert sum(model.Y * model.iterations) == 380
+
+def test_solve_static_single():
+    model = Accounting(index=['before', 'after'])
+    model.G = [20, 25]
+    assert model.Y.tolist() == [0, 0]
+    model.solve(single='before')
+    assert model.Y.tolist() == [20, 0]
+    model.solve(single='after')
+    assert model.Y.tolist() == [20, 25]
+
+def test_solve_static_all():
+    model = Accounting(index=['before', 'after'])
+    model.G = [20, 25]
+    model.solve()
+    assert model.Y.tolist() == [20, 25]
 
 
 def test_make_spacing():

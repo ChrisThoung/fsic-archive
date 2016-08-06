@@ -14,6 +14,7 @@ from pandas import Series, DataFrame
 import pandas as pd
 pd.set_option('mode.chained_assignment', None)
 
+from FSIC.exceptions import FSICError
 from FSIC.utilities import locate_in_index
 
 
@@ -91,6 +92,7 @@ class Model(object):
     def initialise(self,
                    start=None, end=None,
                    solve_from=None, solve_to=None,
+                   index=None,
                    data=None,
                    variables=None, parameters=None, errors=None,
                    convergence_variables=None,
@@ -122,6 +124,13 @@ class Model(object):
             the user wants to restrict the period of solution. If set, and
             `end` is not set, then the end period of the final index will be:
               `solve_to` + `self.END_OFFSET`
+
+        index : `pandas` index-like (including a list)
+            Object to use as the index. Has precedence over `solve_from` and
+            `solve_to` if the span of this variable encompasses the implied
+            start and end periods. Also provides the means to pass a non-time
+            index (provided that the model is not dynamic; the class will
+            throw an exception if this is not the case)
 
         data : `pandas` `Series` or `DataFrame` object, default `None`
             Object to use to form the final index, if passed. Has precedence
@@ -185,18 +194,30 @@ class Model(object):
 
         """
         # Make `DataFrame` index and find offsets
-        index = self._make_index(start, end,
+        if index is None:
+            index = self._make_index(start, end,
+                                     solve_from, solve_to,
+                                     data)
+            if solve_from:
+                self.start_offset = locate_in_index(index, solve_from)
+            else:
+                self.start_offset = self.START_OFFSET
+
+            if solve_to:
+                self.end_offset = (len(index) - 1) - locate_in_index(index, solve_to)
+            else:
+                self.end_offset = self.END_OFFSET
+        else:
+            try:
+                self._make_index(index[0], index[-1],
                                  solve_from, solve_to,
                                  data)
-        if solve_from:
-            self.start_offset = locate_in_index(index, solve_from)
-        else:
-            self.start_offset = self.START_OFFSET
-
-        if solve_to:
-            self.end_offset = (len(index) - 1) - locate_in_index(index, solve_to)
-        else:
-            self.end_offset = self.END_OFFSET
+            except ValueError:
+                if self.START_OFFSET != 0 or self.END_OFFSET != 0:
+                    raise FSICError('`index` argument is a non-time index, '
+                                    'but model offsets ({}, {}) '
+                                    'suggest a dynamic model'.format(
+                                        self.START_OFFSET, self.END_OFFSET))
 
         # Form combined list of variables, using class attributes as defaults
         def assign_or_use_default(arg, default):
@@ -488,9 +509,15 @@ class Model(object):
             rows_to_solve = (locate_in_index(self.data.index, single), )
         else:
             if first is None:
-                first = self.data.index[self.start_offset]
+                if self.start_offset is None:
+                    first = self.data.index[0]
+                else:
+                    first = self.data.index[self.start_offset]
             if last is None:
-                last = self.data.index[-1 - self.end_offset]
+                if self.end_offset is None:
+                    last = self.data.index[-1]
+                else:
+                    last = self.data.index[-1 - self.end_offset]
             rows_to_solve = tuple(range(
                 locate_in_index(self.data.index, first),
                 locate_in_index(self.data.index, last) + 1))
