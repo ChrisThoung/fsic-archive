@@ -168,9 +168,9 @@ def test_solve_static_single():
     model = Accounting(index=['before', 'after'])
     model.G = [20, 25]
     assert model.Y.tolist() == [0, 0]
-    model.solve(single='before')
+    model.solve(single='before', verbosity=1)
     assert model.Y.tolist() == [20, 0]
-    model.solve(single='after')
+    model.solve(single='after', verbosity=2)
     assert model.Y.tolist() == [20, 25]
 
 def test_solve_static_all():

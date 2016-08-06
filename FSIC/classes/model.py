@@ -631,8 +631,13 @@ class Model(object):
                 blocks = (10, )
             else:
                 blocks = (5, 10)
-            spacing = [any([(year % b) == 0 for b in blocks])
-                       for year in periods]
+
+            try:
+                spacing = [any([(year % b) == 0 for b in blocks])
+                           for year in periods]
+            except TypeError:
+                spacing = [any([(i % b) == 0 for b in blocks])
+                           for i in range(len(periods))]
         else:
             for i in range(1, len(periods)):
                 if periods[i] != periods[i-1]:
