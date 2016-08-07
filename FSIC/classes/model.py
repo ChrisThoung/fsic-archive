@@ -8,6 +8,8 @@ Base `Model` class for `FSIC` models.
 
 import sys
 
+import numpy as np
+
 from pandas import Index, Period, PeriodIndex
 from pandas import Series, DataFrame
 
@@ -555,7 +557,9 @@ class Model(object):
     def _python_solver(self,
                        rows_to_solve,
                        min_iter, max_iter, tol,
-                       verbosity):
+                       verbosity,
+                       *,
+                       stop_on_nan=True):
         """Solve the model in Python.
 
         Parameters
@@ -564,6 +568,7 @@ class Model(object):
         min_iter, max_iter : ints
         tol : float
         verbosity : int
+        stop_on_nan : bool
 
         """
         spacing = [False] * len(rows_to_solve)
@@ -571,8 +576,7 @@ class Model(object):
             spacing = self._make_spacing(rows_to_solve)
 
         for i, row in enumerate(rows_to_solve):
-            status = '-'
-            converged = False
+            status = 'F'
 
             current = self.data[self.convergence_variables].values[row]
             for iteration in range(1, max_iter + 1):
@@ -584,17 +588,18 @@ class Model(object):
                 if iteration >= min_iter:
                     diff = current - previous
                     sum_sq_diff = sum(diff ** 2)
+
+                    if stop_on_nan and np.isnan(sum_sq_diff):
+                        status = 'N'
+                        break
+
                     if sum_sq_diff < tol:
-                        converged = True
                         status = '.'
                         break
 
-            if not converged:
-                status = 'F'
-
             self.data['status'].values[row] = status
             self.data['iterations'].values[row] = iteration
-            self.data['converged'].values[row] = converged
+            self.data['converged'].values[row] = True if status == '.' else False
 
             if verbosity == 0:
                 pass

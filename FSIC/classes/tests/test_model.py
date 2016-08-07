@@ -17,6 +17,13 @@ from FSIC.classes.model import Model
 from FSIC.exceptions import FSICError
 
 
+class NaNs(Model):
+    VARIABLES = ['c', 'C', 'PC']
+
+    def _solve_python_iteration(self, row):
+        self.c.values[row] = (self.C.values[row] /
+                              self.PC.values[row])
+
 class Variables(Model):
     VARIABLES = list('YCIGXM')
 
@@ -178,6 +185,15 @@ def test_solve_static_all():
     model.G = [20, 25]
     model.solve()
     assert model.Y.tolist() == [20, 25]
+
+def test_solve_nans():
+    # Check immediate halt each period in the event of a NaN propagating
+    # through the system
+    model = NaNs(0, 10)
+    model.solve(verbosity=2)
+    assert model.data['c'].isnull().all()
+    assert (model.data['status'] == 'N').all()
+    assert (model.data['iterations'] == 1).all()
 
 
 def test_make_spacing():
