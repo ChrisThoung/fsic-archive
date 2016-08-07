@@ -12,7 +12,7 @@ from pandas.util.testing import assert_frame_equal
 
 from FSIC.classes.equation import Equation
 from FSIC.classes.schematic import Schematic
-from FSIC.parser.wrappers import read_python
+from FSIC.parser.wrappers import read_markdown, read_python
 
 
 def test_schematic_merge_two():
@@ -111,6 +111,23 @@ def test_schematic_merge_three():
         merged.symbol_table.reindex(index=xp_symbol_table.index,
                                     columns=xp_symbol_table.columns),
         xp_symbol_table)
+
+
+def test_frontmatter_handling():
+    # Check that frontmatter variables do not appear in the merged symbol table
+    frontmatter = '''\
+---
+name: SomeModel
+---
+'''
+    equation = '''\
+```{.python}
+Y = C + I + G + X - M
+```
+'''
+    merged = Schematic.merge([read_markdown(frontmatter),
+                              read_markdown(equation)])
+    assert sorted(merged.symbol_table.index.tolist()) == sorted(list('YCIGXM'))
 
 
 if __name__ == '__main__':

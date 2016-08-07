@@ -80,7 +80,7 @@ def _merge_block_tables(old, new):
                 'Unimplemented case for block tables '
                 'that both contain a frontmatter block')
 
-    merged = old.append(new)
+    merged = old.append(new).fillna(False)
 
     # If duplicate names across tables, rename with a '_n' suffix,
     # where n is a zero-based counter
