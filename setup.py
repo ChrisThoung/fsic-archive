@@ -44,7 +44,8 @@ setup(
     author_email=AUTHOR_EMAIL,
     url=URL,
     packages=['FSIC'],
-    package_data={'FSIC.templates': [os.path.join('python', '*.txt')]},
+    package_data={'FSIC.templates': [os.path.join('python', '*.txt')],
+                  'FSIC.tests': [os.path.join('data', '*.csv')], },
     entry_points={
         'console_scripts': [
             'fsic=FSIC.cli.script:interface', ], })

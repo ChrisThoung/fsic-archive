@@ -84,7 +84,7 @@ def _make_parser(cls):
 
 
 def _make_handler(cls):
-    def handle_args(args):
+    def handle_args(args, *, return_result=True):
         """Argument handler for model scripts."""
         try:
             args = args.__dict__
@@ -93,14 +93,17 @@ def _make_handler(cls):
 
         cmd = args['cmd']
         if cmd == 'solve':
-            _solve(args, cls)
+            result = _solve(args, cls, return_result=return_result)
         else:
             raise ValueError('Unrecognised command: {}'.format(cmd))
+
+        if return_result:
+            return result
 
     return handle_args
 
 
-def _solve(args, cls):
+def _solve(args, cls, *, return_result=True):
     """Solve an instance of `cls` using the settings in `args`.
 
     ** Warning: if `args` is non-empty, this function uses `exec()` to assign
@@ -137,5 +140,7 @@ def _solve(args, cls):
             else:
                 raise ValueError(
                     'Unrecognised file extension in: {}'.format(path))
+    elif return_result:
+        return model
     else:
         print(model.data.to_string())

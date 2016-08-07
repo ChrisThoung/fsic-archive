@@ -373,7 +373,10 @@ class Model(object):
             start = solve_from - self.START_OFFSET
 
             if data is not None:
-                start = min(start, data.index[0])
+                try:
+                    start = min(start, data.index[0])
+                except TypeError:
+                    start = min(start, Period(data.index[0]))
 
         elif data is not None:
             start = data.index[0]
