@@ -78,6 +78,7 @@ def build_model(schematic, output='class', with_main=False, order_method='topolo
     contents['variables'] = [v for v, t in schematic.symbol_table['type'].items()
                              if t in ('endogenous', 'exogenous')]
     contents['convergence_variables'] = contents['endogenous']
+    contents['exogenous_variables'] = contents['exogenous']
 
     # Add offset values
     contents['start_offset'] = -min(schematic.symbol_table['min'])

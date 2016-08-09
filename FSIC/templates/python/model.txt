@@ -21,6 +21,8 @@ class {name}(FSIC.Model):
 
     CONVERGENCE_VARIABLES = {convergence_variables}
 
+    EXOGENOUS_VARIABLES = {exogenous_variables}
+
     START_OFFSET = {start_offset}
     END_OFFSET = {end_offset}
 

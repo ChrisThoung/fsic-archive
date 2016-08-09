@@ -59,6 +59,8 @@ def test_build_chain_sim():
 
     CONVERGENCE_VARIABLES = ['C_s', 'C_d', 'G_s', 'T_s', 'T_d', 'N_s', 'N_d', 'YD', 'H_h', 'H_s', 'Y']
 
+    EXOGENOUS_VARIABLES = ['G_d']
+
     START_OFFSET = 1
     END_OFFSET = 0
 
@@ -102,6 +104,8 @@ def test_build_chain_re():
     ERRORS = []
 
     CONVERGENCE_VARIABLES = ['RB']
+
+    EXOGENOUS_VARIABLES = ['RS']
 
     START_OFFSET = 0
     END_OFFSET = 6
