@@ -10,7 +10,8 @@ import argparse
 import itertools
 import os
 
-from FSIC.io.csvy import read_csvy, write_csvy
+from FSIC.io.api import read
+from FSIC.io.csvy import write_csvy
 
 
 def make_cli(cls):
@@ -113,12 +114,7 @@ def _solve(args, cls, *, return_result=True):
     data = None
     input_ = args['input']
     if input_:
-        if len(input_) != 1:
-            raise NotImplementedError(
-                'Still to implement code to read multiple input files')
-        for path in input_:
-            if os.path.splitext(path)[1] in ('.csv', '.csvy'):
-                data = read_csvy(path, index_col=0)
+        data = read(input_, index_col=0)
 
     model = cls(start=args['start'], end=args['end'],
                 solve_from=args['solve_from'], solve_to=args['solve_to'],
