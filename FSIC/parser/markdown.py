@@ -248,7 +248,11 @@ def make_symbol_table(equations):
 
     def compare_equation_strings(a, b):
         if len(a) and len(b):
-            raise SpecificationError
+            raise SpecificationError('''\
+Found two equations that determine the same endogenous variable:
+    {}
+    {}\
+'''.format(a, b))
         elif not len(a) and not len(b):
             return ''
         elif len(a) > len(b):

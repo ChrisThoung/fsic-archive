@@ -48,6 +48,7 @@ made. The following are accepted prefixes:
 * API: API changes
 * BLD: Changes to the installation/build process
 * BUG: Bug fix
+* CLN: Tidied code
 * DOC: New/updated documentation
 * ENH: Enhancement (new functionality)
 * TST: New/updated test
