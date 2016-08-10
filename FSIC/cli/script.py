@@ -69,7 +69,9 @@ def _build(args):
     from FSIC.classes.schematic import Schematic
     from FSIC.build.model import build_model
 
-    schematics = [read_markdown(f) for f in args['files']]
+    schematics = list(filter(
+        lambda x: False if x is None else True,
+        [read_markdown(f) for f in args['files']]))
     script = build_model(Schematic.merge(schematics),
                          'script',
                          with_main=True,
