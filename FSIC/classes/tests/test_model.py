@@ -77,9 +77,9 @@ def test_initialise_period_index():
 def test_initialise_period_index_from_int():
     data = DataFrame({'Y': 0.0, 'C': 0.0, 'I': 0.0, 'G': 0.0, 'X': 0.0, 'M': 0.0, },
                      index=range(1995, 2006))
-    data.ix[2000, 'G'] = 20
+    data.loc[2000, 'G'] = 20
     model = Variables(data=data)
-    assert model.data.ix['2000', 'G'] == 20
+    assert model.data.loc['2000', 'G'] == 20
 
 def test_initialise_integer_index():
     xp = DataFrame({'Y': 0.0, 'C': 0.0, 'I': 0.0, 'G': 0.0, 'X': 0.0, 'M': 0.0,

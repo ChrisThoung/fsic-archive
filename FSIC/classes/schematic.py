@@ -73,7 +73,7 @@ def _merge_block_tables(old, new):
     # Resolve cases where both tables contain a frontmatter block
     if '_Frontmatter' in old.index and '_Frontmatter' in new.index:
         # New block table has empty frontmatter entry: just drop
-        if len(new.ix['_Frontmatter', '_raw'].strip()) == 0:
+        if len(new.loc['_Frontmatter', '_raw'].strip()) == 0:
             new = new.drop('_Frontmatter', axis='index')
         else:
             raise NotImplementedError(

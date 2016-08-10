@@ -62,7 +62,7 @@ def build_model(schematic, output='class', with_main=False, order_method='topolo
     """
     # Use default dictionary as a starting point, and copy in frontmatter
     contents = DEFAULT_FIELDS.copy()
-    frontmatter = yaml.load(schematic.block_table.ix['_Frontmatter', '_raw'])
+    frontmatter = yaml.load(schematic.block_table.loc['_Frontmatter', '_raw'])
     if frontmatter is not None:
         for k, v in frontmatter.items():
             contents[k] = v

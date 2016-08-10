@@ -266,7 +266,7 @@ Found two equations that determine the same endogenous variable:
         symbols['equation'] = ''
         for index, row in symbols.iterrows():
             if row['type'] == 'endogenous':
-                symbols.ix[index, 'equation'] = key
+                symbols.loc[index, 'equation'] = key
         symbol_tables.append(symbols)
 
     return merge_frames(

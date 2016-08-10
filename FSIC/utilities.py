@@ -44,8 +44,8 @@ def merge_frames(frames_to_merge, comparison_functions):
             entry = dict(zip(df.columns, entry))
             if row in merged.index:
                 for column, new_value in entry.items():
-                    merged.ix[row, column] = comparison_functions[column](
-                        new_value, merged.ix[row, column])
+                    merged.loc[row, column] = comparison_functions[column](
+                        new_value, merged.loc[row, column])
             else:
                 merged = pd.concat([merged, DataFrame(entry, index=[row])])
     return merged

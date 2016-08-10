@@ -60,7 +60,7 @@ class Equation(object):
         self.terms = DataFrame.from_dict(terms, orient='index')
         symbols = self._make_symbols(self.terms)
         self.symbols = DataFrame.from_dict(self._make_symbols(self.terms),
-                                           orient='index').ix[symbols.keys(), :]
+                                           orient='index').loc[symbols.keys(), :]
 
     def _parse_terms(self, expression):
         """Extract `OrderedDict` of parsed terms from `expression`."""
