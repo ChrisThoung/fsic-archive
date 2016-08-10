@@ -11,6 +11,8 @@ import argparse
 from FSIC.build.model import ORDER_METHODS
 from FSIC.metadata import VERSION
 
+from FSIC.exceptions import FSICError
+
 
 PARSER = argparse.ArgumentParser(
     description='Tools for Stock-Flow Consistent macroeconomic modelling.',
@@ -72,7 +74,12 @@ def _build(args):
     schematics = list(filter(
         lambda x: False if x is None else True,
         [read_markdown(f) for f in args['files']]))
-    script = build_model(Schematic.merge(schematics),
+
+    combined = Schematic.merge(schematics)
+    if combined.block_table.index.tolist() == ['_Frontmatter']:
+        raise FSICError('No code found in source file(s)')
+
+    script = build_model(combined,
                          'script',
                          with_main=True,
                          order_method=args['order_method'])
