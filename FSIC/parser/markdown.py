@@ -89,6 +89,8 @@ def read_markdown(filepath_or_string):
     schematic : `FSIC` `Schematic` object
         The parsed model specification
 
+    (Or `None` if no code blocks found.)
+
     """
     # TODO: Consider an alternative way to work around the circular dependency
     #       between the `Schematic` class and `process_block_table()`
@@ -98,6 +100,12 @@ def read_markdown(filepath_or_string):
         filepath_or_string = open(filepath_or_string, 'r').read()
 
     blocks = parse_blocks(filepath_or_string)
+
+    # Return `None` if no code found
+    raw_code = [v.get('_raw', '') for v in blocks.values()]
+    if set(raw_code) == set(['']):
+        return None
+
     block_table = DataFrame.from_dict(
         blocks, orient='index').reindex(index=blocks.keys())
 

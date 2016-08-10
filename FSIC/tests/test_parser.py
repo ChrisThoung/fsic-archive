@@ -16,6 +16,13 @@ from FSIC.parser.markdown import read_markdown
 from FSIC.parser.wrappers import read_python
 
 
+def test_read_markdown_empty():
+    assert read_markdown('') is None
+
+def test_read_python_empty():
+    assert read_python('') is None
+
+
 def test_read_markdown():
     data = '''\
 ---
