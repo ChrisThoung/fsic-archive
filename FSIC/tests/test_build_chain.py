@@ -67,6 +67,7 @@ def test_build_chain_sim():
     VERSION = '0.1.0.dev'\
 ''', system='''\
         self.G_s.values[row] = self.G_d.values[row]
+
         self.C_d.values[row] = self.alpha_1.values[row] * self.YD.values[row] + self.alpha_2.values[row] * self.H_h.values[row-1]
         self.C_s.values[row] = self.C_d.values[row]
         self.Y.values[row] = self.C_s.values[row] + self.G_s.values[row]
@@ -75,6 +76,7 @@ def test_build_chain_sim():
         self.YD.values[row] = self.W.values[row] * self.N_s.values[row] - self.T_s.values[row]
         self.T_d.values[row] = self.theta.values[row] * self.W.values[row] * self.N_s.values[row]
         self.T_s.values[row] = self.T_d.values[row]
+
         self.H_h.values[row] = self.H_h.values[row-1] + self.YD.values[row] - self.C_d.values[row]
         self.H_s.values[row] = self.H_s.values[row-1] + self.G_d.values[row] - self.T_d.values[row]\
 ''')

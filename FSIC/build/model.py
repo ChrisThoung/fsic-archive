@@ -17,7 +17,8 @@ from FSIC.templates.python import MODEL, DEFAULT_FIELDS, MAIN_BLOCK
 
 def order_method_topological(equations):
     return itertools.chain.from_iterable(
-        topological_sort(make_graph(equations)))
+        [(['\n'] if i else []) + item
+         for i, item in enumerate(topological_sort(make_graph(equations)))])
 
 
 ORDER_METHODS = OrderedDict(zip(*zip(
@@ -101,6 +102,11 @@ def build_model(schematic, output='class', with_main=False, order_method='topolo
     # Create final code for Python solution
     lines = []
     for item in order:
+        # Add space between code blocks
+        if len(item.strip()) == 0:
+            lines.append('')
+            continue
+
         equation = schematic.equations[item]
         format_dict = {}
         for i, t in equation.terms.iterrows():
@@ -117,7 +123,9 @@ def build_model(schematic, output='class', with_main=False, order_method='topolo
             format_dict[key] = term
         expression = equation.template.format(**format_dict)
         lines.append(expression)
-    contents['python_code'] = '\n        '.join(lines)
+    contents['python_code'] = '\n'.join([
+        line.rstrip()
+        for line in '\n        '.join(lines).splitlines()])
 
     # Create underline to match length of model name
     contents['underline'] = '=' * len(contents['name'])
