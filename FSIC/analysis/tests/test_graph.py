@@ -113,5 +113,14 @@ def test_topological_sort():
     assert order == XP_ORDER
 
 
+def test_unravel_graph():
+    # Test cycle detection and graph unravelling
+    # (Originally added to check for no duplicate nodes across cycles.)
+    G = nx.DiGraph()
+    G.add_edges_from([('A', 'B'), ('B', 'C'), ('C', 'D'), ('D', 'A'),
+                      ('X', 'Y'), ('Y', 'Z'), ('Z', 'A'), ('A', 'B'), ('B', 'X'), ])
+    assert FSIC.analysis.graph._unravel_graph(G) == [['A', 'B', 'C', 'D'], ['X', 'Y', 'Z']]
+
+
 if __name__ == '__main__':
     nose.runmodule()

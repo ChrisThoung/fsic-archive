@@ -357,12 +357,13 @@ def _unravel_graph(G):
                          'a strongly connected component')
 
     nested_order = []
+    already_encountered = set()
     for i, group in enumerate(node_groups):
-        # Remove previous groups (cycles), if they are subsets of the current
-        # one
-        for previous in node_groups[:i]:
-            if set(previous).issubset(group):
-                group = set(group).difference(previous)
+        # Remove nodes from the current group if they appear in a
+        # previously-encountered cycle
+        group = [node for node in group if node not in already_encountered]
+        # Update list of already-encountered nodes
+        already_encountered = already_encountered.union(set(group))
 
         # Get the subgraph of the remaining nodes and either...
         remainder = G.subgraph(group)
