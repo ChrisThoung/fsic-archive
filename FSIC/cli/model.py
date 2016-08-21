@@ -9,6 +9,7 @@ Interface for individual model scripts.
 import argparse
 import itertools
 import os
+import re
 
 from FSIC.io.api import read
 from FSIC.io.csvy import write_csvy
@@ -104,6 +105,39 @@ def _make_handler(cls):
     return handle_args
 
 
+def translate(expression, prefix='model.'):
+    """Convert `expression` to a compatible Python statement."""
+    # Regular expression to identify terms in the expression
+    pattern = re.compile(r'''
+        (?:
+            (?P<variable>(?P<name>[_A-Za-z][_A-Za-z0-9]*)\s*(?:[[](?P<index>.*?)[]])?) |
+            (?P<value>(?:[0-9]+(?:[.]?[0-9]*)?)|(?:[.][0-9]+))
+        )
+    ''', re.VERBOSE)
+
+    # Generate a template to re-insert the terms
+    template = re.sub(r'\s+', ' ', pattern.sub(' {} ', expression).strip())
+
+    # Identify terms and modify, if necessary
+    terms = []
+    for m in pattern.finditer(expression):
+        gd = m.groupdict()
+
+        if gd['variable'] is not None:
+            term = '{}{}'.format(prefix, gd['name'])
+            if gd['index']:
+                term += '[{}]'.format(gd['index'])
+        elif gd['value'] is not None:
+            term = gd['value']
+        else:
+            raise ValueError
+
+        terms.append(term)
+
+    expression = template.format(*terms)
+    return expression
+
+
 def _solve(args, cls, *, return_result=True):
     """Solve an instance of `cls` using the settings in `args`.
 
@@ -121,7 +155,7 @@ def _solve(args, cls, *, return_result=True):
                 data=data)
 
     if args['command']:
-        commands = '\n'.join(['model.' + c.strip()
+        commands = '\n'.join([translate(c.strip())
                               for c in itertools.chain.from_iterable(
                                       args['command'])])
         exec(commands)
