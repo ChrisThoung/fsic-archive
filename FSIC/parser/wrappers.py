@@ -10,13 +10,13 @@ import os
 from FSIC.parser.markdown import read_markdown
 
 
-wrapper_docstring = """Read the {0} model specification in `filepath_or_string`.
+wrapper_docstring = """Read the {language} model specification in `filepath_or_string`.
 
     Parameters
     ----------
     filepath_or_buffer : str
-        {0} input to read. Can be either a path to the input file or a
-        string of {0} code.
+        {language} input to read. Can be either a path to the input file or a
+        string of {language} code.
 
     Returns
     -------
@@ -32,4 +32,4 @@ def read_python(filepath_or_string):
     return read_markdown('``` {#Python .python}\n' +
                          filepath_or_string +
                          '\n```')
-read_python.__doc__ = wrapper_docstring.format('Python')
+read_python.__doc__ = wrapper_docstring.format(language='Python')
