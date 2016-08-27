@@ -1,0 +1,4 @@
+C_s = C_d
+G_s = G_d
+T_s = T_d
+N_s = N_d # No labour supply constraints

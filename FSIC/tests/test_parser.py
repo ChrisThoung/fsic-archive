@@ -6,6 +6,8 @@ Test FSIC Markdown parser and wrappers.
 
 """
 
+import os
+
 from pandas import DataFrame
 from pandas.util.testing import assert_frame_equal
 
@@ -91,16 +93,11 @@ H_h = H_s
             columns=xp_symbol_table.columns),
         xp_symbol_table)
 
-def test_read_python():
-    data = '''\
-C_s = C_d
-G_s = G_d
-T_s = T_d
-N_s = N_d # No labour supply constraints'''
 
+def check_python(schematic):
     xp_block_table = DataFrame.from_dict({
         '_Frontmatter': {'_raw': '', '.yaml': True, '.python': False},
-        'Python': {'_raw': 'C_s = C_d\nG_s = G_d\nT_s = T_d\nN_s = N_d # No labour supply constraints',
+        'Python': {'_raw': 'C_s = C_d\nG_s = G_d\nT_s = T_d\nN_s = N_d # No labour supply constraints\n',
                             '.yaml': False, '.python': True}},
                                    orient='index')
     xp_equation_table = DataFrame.from_dict({
@@ -122,9 +119,6 @@ N_s = N_d # No labour supply constraints'''
         'N_s': {'type': 'endogenous', 'min': 0, 'max': 0, 'equation': 'N_s = N_d'},
         'N_d': {'type': 'exogenous', 'min': 0, 'max': 0, 'equation': ''}},
                                    orient='index')
-
-    schematic = read_python(data)
-
     assert_frame_equal(
         schematic.block_table,
         xp_block_table.reindex(index=schematic.block_table.index,
@@ -141,6 +135,22 @@ N_s = N_d # No labour supply constraints'''
             index=xp_symbol_table.index,
             columns=xp_symbol_table.columns),
         xp_symbol_table)
+
+def test_read_python():
+    data = '''\
+C_s = C_d
+G_s = G_d
+T_s = T_d
+N_s = N_d # No labour supply constraints
+'''
+    schematic = read_python(data)
+    check_python(schematic)
+
+def test_read_python_from_file():
+    schematic = read_python(os.path.join(os.path.split(__file__)[0],
+                                         'data',
+                                         'python.txt'))
+    check_python(schematic)
 
 
 if __name__ == '__main__':
