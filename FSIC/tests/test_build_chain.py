@@ -55,6 +55,7 @@ def test_build_chain_sim():
         static='''\
     VARIABLES = ['C_s', 'C_d', 'G_s', 'G_d', 'T_s', 'T_d', 'N_s', 'N_d', 'YD', 'H_h', 'H_s', 'Y']
     PARAMETERS = ['W', 'theta', 'alpha_1', 'alpha_2']
+    AUTOMATIC = []
     ERRORS = []
 
     CONVERGENCE_VARIABLES = ['C_s', 'C_d', 'G_s', 'T_s', 'T_d', 'N_s', 'N_d', 'YD', 'H_h', 'H_s', 'Y']
@@ -103,6 +104,7 @@ def test_build_chain_re():
         static='''\
     VARIABLES = ['RB', 'RS']
     PARAMETERS = []
+    AUTOMATIC = []
     ERRORS = []
 
     CONVERGENCE_VARIABLES = ['RB']

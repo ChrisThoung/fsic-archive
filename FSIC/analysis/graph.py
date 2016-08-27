@@ -107,7 +107,7 @@ def _make_graph_from_list(list_, key='normalised', ignore_self_loops=False):
                 endogenous.append(name)
             elif type_ in ('exogenous', ):
                 exogenous.append(name)
-            elif type_ in ('function', 'parameter', 'error', ):
+            elif type_ in ('function', 'parameter', 'automatic', 'error', ):
                 continue
             else:
                 raise ValueError(

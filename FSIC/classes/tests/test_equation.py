@@ -14,7 +14,7 @@ from FSIC.classes.equation import Equation
 
 
 def test_equation():
-    expression = 'C_d = {alpha_0} + max({alpha_1} * YD[0], C_d[-1]) + {alpha_2} * H_h[-1] + <epsilon>'
+    expression = 'C_d = {alpha_0} + max({alpha_1} * YD[0], C_d[-1]) + {alpha_2} * H_h[-1] + $I2000$ + <epsilon>'
 
     xp_terms = DataFrame.from_dict({
         'endogenous_0': {'raw': 'C_d', 'name': 'C_d', 'type': 'endogenous', 'index': 0, 'normalised': 'C_d'},
@@ -25,12 +25,14 @@ def test_equation():
         'exogenous_1': {'raw': 'C_d[-1]', 'name': 'C_d', 'type': 'exogenous', 'index': -1, 'normalised': 'C_d[-1]'},
         'parameter_2': {'raw': '{alpha_2}', 'name': 'alpha_2', 'type': 'parameter', 'index': 0, 'normalised': 'alpha_2'},
         'exogenous_2': {'raw': 'H_h[-1]', 'name': 'H_h', 'type': 'exogenous', 'index': -1, 'normalised': 'H_h[-1]'},
+        'automatic_0': {'raw': '$I2000$', 'name': 'I2000', 'type': 'automatic', 'index': 0, 'normalised': 'I2000'},
         'error_0': {'raw': '<epsilon>', 'name': 'epsilon', 'type': 'error', 'index': 0, 'normalised': 'epsilon'}},
                                    orient='index')
-    xp_template = '{endogenous_0} = {parameter_0} + {function_0}({parameter_1} * {exogenous_0}, {exogenous_1}) + {parameter_2} * {exogenous_2} + {error_0}'
+    xp_template = '{endogenous_0} = {parameter_0} + {function_0}({parameter_1} * {exogenous_0}, {exogenous_1}) + {parameter_2} * {exogenous_2} + {automatic_0} + {error_0}'
     xp_symbols = DataFrame.from_dict({
         'C_d': {'type': 'endogenous', 'min': -1, 'max': 0},
         'H_h': {'type': 'exogenous', 'min': -1, 'max': -1},
+        'I2000': {'type': 'automatic', 'min': 0, 'max': 0},
         'YD': {'type': 'exogenous', 'min': 0, 'max': 0},
         'alpha_0': {'type': 'parameter', 'min': 0, 'max': 0},
         'alpha_1': {'type': 'parameter', 'min': 0, 'max': 0},

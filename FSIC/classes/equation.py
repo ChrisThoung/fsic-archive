@@ -29,6 +29,9 @@ class Equation(object):
                     # Errors: enclosed in angled brackets
                     (?: < (?P<error>[_A-Za-z][_A-Za-z0-9]*) > )|
 
+                    # Automatic variables: enclosed in '$'
+                    (?: [$] (?P<automatic>[_A-Za-z][_A-Za-z0-9]*) [$] )|
+
                     # Endogenous: before an '=' sign
                     (?: (?P<endogenous>[_A-Za-z][_A-Za-z0-9]*) (?=.*?[=]) )|
 
@@ -40,7 +43,7 @@ class Equation(object):
         re.VERBOSE)
 
     PRECEDENCE = ('endogenous', 'exogenous')
-    EXCLUSIVE = ('error', 'function', 'parameter')
+    EXCLUSIVE = ('automatic', 'error', 'function', 'parameter')
 
     def __init__(self, expression=None):
         self.raw = expression

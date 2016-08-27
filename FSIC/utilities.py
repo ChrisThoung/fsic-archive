@@ -197,6 +197,8 @@ def time_trend(index, *, loc=None, iloc=None, key=None, value=0, descending=Fals
     return Series(range(start, end + offset, increment), index=index)
 
 
+indicator_types = ('impulse', 'step', 'trend', 'plateau', )
+
 def indicator_matrix(index, *, kind, drop_constants=False, **kwargs):
     """Create a matrix of indicators, as a `DataFrame` object.
 
@@ -216,6 +218,9 @@ def indicator_matrix(index, *, kind, drop_constants=False, **kwargs):
     indicators : `pandas` `DataFrame`
 
     """
+    if kind not in indicator_types:
+        raise ValueError('Invalid `kind` argument: {}'.format(kind))
+
     T = len(index)
 
     if kind == 'impulse':
@@ -233,8 +238,6 @@ def indicator_matrix(index, *, kind, drop_constants=False, **kwargs):
                             for t in [time_trend(index, **kwargs).shift(-i)
                                       for i in range(T)]], axis=1).values
         prefix = 'P'
-    else:
-        raise ValueError('Invalid `kind` argument: {}'.format(kind))
 
     indicators = DataFrame(matrix,
                            index=index,

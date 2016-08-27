@@ -17,6 +17,7 @@ class {name}(FSIC.Model):
 
     VARIABLES = {variables}
     PARAMETERS = {parameters}
+    AUTOMATIC = {automatic}
     ERRORS = {errors}
 
     CONVERGENCE_VARIABLES = {convergence_variables}

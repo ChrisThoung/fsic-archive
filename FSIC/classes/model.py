@@ -17,6 +17,7 @@ import pandas as pd
 pd.set_option('mode.chained_assignment', None)
 
 from FSIC.exceptions import FSICError
+from FSIC.utilities import indicator_types, indicator_matrix
 from FSIC.utilities import locate_in_index
 
 
@@ -62,6 +63,7 @@ class Model(object):
 
     VARIABLES = None
     PARAMETERS = None
+    AUTOMATIC = None
     ERRORS = None
 
     CONVERGENCE_VARIABLES = None
@@ -75,6 +77,7 @@ class Model(object):
     def __init__(self, *args, **kwargs):
         self.variables = None
         self.parameters = None
+        self.automatic = None
         self.errors = None
 
         self.convergence_variables = None
@@ -96,9 +99,10 @@ class Model(object):
                    solve_from=None, solve_to=None,
                    index=None,
                    data=None,
-                   variables=None, parameters=None, errors=None,
+                   variables=None, parameters=None, automatic=None, errors=None,
                    convergence_variables=None,
-                   default_value=0.0) -> None:
+                   default_value=0.0,
+                   exceptions='ignore') -> None:
         """Initialise the model variable, `self.data`, for solution.
 
         Parameters
@@ -149,6 +153,9 @@ class Model(object):
             `PARAMETERS`. Final DataFrame columns consist of the union of
             `variables`, `parameters` and `errors`, plus 'iterations',
             'converged' and 'status'
+        automatic : list of strings, default `None`
+            Variables to generate automatically, for example, dummy and step
+            variables, and time trends.
         errors : list of strings, default `None`
             Error variables of the model. If `None`, default to `ERRORS`. Final
             DataFrame columns consist of the union of `variables`, `parameters`
@@ -162,6 +169,12 @@ class Model(object):
         default_value : numeric
             Default fill value for new `DataFrame` (if not in `data`, if
             supplied)
+
+        exceptions : str {'strict', 'ignore', }, default 'ignore'
+            Stringency of error handling. If:
+             - 'strict': throw an exception if any automatic variables cannot
+                         be created
+             - 'ignore': set to zero any variables that cannot be created
 
         Notes
         -----
@@ -184,9 +197,10 @@ class Model(object):
                          `solve_to` and `data` (see `_make_index()` for
                          details)
          - columns: where supplied, the union of `variables`, `parameters`,
-                    `errors`, the columns of `data` and `['status',
-                    'iterations', 'converged']` ; `VARIABLES`, `PARAMETERS` and
-                    `ERRORS` otherwise
+                    `errors`, the columns of `data`, `automatic` and
+                    `['status', 'iterations', 'converged']` ; `VARIABLES`,
+                    `PARAMETERS`, `ERRORS` and `AUTOMATIC` otherwise. Automatic
+                    variables are initialised separately to the other variables
 
         The order of assignment of the list of convergence variables
         (`self.convergence_variables`) is:
@@ -256,6 +270,25 @@ class Model(object):
         else:
             self.data = DataFrame(default_value,
                                   index=index, columns=columns)
+
+        # Add automatic variables
+        self.automatic = assign_or_use_default(automatic, self.AUTOMATIC)
+        if len(self.automatic):
+            automatic_variables = set(self.automatic)
+            for kind in indicator_types:
+                indicators = indicator_matrix(self.data.index, kind=kind)
+                match = automatic_variables.intersection(set(indicators.columns))
+                if len(match):
+                    for v in match:
+                        self.data[v] = indicators[v].copy()
+                    automatic_variables = automatic_variables.difference(match)
+            if len(automatic_variables):
+                if exceptions == 'strict':
+                    raise FSICError('Unable to create the following automatic variables: {}'
+                                    .format(', '.join(list(automatic_variables))))
+                elif exceptions == 'ignore':
+                    for v in automatic_variables:
+                        self.data[v] = 0.0
 
         # Initialise columns to store solution information
         self.data['status'] = Series('-', index=index)

@@ -72,6 +72,7 @@ def build_model(schematic, output='class', with_main=False, order_method='topolo
     variable_types = {'endogenous': 'endogenous',
                       'exogenous': 'exogenous',
                       'parameters': 'parameter',
+                      'automatic': 'automatic',
                       'errors': 'error'}
     for key, type_ in variable_types.items():
         contents[key] = [v for v, t in schematic.symbol_table['type'].items()
@@ -112,7 +113,7 @@ def build_model(schematic, output='class', with_main=False, order_method='topolo
         for i, t in equation.terms.iterrows():
             key = t.name
             term = t['name']
-            if t['type'] in ('endogenous', 'exogenous', 'parameter', 'error'):
+            if t['type'] in ('endogenous', 'exogenous', 'parameter', 'automatic', 'error'):
                 index = t['index']
                 if index == 0:
                     index = ''
