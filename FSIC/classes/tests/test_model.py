@@ -171,6 +171,30 @@ def test_solve():
     model.solve('2000Q2', '2000Q4', verbosity=1)
     assert sum(model.Y * model.iterations) == 380
 
+def test_solve_copy_convergence():
+    default = Dynamic('2000Q1', '2005Q4') ; default.G = 20 ; default.M = 10 ; default.solve()
+    convergence = Dynamic('2000Q1', '2005Q4') ; convergence.G = 20 ; convergence.M = 10 ; convergence.solve(copy='convergence')
+    assert_frame_equal(default.data[list('YCIGXM')], convergence.data[list('YCIGXM')])
+
+    # Ensure that `convergence` solved at least as quickly as `default` and
+    # that at least some periods solved quicker
+    iterations = convergence.iterations - default.iterations
+    assert (iterations <= 0).all()
+    assert sum(iterations) < 0
+
+@raises(NotImplementedError)
+def test_solve_copy_endogenous():
+    default = Dynamic('2000Q1', '2005Q4') ; default.G = 20 ; default.M = 10 ; default.solve()
+    endogenous = Dynamic('2000Q1', '2005Q4') ; endogenous.G = 20 ; endogenous.M = 10 ; endogenous.solve(copy='endogenous')
+    assert_frame_equal(default.data[list('YCIGXM')], endogenous.data[list('YCIGXM')])
+
+    # Ensure that `endogenous` solved at least as quickly as `default` and
+    # that at least some periods solved quicker
+    iterations = endogenous.iterations - default.iterations
+    assert (iterations <= 0).all()
+    assert sum(iterations) < 0
+
+
 def test_solve_static_single():
     model = Accounting(index=['before', 'after'])
     model.G = [20, 25]

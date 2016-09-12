@@ -87,8 +87,8 @@ class Model(object):
 
         self.data = None
 
-        # Default to Python solver
-        self._solver = self._python_solver
+        # Default to Python Gauss-Seidel solver
+        self._solver = self._solver_gauss_seidel_python
 
         if len(args) or len(kwargs):
             self.initialise(*args, **kwargs)
@@ -496,7 +496,8 @@ class Model(object):
     def solve(self,
               first=None, last=None, single=None,
               min_iter=0, max_iter=100, tol=1e-06,
-              verbosity=0) -> None:
+              verbosity=0,
+              **kwargs) -> None:
         """Solve the model for one or more periods.
 
         Parameters
@@ -530,6 +531,8 @@ class Model(object):
         verbosity : int, default 0
             The level of detail to report on solution progress. Prints no
             output if zero; higher values report progressively more detail
+
+        kwargs : arguments to pass to solver function
 
         """
         if self.data is None:
@@ -584,16 +587,18 @@ class Model(object):
         # Solve model
         self._solver(rows_to_solve,
                      min_iter, max_iter, tol,
-                     verbosity)
+                     verbosity,
+                     **kwargs)
 
 
-    def _python_solver(self,
-                       rows_to_solve,
-                       min_iter, max_iter, tol,
-                       verbosity,
-                       *,
-                       stop_on_nan=True):
-        """Solve the model in Python.
+    def _solver_gauss_seidel_python(self,
+                                    rows_to_solve,
+                                    min_iter, max_iter, tol,
+                                    verbosity,
+                                    *,
+                                    stop_on_nan=True,
+                                    copy=None):
+        """Gauss-Seidel solver, implemented in Python.
 
         Parameters
         ----------
@@ -602,6 +607,15 @@ class Model(object):
         tol : float
         verbosity : int
         stop_on_nan : bool
+        copy : str {'endogenous', 'convergence'}, default `None`
+            If not `None`, copy selected values from the previous period into
+            the current period prior to solution. This may help to reduce the
+            number of iterations to convergence and/or guard against `NaN`s in
+            the event of an unfavourable/unfortunate equation order.
+
+            Options:
+             - 'endogenous' : copy endogenous variables only
+             - 'convergence' : copy convergence variables only
 
         """
         spacing = [False] * len(rows_to_solve)
@@ -611,13 +625,29 @@ class Model(object):
         for i, row in enumerate(rows_to_solve):
             status = 'F'
 
-            current = self.data[self.convergence_variables].values[row]
+            # Optionally copy previous period's values over to the current period
+            if copy is not None:
+                if copy == 'endogenous':
+                    raise NotImplementedError
+                if copy == 'convergence':
+                    copy_vars = self.convergence_variables
+                else:
+                    raise ValueError('Invalid `copy` argument: {}'.format(copy))
+
+                if len(copy_vars) > 1:
+                    self.data.iloc[row, [self.data.columns.get_loc(v) for v in copy_vars]] = (
+                        self.data.iloc[row - 1, [self.data.columns.get_loc(v) for v in copy_vars]])
+                else:
+                    self.data.iloc[row, self.data.columns.get_loc(copy_vars[0])] = (
+                        self.data.iloc[row - 1, self.data.columns.get_loc(copy_vars[0])])
+
+            current = self.data[self.convergence_variables].values[row].copy()
             for iteration in range(1, max_iter + 1):
-                previous = current
 
+                previous = current.copy()
                 self._solve_python_iteration(row)
+                current = self.data[self.convergence_variables].values[row].copy()
 
-                current = self.data[self.convergence_variables].values[row]
                 if iteration >= min_iter:
                     diff = current - previous
                     sum_sq_diff = sum(diff ** 2)
