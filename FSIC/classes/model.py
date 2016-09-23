@@ -17,7 +17,7 @@ import pandas as pd
 pd.set_option('mode.chained_assignment', None)
 
 from FSIC.exceptions import FSICError
-from FSIC.utilities import indicator_types, indicator_matrix
+from FSIC.functions import indicator_types, indicator_matrix
 from FSIC.utilities import locate_in_index
 
 
