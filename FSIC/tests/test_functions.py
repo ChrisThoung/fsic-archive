@@ -6,15 +6,40 @@ Test FSIC data functions.
 
 """
 
+import math
+
+import numpy as np
+
 from pandas import PeriodIndex
 from pandas import Series, DataFrame
 
+from FSIC.functions import lag, diff, dlag, dlog
 from FSIC.functions import time_trend, indicator_matrix
 
 import nose
 from nose.tools import raises
 
 from pandas.util.testing import assert_series_equal, assert_frame_equal
+
+
+def test_transformations():
+    x = Series({a: i for i, a in enumerate('ABCDEFG')})
+    # lag()
+    assert_series_equal(
+        lag(x),
+        Series([np.nan] + list(range(6)), index=list('ABCDEFG')))
+    # diff()
+    assert_series_equal(
+        diff(x),
+        Series([np.nan] + [1] * 6, index=list('ABCDEFG')))
+    # dlag()
+    assert_series_equal(
+        dlag(x),
+        Series([np.nan] * 2 + [1] * 5, index=list('ABCDEFG')))
+    # dlog()
+    assert_series_equal(
+        dlog(Series(math.e, index=list('ABCDEFG'))),
+        Series([np.nan] + [0.0] * 6, index=list('ABCDEFG')))
 
 
 def test_time_trend():

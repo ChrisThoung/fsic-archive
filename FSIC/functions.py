@@ -13,6 +13,19 @@ from pandas import Series, DataFrame
 import pandas as pd
 
 
+def lag(x, p=1):
+    return x.shift(p)
+
+def diff(x, d=1):
+    return x - lag(x, d)
+
+def dlag(x, p=1, d=1):
+    return lag(diff(x, d), p)
+
+def dlog(x, d=1):
+    return diff(np.log(x), d)
+
+
 def time_trend(index, *, loc=None, iloc=None, key=None, value=0, descending=False):
     """Create a time trend from `index`, as a `Series` object.
 
