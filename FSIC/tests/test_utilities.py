@@ -15,7 +15,9 @@ from nose.tools import raises
 
 from FSIC import Equation
 from FSIC.exceptions import SpecificationError
+
 from FSIC.utilities import merge_frames, make_comparison_function
+from FSIC.utilities import partition, unique_everseen
 
 
 def test_merge_frames():
@@ -51,6 +53,17 @@ def test_make_comparison_function():
 def test_make_comparison_function_specification_error():
     compare = make_comparison_function('abcd', 'efg')
     compare('a', 'e')
+
+
+def test_partition():
+    assert [list(b) for b in partition('ABCDEFG', 4)] == [list('ABCD'), list('EFG')]
+    assert [list(b) for b in partition('ABCDEFG', 7)] == [list('ABCDEFG')]
+    assert [list(b) for b in partition('ABCDEFG', 8)] == [list('ABCDEFG')]
+
+def test_unique_everseen():
+    assert list(unique_everseen('ABBCCCDDDDEEEEEFFFFFFGGGGGGG')) == list('ABCDEFG')
+    assert list(unique_everseen('abcdefgABBCCCDDDDEEEEEFFFFFFGGGGGGG', str.upper)) == list('abcdefg')
+    assert list(unique_everseen('abcdefgABBCCCDDDDEEEEEFFFFFFGGGGGGG', str.lower)) == list('abcdefg')
 
 
 if __name__ == '__main__':
