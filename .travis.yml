@@ -6,6 +6,7 @@ python:
     - 3.6
 install:
     - pip install PyYAML
+    - pip install Cython
     - pip install pandas
     - pip install networkx
     - pip install nose
