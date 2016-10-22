@@ -3,9 +3,7 @@
 """
 FSIC
 ====
-**FSIC** (Flows and Stocks Integrated Consistently) is a Python package for the
-specification, solution and analysis of Stock-Flow Consistent macroeconomic
-models in the tradition of Wynne Godley.
+**FSIC** is a Python package for macroeconomic modelling.
 
 """
 
@@ -13,8 +11,8 @@ import os
 from setuptools import setup
 
 
-# Read some metadata from FSIC
-exec(open(os.path.join('FSIC', 'metadata.py')).read())
+# Read some metadata from `fsic`
+exec(open(os.path.join('fsic', 'metadata.py')).read())
 LONG_DESCRIPTION = open('README.md').read()
 
 CLASSIFIERS = [c.strip() for c in '''\
@@ -28,6 +26,7 @@ Programming Language :: Python :: 3
 Programming Language :: Python :: 3.3
 Programming Language :: Python :: 3.4
 Programming Language :: Python :: 3.5
+Programming Language :: Python :: 3.6
 Topic :: Scientific/Engineering
 '''.split('\n') if len(c.strip())]
 
@@ -43,12 +42,20 @@ setup(
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
     url=URL,
-    packages=['FSIC'],
+    packages=['fsic',
+              'fsic.analysis',
+              'fsic.build',
+              'fsic.classes',
+              'fsic.cli',
+              'fsic.io',
+              'fsic.parser',
+              'fsic.templates',
+              'fsic.templates.python', ],
     package_data={
-        'FSIC.io.tests': [os.path.join('data', '*.csv'), ],
-        'FSIC.templates': [os.path.join('python', '*.txt'), ],
-        'FSIC.tests': [os.path.join('data', '*.csv'),
+        'fsic.io.tests': [os.path.join('data', '*.csv'), ],
+        'fsic.templates': [os.path.join('python', '*.txt'), ],
+        'fsic.tests': [os.path.join('data', '*.csv'),
                        os.path.join('data', '*.txt'), ], },
     entry_points={
         'console_scripts': [
-            'fsic=FSIC.cli.script:interface', ], })
+            'fsic=fsic.cli.script:interface', ], })

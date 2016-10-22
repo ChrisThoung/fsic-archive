@@ -1,0 +1,34 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+{name}
+{underline}
+{description}
+
+"""
+
+import fsic
+
+
+class {name}(fsic.Model):
+    """{docstring}
+
+    """
+
+    VARIABLES = {variables}
+    PARAMETERS = {parameters}
+    AUTOMATIC = {automatic}
+    ERRORS = {errors}
+
+    CONVERGENCE_VARIABLES = {convergence_variables}
+
+    EXOGENOUS_VARIABLES = {exogenous_variables}
+
+    START_OFFSET = {start_offset}
+    END_OFFSET = {end_offset}
+
+    VERSION = {version}
+
+
+    def _solve_python_iteration(self, row):
+        {python_code}

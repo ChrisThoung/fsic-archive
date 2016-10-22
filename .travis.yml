@@ -3,10 +3,12 @@ python:
     - 3.3
     - 3.4
     - 3.5
+    - 3.6
 install:
     - pip install PyYAML
     - pip install pandas
     - pip install networkx
+    - pip install nose
     - pip install coverage
-    - python setup.py install
-script: nosetests --with-coverage --cover-package=FSIC -v
+    - pip install .
+script: nosetests --with-coverage --cover-package=fsic -v

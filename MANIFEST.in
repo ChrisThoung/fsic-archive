@@ -6,7 +6,7 @@ include CHANGELOG.md
 include LICENSE
 include REFERENCES.md
 
-graft FSIC
+graft fsic
 global-exclude *.pyc
 
 # Sphinx documentation folder
