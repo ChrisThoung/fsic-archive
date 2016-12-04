@@ -41,6 +41,10 @@ setup(
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
     url=URL,
+    install_requires=[
+        'pandas',
+        'networkx',
+        'pyyaml', ],
     packages=['fsic',
               'fsic.analysis',
               'fsic.build',
