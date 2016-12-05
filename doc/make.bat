@@ -39,6 +39,7 @@ if "%1" == "help" (
 	echo.  linkcheck  to check all external links for integrity
 	echo.  doctest    to run all doctests embedded in the documentation if enabled
 	echo.  coverage   to run coverage check of the documentation if enabled
+	echo.  dummy      to check syntax errors of document sources
 	goto end
 )
 
@@ -266,6 +267,14 @@ if "%1" == "pseudoxml" (
 	if errorlevel 1 exit /b 1
 	echo.
 	echo.Build finished. The pseudo-XML files are in %BUILDDIR%/pseudoxml.
+	goto end
+)
+
+if "%1" == "dummy" (
+	%SPHINXBUILD% -b dummy %ALLSPHINXOPTS% %BUILDDIR%/dummy
+	if errorlevel 1 exit /b 1
+	echo.
+	echo.Build finished. Dummy builder generates no files.
 	goto end
 )
 
