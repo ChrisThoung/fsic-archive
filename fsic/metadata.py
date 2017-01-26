@@ -30,4 +30,4 @@ AUTHOR = 'Chris Thoung'
 AUTHOR_EMAIL = 'chris.thoung@gmail.com'
 URL = 'https://github.com/ChrisThoung/fsic'
 
-COPYRIGHT = '2014-16, Chris Thoung'
+COPYRIGHT = '2014-17, Chris Thoung'
