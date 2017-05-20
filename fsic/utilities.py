@@ -14,7 +14,7 @@ from pandas import Period
 from pandas import DataFrame
 import pandas as pd
 
-from pandas.tslib import DateParseError
+from pandas.core.tools.datetimes import DateParseError
 
 from fsic.exceptions import SpecificationError
 

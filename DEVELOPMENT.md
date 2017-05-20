@@ -49,6 +49,7 @@ made. The following are accepted prefixes:
 * BLD: Changes to the installation/build process
 * BUG: Bug fix
 * CLN: Tidied code
+* CPT: Update for compatibility with newer versions of other third-party packages
 * DOC: New/updated documentation
 * ENH: Enhancement (new functionality)
 * TST: New/updated test
