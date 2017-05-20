@@ -15,6 +15,9 @@ Version 0.2.0 of FSIC is a complete rewrite of the codebase, comprising:
 
 ### Added
 
+* New `Variable` class as a lighter-weight replacement for `pandas` `Series`
+  objects
+
 ### Deprecated
 
 ### Removed
