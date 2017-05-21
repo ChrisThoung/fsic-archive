@@ -8,3 +8,4 @@ FSIC classes API.
 
 from fsic.classes.equation import Equation
 from fsic.classes.model import Model
+from fsic.classes.variable import Variable

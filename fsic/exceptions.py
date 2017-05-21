@@ -13,3 +13,7 @@ class FSICError(Exception):
 
 class SpecificationError(FSICError):
     pass
+
+
+class DimensionError(FSICError):
+    pass

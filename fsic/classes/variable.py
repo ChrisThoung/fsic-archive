@@ -8,27 +8,47 @@ Container based on standard-library `OrderedDict` class, augmented with
 """
 
 from collections import OrderedDict
+from collections.abc import Iterable
 import itertools
+
+
+from fsic.exceptions import DimensionError
 
 
 class Variable(OrderedDict):
     """`OrderedDict`-based container with `pandas` Series-style indexing."""
 
-    def __init__(self, values, index=None):
+    def __init__(self, values=None, index=None):
         """Initialise object with values and index (keys).
 
         Parameters
         ----------
-        values : constant (*requires* an `index` argument) or iterable
-        index : iterable; default: `range(0, len(values))`
+        values : iterable, default `None`
+        index : iterable, defaults to [0, 1, ...]
 
         """
+        if values is None and index is None:
+            contents = zip((), ())
+        else:
+            if index is None:
+                if isinstance(values, Iterable):
+                    index = itertools.count()
+                else:
+                    values, index = [values], [0]
+                contents = zip(index, values)
+            else:
+                if not isinstance(values, Iterable):
+                    values = [values]
 
-        if index is None:
-            # No index: (infinite) counter to implement a `range`-like
-            index = itertools.count()
-        elif not hasattr(values, '__iter__') or isinstance(values, str):
-            # Constant: (infinite) cycler over length of `index`
-            values = itertools.cycle([values])
+                if len(values) == 1:
+                    contents = zip(index, itertools.cycle(values))
+                else:
+                    index, value = map(list, (index, values))
+                    if len(index) != len(values):
+                        raise DimensionError(
+                            'Unequal argument lengths of '
+                            '`values` ({}) and `index` ({})'.format(len(values),
+                                                                    len(index)))
+                    contents = zip(index, values)
 
-        super().update(zip(index, values))
+        super().update(contents)
