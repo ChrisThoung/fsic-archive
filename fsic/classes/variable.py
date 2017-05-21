@@ -72,3 +72,40 @@ class Variable(OrderedDict):
                     contents = zip(index, values)
 
         super().update(contents)
+
+    def __getitem__(self, key):
+        """Augmented getter, aping `pandas` `Series`-style indexing.
+
+        Examples
+        --------
+        >>> example_var = Variable(range(7), 'ABCDEFG')
+
+        >>> example_var['A']
+        0
+
+        >>> example_var['B':'D']
+        [1, 2, 3]
+
+        >>> example_var[:'C']
+        [0, 1, 2]
+
+        >>> example_var['E':]
+        [4, 5, 6]
+
+        >>> example_var[::2]
+        [0, 2, 4, 6]
+
+        """
+        if type(key) is slice:
+            find = list(self.keys()).index
+
+            start = 0 if key.start is None else find(key.start)
+            stop = len(self) if key.stop is None else find(key.stop) + 1
+            step = 1 if key.step is None else key.step
+
+            item = list(map(self.__getitem__,
+                            itertools.islice(self.keys(), start, stop, step)))
+        else:
+            item = super().__getitem__(key)
+
+        return item

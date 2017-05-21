@@ -66,6 +66,14 @@ def test_simple_indexing():
     for i, a in enumerate('ABCDEFG'):
         assert test_var[a] == i
 
+def test_slice_indexing():
+    test_var = Variable(range(7), 'ABCDEFG')
+
+    assert test_var['B':'D'] == [1, 2, 3]
+    assert test_var[:'C'] == [0, 1, 2]
+    assert test_var['E':] == [4, 5, 6]
+    assert test_var[::2] == [0, 2, 4, 6]
+
 
 if __name__ == '__main__':
     nose.runmodule()
