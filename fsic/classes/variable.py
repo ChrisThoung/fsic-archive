@@ -73,6 +73,16 @@ class Variable(OrderedDict):
 
         super().update(contents)
 
+
+    def _unpack_slice(self, slice_):
+        find = list(self.keys()).index
+
+        start = 0 if slice_.start is None else find(slice_.start)
+        stop = len(self) if slice_.stop is None else find(slice_.stop) + 1
+        step = 1 if slice_.step is None else slice_.step
+
+        return start, stop, step
+
     def __getitem__(self, key):
         """Augmented getter, aping `pandas` `Series`-style indexing.
 
@@ -97,15 +107,65 @@ class Variable(OrderedDict):
 
         """
         if type(key) is slice:
-            find = list(self.keys()).index
-
-            start = 0 if key.start is None else find(key.start)
-            stop = len(self) if key.stop is None else find(key.stop) + 1
-            step = 1 if key.step is None else key.step
-
-            item = list(map(self.__getitem__,
-                            itertools.islice(self.keys(), start, stop, step)))
+            start, stop, step = self._unpack_slice(key)
+            labels = itertools.islice(self.keys(), start, stop, step)
+            item = list(map(self.__getitem__, labels))
         else:
             item = super().__getitem__(key)
 
         return item
+
+    def __setitem__(self, key, value):
+        """Augmented setter, aping `pandas` `Series`-style indexing.
+
+        Examples
+        --------
+        >>> example_var = Variable(range(7), 'ABCDEFG')
+        >>> example_var
+        Variable([('A', 0), ('B', 1), ('C', 2), ('D', 3), ('E', 4), ('F', 5), ('G', 6)])
+
+        >>> example_var['A'] = 10
+        >>> example_var
+        Variable([('A', 10), ('B', 1), ('C', 2), ('D', 3), ('E', 4), ('F', 5), ('G', 6)])
+
+        >>> example_var['B':'D'] = 3, 2, 1
+        >>> example_var
+        Variable([('A', 10), ('B', 3), ('C', 2), ('D', 1), ('E', 4), ('F', 5), ('G', 6)])
+
+        >>> example_var['C':] = 50
+        >>> example_var
+        Variable([('A', 10), ('B', 3), ('C', 50), ('D', 50), ('E', 50), ('F', 50), ('G', 50)])
+
+        >>> example_var[:'C'] = -50
+        >>> example_var
+        Variable([('A', -50), ('B', -50), ('C', -50), ('D', 50), ('E', 50), ('F', 50), ('G', 50)])
+
+        >>> example_var[::2] = 100
+        >>> example_var
+        Variable([('A', 100), ('B', -50), ('C', 100), ('D', 50), ('E', 100), ('F', 50), ('G', 100)])
+
+        >>> example_var[::2] = [0, 2, 4, 6]
+        >>> example_var
+        Variable([('A', 0), ('B', -50), ('C', 2), ('D', 50), ('E', 4), ('F', 50), ('G', 6)])
+
+        """
+        if type(key) is slice:
+            start, stop, step = self._unpack_slice(key)
+            labels = itertools.islice(self.keys(), start, stop, step)
+
+            if not isinstance(value, Iterable):
+                value = [value]
+
+            if len(value) == 1:
+                value = itertools.cycle(value)
+            else:
+                labels, value = map(list, (labels, value))
+                if len(labels) != len(value):
+                    raise ValueError(
+                        'Different argument lengths: keys ({}), values ({})'.format(
+                            len(labels), len(value)))
+
+            for k, v in zip(labels, value):
+                super().__setitem__(k, v)
+        else:
+            super().__setitem__(key, value)

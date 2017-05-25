@@ -74,6 +74,33 @@ def test_slice_indexing():
     assert test_var['E':] == [4, 5, 6]
     assert test_var[::2] == [0, 2, 4, 6]
 
+def test_setter():
+    test_var = Variable(range(7), 'ABCDEFG')
+
+    test_var['A'] = 10
+    assert list(test_var.values()) == [10, 1, 2, 3, 4, 5, 6]
+
+    test_var['B':'D'] = [3, 2, 1]
+    assert list(test_var.values()) == [10, 3, 2, 1, 4, 5, 6]
+
+    test_var[:'C'] = [0, 1, 2]
+    assert list(test_var.values()) == [0, 1, 2, 1, 4, 5, 6]
+
+    test_var['E':] = range(1000, 1003)
+    assert list(test_var.values()) == [0, 1, 2, 1, 1000, 1001, 1002]
+
+    test_var[::2] = [-10, 0, 10, 20]
+    assert list(test_var.values()) == [-10, 1, 0, 1, 10, 1001, 20]
+
+    test_var['D':'F'] = -100
+    assert list(test_var.values()) == [-10, 1, 0, -100, -100, -100, 20]
+
+@raises(ValueError)
+def test_set_error():
+    test_var = Variable(range(7), 'ABCDEFG')
+    # The slice specifies three elements but there are four values
+    test_var['A':'C'] = [0, 1, 2, 3]
+
 
 if __name__ == '__main__':
     nose.runmodule()
