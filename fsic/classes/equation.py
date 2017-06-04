@@ -7,7 +7,7 @@ equation
 """
 
 from collections import Counter, OrderedDict
-from collections.abc import Mapping
+from collections.abc import Container, Mapping
 
 import re
 
@@ -66,6 +66,10 @@ class Equation(object):
             self.parse(self.raw)
 
         self.data = None
+
+        self.index = None
+        self.start_offset = None
+        self.end_offset = None
 
     def parse(self, expression):
         """Extract template and table of terms from `expression`."""
@@ -167,17 +171,26 @@ class Equation(object):
         return True
 
     def initialise(self, index, values=0.0):
+        self.index = tuple(index)
+
         if isinstance(values, Mapping):
             get = lambda k: values.get(k, 0.0)
         else:
             get = lambda k: values
 
-        data = {k: self.CONTAINER_1D(get(k), index)
+        data = {k: self.CONTAINER_1D(get(k), self.index)
                 for k in self.terms['name']}
         self.data = self.CONTAINER_2D(data)
 
         for k in self.data.keys():
             setattr(self.__class__, k, self._make_property(self.data, k))
+
+        self.start_offset = -1 * min(self.symbols['min'])
+        self.end_offset = max(self.symbols['max'])
+
+        solve_function = self._make_solve_function_script(self.raw, self.template, self.terms)
+        exec(solve_function, globals(), locals())
+        setattr(self.__class__, 'solve', locals()['solve'])
 
     @staticmethod
     def _make_property(container, key):
@@ -192,3 +205,49 @@ class Equation(object):
             raise NotImplementedError
 
         return property(getter, setter, deleter)
+
+    def span(self):
+        if self.start_offset is None or self.end_offset is None:
+            raise RuntimeError
+
+        for i in range(self.start_offset, len(self.index) - self.end_offset):
+            yield self.index[i]
+
+    def solve(self, period=None, data=None):
+        raise NotImplementedError
+
+    @staticmethod
+    def _make_solve_function_script(raw_expression, template, terms):
+
+        expr_terms = {}
+        for i, row in terms.iterrows():
+            expr_terms[i] = 'self.{}[index[{}]]'.format(row['name'], row['index'])
+        code = template.format(**expr_terms)
+
+        docstring = '''\
+Solve: {}
+
+    Coded as: {}
+
+    Parsed from: {}\
+'''.format(template.format(**terms['normalised'].to_dict()),
+           code,
+           template.format(**terms['raw'].to_dict()))
+
+        function = '''\
+def solve(self, period=None, data=None):
+    """{docstring}
+
+    """
+    if period is None:
+        period = self.span()
+    elif not isinstance(period, Container):
+        period = [period]
+
+    for p in period:
+        position = self.index.index(p)
+        index = self.index[position:] + self.index[:position]
+        {code}\
+'''.format(docstring=docstring, code=code)
+
+        return function
