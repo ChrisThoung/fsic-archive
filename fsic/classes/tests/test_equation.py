@@ -106,6 +106,30 @@ def test_equation_solve_script():
                                   'alpha_2': 0.4},
                                 index=list('ABCDEFG')))
 
+def test_equation_solve_expression():
+    class Consumption(Equation):
+        EXPRESSION = 'C = ({alpha_1} * YD) + ({alpha_2} * H[-1])'
+
+    consumption = Consumption()
+    consumption.initialise(index='ABCDEFG')
+
+    consumption.alpha_1 = 0.6
+    consumption.alpha_2 = 0.4
+
+    consumption.YD['B':] = 80.0
+    consumption.H = 80.0
+
+    for period in consumption.span():
+        consumption.solve(period)
+
+    assert_frame_equal(DataFrame(consumption.data),
+                       DataFrame({'C': [0.0] + ([80.0] * 6),
+                                  'YD': [0.0] + ([80.0] * 6),
+                                  'H': [80.0] * 7,
+                                  'alpha_1': 0.6,
+                                  'alpha_2': 0.4},
+                                index=list('ABCDEFG')))
+
 
 if __name__ == '__main__':
     nose.runmodule()

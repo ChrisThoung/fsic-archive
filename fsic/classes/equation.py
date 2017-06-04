@@ -57,6 +57,9 @@ class Equation(object):
     EXPRESSION = None
 
     def __init__(self, expression=None):
+        if expression is None:
+            expression = self.EXPRESSION
+
         self.raw = expression
         self.template = None
         self.terms = None
