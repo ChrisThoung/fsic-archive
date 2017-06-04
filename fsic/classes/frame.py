@@ -61,10 +61,12 @@ class Frame(OrderedDict):
         elif type(key) is tuple:
             raise NotImplementedError
         else:
-            if not isinstance(value, Container):
+            if not isinstance(value, Container) or isinstance(value, range):
+                index = None
+
                 if len(self):
-                    value = self.CONTAINER(value, next(iter(self.values())).keys())
-                else:
-                    raise NotImplementedError
+                    index = next(iter(self.values())).keys()
+
+                value = self.CONTAINER(value, index)
 
             super().__setitem__(key, value)

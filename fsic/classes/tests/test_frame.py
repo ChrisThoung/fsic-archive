@@ -91,6 +91,16 @@ def test_setitem_add_column():
                                   'F': [0] * 5},
                                  index=list('ABCDE'))[list('XYZF')])
 
+    frame['G'] = range(-5, 5, 2)
+    assert list(frame['G'].values()) == list(range(-5, 5, 2))
+    assert_frame_equal(DataFrame(frame),
+                       DataFrame({'X': range(5),
+                                  'Y': range(0, 10, 2),
+                                  'Z': range(0, 15, 3),
+                                  'F': [0] * 5,
+                                  'G': range(-5, 5, 2)},
+                                 index=list('ABCDE'))[list('XYZFG')])
+
 
 if __name__ == '__main__':
     nose.runmodule()
