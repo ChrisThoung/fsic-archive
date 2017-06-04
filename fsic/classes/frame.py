@@ -8,7 +8,7 @@ of the behaviour of the `pandas` `DataFrame` class).
 """
 
 from collections import OrderedDict
-from collections.abc import Container
+from collections.abc import Mapping
 import itertools
 
 from fsic.classes.variable import Variable
@@ -61,7 +61,7 @@ class Frame(OrderedDict):
         elif type(key) is tuple:
             raise NotImplementedError
         else:
-            if not isinstance(value, Container) or isinstance(value, range):
+            if not isinstance(value, Mapping) or isinstance(value, range):
                 index = None
 
                 if len(self):

@@ -101,6 +101,71 @@ def test_setitem_add_column():
                                   'G': range(-5, 5, 2)},
                                  index=list('ABCDE'))[list('XYZFG')])
 
+    frame['H'] = range(-5, 0)
+    assert list(frame['H'].values()) == list(range(-5, 0))
+    assert_frame_equal(DataFrame(frame),
+                       DataFrame({'X': range(5),
+                                  'Y': range(0, 10, 2),
+                                  'Z': range(0, 15, 3),
+                                  'F': [0] * 5,
+                                  'G': range(-5, 5, 2),
+                                  'H': range(-5, 0)},
+                                 index=list('ABCDE'))[list('XYZFGH')])
+
+    frame['I'] = [10 ** i for i in range(5)]
+    assert list(frame['I'].values()) == [1, 10, 100, 1000, 10000, ]
+    assert_frame_equal(DataFrame(frame),
+                       DataFrame({'X': range(5),
+                                  'Y': range(0, 10, 2),
+                                  'Z': range(0, 15, 3),
+                                  'F': [0] * 5,
+                                  'G': range(-5, 5, 2),
+                                  'H': range(-5, 0),
+                                  'I': [1, 10, 100, 1000, 10000, ]},
+                                 index=list('ABCDE'))[list('XYZFGHI')])
+
+def test_setitem_replace_column():
+    frame = Frame({'X': Variable(range(5), index='ABCDE'),
+                   'Y': Variable(range(0, 10, 2), index='ABCDE'),
+                   'Z': Variable(range(0, 15, 3), index='ABCDE')})
+    assert_frame_equal(DataFrame(frame),
+                       DataFrame({'X': range(5),
+                                  'Y': range(0, 10, 2),
+                                  'Z': range(0, 15, 3)},
+                                 index=list('ABCDE')))
+
+    frame['X'] = 0
+    assert list(frame['X'].values()) == [0] * 5
+    assert_frame_equal(DataFrame(frame),
+                       DataFrame({'X': [0] * 5,
+                                  'Y': range(0, 10, 2),
+                                  'Z': range(0, 15, 3)},
+                                 index=list('ABCDE')))
+
+    frame['Y'] = range(-5, 0)
+    assert list(frame['Y'].values()) == list(range(-5, 0))
+    assert_frame_equal(DataFrame(frame),
+                       DataFrame({'X': [0] * 5,
+                                  'Y': range(-5, 0),
+                                  'Z': range(0, 15, 3)},
+                                 index=list('ABCDE')))
+
+    frame['Z'] = [10 ** i for i in range(5)]
+    assert list(frame['Z'].values()) == [1, 10, 100, 1000, 10000, ]
+    assert_frame_equal(DataFrame(frame),
+                       DataFrame({'X': [0] * 5,
+                                  'Y': range(-5, 0),
+                                  'Z': [1, 10, 100, 1000, 10000, ]},
+                                 index=list('ABCDE')))
+
+    frame['X'] = Variable(range(5), index='ABCDE')
+    assert list(frame['X'].values()) == list(range(5))
+    assert_frame_equal(DataFrame(frame),
+                       DataFrame({'X': range(5),
+                                  'Y': range(-5, 0),
+                                  'Z': [1, 10, 100, 1000, 10000, ]},
+                                 index=list('ABCDE')))
+
 
 if __name__ == '__main__':
     nose.runmodule()
