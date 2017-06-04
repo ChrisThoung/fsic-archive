@@ -26,14 +26,7 @@ class Frame(OrderedDict):
             else:
                 super().update(data)
 
-    def _unpack_slice(self, slice_):
-        find = list(self.keys()).index
-
-        start = 0 if slice_.start is None else find(slice_.start)
-        stop = len(self) if slice_.stop is None else find(slice_.stop) + 1
-        step = 1 if slice_.step is None else slice_.step
-
-        return start, stop, step
+    _unpack_slice = Variable._unpack_slice
 
     def __getitem__(self, key):
         if type(key) is slice:
