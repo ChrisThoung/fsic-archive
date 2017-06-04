@@ -6,6 +6,8 @@ Test FSIC `Model` class.
 
 """
 
+import warnings
+
 from pandas import PeriodIndex
 from pandas import DataFrame
 from pandas.util.testing import assert_frame_equal
@@ -214,7 +216,11 @@ def test_solve_nans():
     # Check immediate halt each period in the event of a NaN propagating
     # through the system
     model = NaNs(0, 10)
-    model.solve(verbosity=2)
+
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore')
+        model.solve(verbosity=2)
+
     assert model.data['c'].isnull().all()
     assert (model.data['status'] == 'N').all()
     assert (model.data['iterations'] == 1).all()
