@@ -7,8 +7,13 @@ equation
 """
 
 from collections import Counter, OrderedDict
+from collections.abc import Mapping
+
 import re
 from pandas import DataFrame
+
+from fsic.classes.variable import Variable
+from fsic.classes.frame import Frame
 from fsic.utilities import merge_dicts, make_comparison_function
 
 
@@ -45,6 +50,11 @@ class Equation(object):
     PRECEDENCE = ('endogenous', 'exogenous')
     EXCLUSIVE = ('automatic', 'error', 'function', 'parameter')
 
+    CONTAINER_1D = Variable
+    CONTAINER_2D = Frame
+
+    EXPRESSION = None
+
     def __init__(self, expression=None):
         self.raw = expression
         self.template = None
@@ -53,6 +63,8 @@ class Equation(object):
 
         if self.raw is not None:
             self.parse(self.raw)
+
+        self.data = None
 
     def parse(self, expression):
         """Extract template and table of terms from `expression`."""
@@ -152,3 +164,14 @@ class Equation(object):
             return False
 
         return True
+
+    def initialise(self, index, values=0.0):
+        if isinstance(values, Mapping):
+            get = lambda k: values.get(k, 0.0)
+        else:
+            get = lambda k: values
+
+        data = {k: self.CONTAINER_1D(get(k), index)
+                for k in self.terms['name']}
+
+        self.data = self.CONTAINER_2D(data)

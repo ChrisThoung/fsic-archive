@@ -65,6 +65,15 @@ def test_equation_magic():
     assert b != c
     assert c != d
 
+def test_equation_initialise():
+    consumption = Equation('C = ({alpha_1} * YD) + ({alpha_2} * H[-1])')
+    consumption.initialise(index='ABCDEFG')
+
+    assert_frame_equal(DataFrame(consumption.data),
+                       DataFrame({v: 0.0
+                                  for v in ['C', 'YD', 'H', 'alpha_1', 'alpha_2']},
+                                 index=list('ABCDEFG')))
+
 
 if __name__ == '__main__':
     nose.runmodule()
