@@ -72,6 +72,25 @@ def test_getitem_row_col_range():
                                   'Z': range(3, 12, 3)},
                                  index=list('BCD')))
 
+def test_setitem_add_column():
+    frame = Frame({'X': Variable(range(5), index='ABCDE'),
+                   'Y': Variable(range(0, 10, 2), index='ABCDE'),
+                   'Z': Variable(range(0, 15, 3), index='ABCDE')})
+    assert_frame_equal(DataFrame(frame),
+                       DataFrame({'X': range(5),
+                                  'Y': range(0, 10, 2),
+                                  'Z': range(0, 15, 3)},
+                                 index=list('ABCDE')))
+
+    frame['F'] = 0
+    assert list(frame['F'].values()) == [0] * 5
+    assert_frame_equal(DataFrame(frame),
+                       DataFrame({'X': range(5),
+                                  'Y': range(0, 10, 2),
+                                  'Z': range(0, 15, 3),
+                                  'F': [0] * 5},
+                                 index=list('ABCDE'))[list('XYZF')])
+
 
 if __name__ == '__main__':
     nose.runmodule()

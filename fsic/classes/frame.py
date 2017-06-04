@@ -8,6 +8,7 @@ of the behaviour of the `pandas` `DataFrame` class).
 """
 
 from collections import OrderedDict
+from collections.abc import Container
 import itertools
 
 from fsic.classes.variable import Variable
@@ -53,3 +54,17 @@ class Frame(OrderedDict):
             item = super().__getitem__(key)
 
         return item
+
+    def __setitem__(self, key, value):
+        if type(key) is slice:
+            raise NotImplementedError
+        elif type(key) is tuple:
+            raise NotImplementedError
+        else:
+            if not isinstance(value, Container):
+                if len(self):
+                    value = self.CONTAINER(value, next(iter(self.values())).keys())
+                else:
+                    raise NotImplementedError
+
+            super().__setitem__(key, value)
