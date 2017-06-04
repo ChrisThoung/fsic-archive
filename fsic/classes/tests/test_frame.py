@@ -48,28 +48,25 @@ def test_init_2():
                                   'Z': range(0, 15, 3)},
                                  index=list('ABCDE')))
 
-def test_slice_single():
+def test_getitem_single_column():
     frame = Frame({'X': Variable(range(5), index='ABCDE'),
                    'Y': Variable(range(0, 10, 2), index='ABCDE'),
-                   'Z': Variable(range(0, 15, 3), index='ABCDE')},
-                  sort=True)
+                   'Z': Variable(range(0, 15, 3), index='ABCDE')})
     assert list(frame['X'].values()) == list(range(5))
 
-def test_slice_single_range():
+def test_getitem_column_range():
     frame = Frame({'X': Variable(range(5), index='ABCDE'),
                    'Y': Variable(range(0, 10, 2), index='ABCDE'),
-                   'Z': Variable(range(0, 15, 3), index='ABCDE')},
-                  sort=True)
+                   'Z': Variable(range(0, 15, 3), index='ABCDE')})
     assert_frame_equal(DataFrame(frame['Y':'Z']),
                        DataFrame({'Y': range(0, 10, 2),
                                   'Z': range(0, 15, 3)},
                                  index=list('ABCDE')))
 
-def test_slice_both_ranges():
+def test_getitem_row_col_range():
     frame = Frame({'X': Variable(range(5), index='ABCDE'),
                    'Y': Variable(range(0, 10, 2), index='ABCDE'),
-                   'Z': Variable(range(0, 15, 3), index='ABCDE')},
-                  sort=True)
+                   'Z': Variable(range(0, 15, 3), index='ABCDE')})
     assert_frame_equal(DataFrame(frame['B':'D', 'Y':'Z']),
                        DataFrame({'Y': range(2, 8, 2),
                                   'Z': range(3, 12, 3)},

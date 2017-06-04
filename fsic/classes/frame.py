@@ -18,7 +18,7 @@ class Frame(OrderedDict):
 
     CONTAINER = Variable
 
-    def __init__(self, data=None, sort=False):
+    def __init__(self, data=None, sort=True):
         if data is not None:
             if sort:
                 for k in sorted(data):
@@ -27,12 +27,12 @@ class Frame(OrderedDict):
                 super().update(data)
 
     _unpack_slice = Variable._unpack_slice
+    _unpack_slice_to_labels = Variable._unpack_slice_to_labels
 
     def __getitem__(self, key):
         if type(key) is slice:
-            start, stop, step = self._unpack_slice(key)
-            labels = list(itertools.islice(self.keys(), start, stop, step))
-            item = self.__class__(zip(labels, map(self.__getitem__, labels)))
+            column_labels = list(self._unpack_slice_to_labels(key))
+            item = self.__class__(zip(column_labels, map(self.__getitem__, column_labels)), sort=False)
         elif type(key) is tuple:
             if len(key) != 2:
                 raise KeyError('Only slicing up to two dimensions is supported')
@@ -43,13 +43,12 @@ class Frame(OrderedDict):
                     container._unpack_slice_to_labels(key[0]))
 
             # Select columns...
-            start, stop, step = self._unpack_slice(key[1])
-            column_labels = list(itertools.islice(self.keys(), start, stop, step))
+            column_labels = list(self._unpack_slice_to_labels(key[1]))
             columns = map(self.__getitem__, column_labels)
 
             # ...then filter by row
             filtered_columns = map(filter_col, columns)
-            item = self.__class__(zip(column_labels, filtered_columns))
+            item = self.__class__(zip(column_labels, filtered_columns), sort=False)
         else:
             item = super().__getitem__(key)
 
