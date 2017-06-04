@@ -57,9 +57,13 @@ class Frame(OrderedDict):
 
     def __setitem__(self, key, value):
         if type(key) is slice:
-            raise NotImplementedError
+            column_labels = self._unpack_slice_to_labels(key)
+            for column in column_labels:
+                self.__setitem__(column, value)
         elif type(key) is tuple:
-            raise NotImplementedError
+            column_labels = list(self._unpack_slice_to_labels(key[1]))
+            for column in column_labels:
+                self.__getitem__(column).__setitem__(key[0], value)
         else:
             if not isinstance(value, Mapping) or isinstance(value, range):
                 index = None

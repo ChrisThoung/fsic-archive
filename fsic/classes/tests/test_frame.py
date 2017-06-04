@@ -166,6 +166,42 @@ def test_setitem_replace_column():
                                   'Z': [1, 10, 100, 1000, 10000, ]},
                                  index=list('ABCDE')))
 
+def test_setitem_replace_multiple_columns():
+    frame = Frame({'X': Variable(range(5), index='ABCDE'),
+                   'Y': Variable(range(0, 10, 2), index='ABCDE'),
+                   'Z': Variable(range(0, 15, 3), index='ABCDE')})
+    assert_frame_equal(DataFrame(frame),
+                       DataFrame({'X': range(5),
+                                  'Y': range(0, 10, 2),
+                                  'Z': range(0, 15, 3)},
+                                 index=list('ABCDE')))
+
+    frame['Y':'Z'] = range(5)
+    assert list(frame['Y'].values()) == list(range(5))
+    assert list(frame['Z'].values()) == list(range(5))
+    assert_frame_equal(DataFrame(frame),
+                       DataFrame({'X': range(5),
+                                  'Y': range(5),
+                                  'Z': range(5)},
+                                 index=list('ABCDE')))
+
+def test_setitem_replace_rows_and_columns():
+    frame = Frame({'X': Variable(range(5), index='ABCDE'),
+                   'Y': Variable(range(0, 10, 2), index='ABCDE'),
+                   'Z': Variable(range(0, 15, 3), index='ABCDE')})
+    assert_frame_equal(DataFrame(frame),
+                       DataFrame({'X': [0, 1, 2, 3, 4],
+                                  'Y': [0, 2, 4, 6, 8],
+                                  'Z': [0, 3, 6, 9, 12]},
+                                 index=list('ABCDE')))
+
+    frame['B', 'X':'Z'] = 5
+    assert_frame_equal(DataFrame(frame),
+                       DataFrame({'X': [0, 5, 2, 3, 4],
+                                  'Y': [0, 5, 4, 6, 8],
+                                  'Z': [0, 5, 6, 9, 12]},
+                                 index=list('ABCDE')))
+
 
 if __name__ == '__main__':
     nose.runmodule()
