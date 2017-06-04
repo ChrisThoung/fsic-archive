@@ -10,6 +10,7 @@ from collections import Counter, OrderedDict
 from collections.abc import Mapping
 
 import re
+
 from pandas import DataFrame
 
 from fsic.classes.variable import Variable
@@ -173,5 +174,21 @@ class Equation(object):
 
         data = {k: self.CONTAINER_1D(get(k), index)
                 for k in self.terms['name']}
-
         self.data = self.CONTAINER_2D(data)
+
+        for k in self.data.keys():
+            setattr(self.__class__, k, self._make_property(self.data, k))
+
+    @staticmethod
+    def _make_property(container, key):
+
+        def getter(self):
+            return container.__getitem__(key)
+
+        def setter(self, value):
+            container.__setitem__(key, value)
+
+        def deleter(self):
+            raise NotImplementedError
+
+        return property(getter, setter, deleter)

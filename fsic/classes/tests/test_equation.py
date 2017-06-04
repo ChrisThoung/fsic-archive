@@ -74,6 +74,17 @@ def test_equation_initialise():
                                   for v in ['C', 'YD', 'H', 'alpha_1', 'alpha_2']},
                                  index=list('ABCDEFG')))
 
+    consumption.alpha_1 = 0.6
+    consumption.alpha_2 = 0.4
+
+    assert_frame_equal(DataFrame(consumption.data),
+                       DataFrame({'C': 0.0,
+                                  'YD': 0.0,
+                                  'H': 0.0,
+                                  'alpha_1': 0.6,
+                                  'alpha_2': 0.4},
+                                index=list('ABCDEFG')))
+
 
 if __name__ == '__main__':
     nose.runmodule()
