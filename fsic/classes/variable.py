@@ -83,6 +83,10 @@ class Variable(OrderedDict):
 
         return start, stop, step
 
+    def _unpack_slice_to_labels(self, slice_):
+        start, stop, step = self._unpack_slice(slice_)
+        return itertools.islice(self.keys(), start, stop, step)
+
     def __getitem__(self, key):
         """Augmented getter, aping `pandas` `Series`-style indexing.
 
@@ -107,8 +111,7 @@ class Variable(OrderedDict):
 
         """
         if type(key) is slice:
-            start, stop, step = self._unpack_slice(key)
-            labels = itertools.islice(self.keys(), start, stop, step)
+            labels = self._unpack_slice_to_labels(key)
             item = list(map(self.__getitem__, labels))
         else:
             item = super().__getitem__(key)
