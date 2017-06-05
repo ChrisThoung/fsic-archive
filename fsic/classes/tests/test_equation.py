@@ -6,6 +6,8 @@ Test FSIC `Equation` class for single equations.
 
 """
 
+import copy
+
 from pandas import DataFrame
 from pandas.util.testing import assert_frame_equal
 
@@ -128,6 +130,39 @@ def test_equation_solve_expression():
                                   'H': [80.0] * 7,
                                   'alpha_1': 0.6,
                                   'alpha_2': 0.4},
+                                index=list('ABCDEFG')))
+
+def test_equation_solve_expression_external():
+    class Consumption(Equation):
+        EXPRESSION = 'C = ({alpha_1} * YD) + ({alpha_2} * H[-1])'
+
+    consumption = Consumption()
+    consumption.initialise(index='ABCDEFG')
+
+    data = copy.deepcopy(consumption.data)
+
+    data['alpha_1'] = 0.6
+    data['alpha_2'] = 0.4
+
+    data['YD']['B':] = 80.0
+    data['H'] = 80.0
+
+    for period in consumption.span():
+        data = consumption.solve(period, data=data)
+
+    assert_frame_equal(DataFrame(data),
+                       DataFrame({'C': [0.0] + ([80.0] * 6),
+                                  'YD': [0.0] + ([80.0] * 6),
+                                  'H': [80.0] * 7,
+                                  'alpha_1': 0.6,
+                                  'alpha_2': 0.4},
+                                index=list('ABCDEFG')))
+    assert_frame_equal(DataFrame(consumption.data),
+                       DataFrame({'C': [0.0] * 7,
+                                  'YD': [0.0] * 7,
+                                  'H': [0.0] * 7,
+                                  'alpha_1': 0.0,
+                                  'alpha_2': 0.0},
                                 index=list('ABCDEFG')))
 
 

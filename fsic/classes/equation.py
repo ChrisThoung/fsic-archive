@@ -56,7 +56,7 @@ class Equation(object):
 
     EXPRESSION = None
 
-    def __init__(self, expression=None):
+    def __init__(self, expression=None, index=None, **kwargs):
         if expression is None:
             expression = self.EXPRESSION
 
@@ -73,6 +73,9 @@ class Equation(object):
         self.index = None
         self.start_offset = None
         self.end_offset = None
+
+        if index is not None:
+            self.initialise(index=index, **kwargs)
 
     def parse(self, expression):
         """Extract template and table of terms from `expression`."""
@@ -224,7 +227,7 @@ class Equation(object):
 
         expr_terms = {}
         for i, row in terms.iterrows():
-            expr_terms[i] = 'self.{}[index[{}]]'.format(row['name'], row['index'])
+            expr_terms[i] = "results['{}'][index[{}]]".format(row['name'], row['index'])
         code = template.format(**expr_terms)
 
         docstring = '''\
@@ -247,10 +250,20 @@ def solve(self, period=None, data=None):
     elif not isinstance(period, Container):
         period = [period]
 
+    if data is None:
+        results = self.data
+    else:
+        results = data
+
     for p in period:
         position = self.index.index(p)
         index = self.index[position:] + self.index[:position]
-        {code}\
+        {code}
+
+    if data is None:
+        self.data = results
+    else:
+        return results\
 '''.format(docstring=docstring, code=code)
 
         return function
