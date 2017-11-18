@@ -366,7 +366,7 @@ def _unravel_graph(G):
         already_encountered = already_encountered.union(set(group))
 
         # Get the subgraph of the remaining nodes and either...
-        remainder = G.subgraph(group)
+        remainder = G.subgraph(group).copy()
         # Sort topologically, if a directed acyclic graph remains, or...
         if nx.is_directed_acyclic_graph(remainder):
             order = order_dag(remainder)
