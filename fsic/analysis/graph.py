@@ -328,7 +328,7 @@ def _unravel_graph(G):
            tie-breaker."""
         order = []
         while True:
-            in_degree_zero = sorted([n for n, i in G.in_degree().items()
+            in_degree_zero = sorted([n for n, i in G.in_degree
                                      if i == 0])
             assert len(in_degree_zero) > 0
 
