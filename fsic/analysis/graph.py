@@ -57,7 +57,7 @@ def make_graph(equations, name='normalised', ignore_self_loops=False):
     # filtering in `_make_graph_from_list()`, either here or in
     # `_map_equations_to_nodes()`
     equation_mapping = {k: equation_mapping[k] for k in G.nodes()}
-    nx.set_node_attributes(G, 'equations', equation_mapping)
+    nx.set_node_attributes(G, name='equations', values=equation_mapping)
 
     return G
 
