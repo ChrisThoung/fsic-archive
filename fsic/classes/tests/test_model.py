@@ -6,11 +6,13 @@ Test FSIC `Model` class.
 
 """
 
+import os
 import warnings
 
 from pandas import PeriodIndex
 from pandas import DataFrame
 from pandas.util.testing import assert_frame_equal
+import pandas as pd
 
 import nose
 from nose.tools import raises
@@ -73,7 +75,7 @@ def test_initialise_period_index():
     model.initialise(data=xp)
     assert_frame_equal(model.data.reindex(columns=xp.columns), xp)
 
-    model.initialise(1990, 2020, data=xp.ix[1995:2000, :])
+    model.initialise(1990, 2020, data=xp.loc['1995':'2000', :])
     assert_frame_equal(model.data.reindex(columns=xp.columns), xp)
 
 def test_initialise_period_index_from_int():
@@ -81,7 +83,15 @@ def test_initialise_period_index_from_int():
                      index=range(1995, 2006))
     data.loc[2000, 'G'] = 20
     model = Variables(data=data)
-    assert model.data.loc['2000', 'G'] == 20
+
+    try:
+        assert model.data.loc['2000', 'G'] == 20
+    except AssertionError:
+        print('Expected:')
+        print(data)
+        print('\nResult:')
+        print(model.data[data.columns])
+        raise
 
 def test_initialise_integer_index():
     xp = DataFrame({'Y': 0.0, 'C': 0.0, 'I': 0.0, 'G': 0.0, 'X': 0.0, 'M': 0.0,
@@ -224,6 +234,21 @@ def test_solve_nans():
     assert model.data['c'].isnull().all()
     assert (model.data['status'] == 'N').all()
     assert (model.data['iterations'] == 1).all()
+
+
+def test_initialise_from_data_and_solve():
+    # Initialise a model from a dataset and solve
+    data = pd.read_csv(os.path.join(os.path.split(__file__)[0],
+                                    'data', 'annual.csv'),
+                       index_col=0)
+
+    input_data = data.copy()
+    input_data['Y'] = 0
+
+    model = Accounting(data=input_data)
+    model.solve()
+
+    assert_frame_equal(model.data[data.columns], data)
 
 
 def test_make_spacing():
