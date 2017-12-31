@@ -113,6 +113,34 @@ def test_topological_sort():
 
     assert order == XP_ORDER
 
+def test_topological_sort_fully_nested_cycles():
+    # Test topological sort on a system in which the subgraphs of cycles, when
+    # connected, encompass the larger cycle subgraphs
+    #
+    # (Added as a test because an earlier version of the algorithm assumed that
+    # looping through the cycles, from smallest to largest, would always leave
+    # *some* graph available to unravel in the last iteration. This would lead
+    # to a null graph which other [internal] functions cannot operate on. The
+    # revised implementation keeps eliminating cycle nodes from the graph until
+    # the graph is empty. Rather than attempt to continue through the loop, the
+    # algorithm simply halts and moves on to the next stage.)
+    G = nx.DiGraph()
+    G.add_edges_from([('B', 'A'), ('C', 'A'),
+                      ('A', 'B'), ('C', 'A'),
+                      ('A', 'C')])
+    nx.set_node_attributes(G, name='equations',
+                           values={'A': ('A = B + C', ),
+                                   'B': ('B = A + C', ),
+                                   'C': ('C = A', )})
+
+    expected = [['A = B + C', 'C = A', 'B = A + C']]
+    print('EXPECTED:', expected)
+
+    order = fsic.analysis.graph.topological_sort(G)
+    print('RESULT:', order)
+
+    assert order == expected
+
 
 def test_unravel_graph():
     # Test cycle detection and graph unravelling

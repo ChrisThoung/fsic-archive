@@ -362,6 +362,12 @@ def _unravel_graph(G):
         # Remove nodes from the current group if they appear in a
         # previously-encountered cycle
         group = [node for node in group if node not in already_encountered]
+
+        # Break if `group` is empty (all nodes already accounted for in
+        # previous cycles; nothing left to unravel)
+        if not len(group):
+            break
+
         # Update list of already-encountered nodes
         already_encountered = already_encountered.union(set(group))
 
