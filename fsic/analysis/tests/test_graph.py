@@ -133,13 +133,17 @@ def test_topological_sort_fully_nested_cycles():
                                    'B': ('B = A + C', ),
                                    'C': ('C = A', )})
 
-    expected = [['A = B + C', 'C = A', 'B = A + C']]
-    print('EXPECTED:', expected)
+    # Two possible orders
+    expected_1 = [['A = B + C', 'C = A', 'B = A + C']]
+    expected_2 = [['A = B + C', 'B = A + C', 'C = A']]
+    print('''\
+EXPECTED: {}
+      OR: {}'''.format(expected_1, expected_2))
 
     order = fsic.analysis.graph.topological_sort(G)
-    print('RESULT:', order)
+    print('RESULT:  ', order)
 
-    assert order == expected
+    assert order == expected_1 or order == expected_1
 
 
 def test_unravel_graph():
