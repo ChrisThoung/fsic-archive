@@ -9,6 +9,8 @@ Test FSIC `Model` class.
 import os
 import warnings
 
+import numpy as np
+
 from pandas import PeriodIndex
 from pandas import DataFrame
 from pandas.util.testing import assert_frame_equal
@@ -19,6 +21,17 @@ from nose.tools import raises
 
 from fsic.classes.model import Model
 from fsic.exceptions import FSICError
+
+
+def standardise_integer_column_dtypes(frame):
+    """Return a copy of `frame` with integer columns coerced to the (system) default integer type."""
+    coerced = frame.copy()
+
+    for name, dtype in frame.dtypes.items():
+        if np.issubdtype(dtype, np.integer):
+            coerced[name] = coerced[name].astype(int)
+
+    return coerced
 
 
 class NaNs(Model):
@@ -52,31 +65,37 @@ def test_initialise_period_index():
                    index=PeriodIndex(start=1990, end=2020))
 
     model = Dynamic(1990, 2020)
-    assert_frame_equal(model.data.reindex(columns=xp.columns), xp)
+    assert_frame_equal(standardise_integer_column_dtypes(model.data.reindex(columns=xp.columns)),
+                       standardise_integer_column_dtypes(xp))
 
     model.initialise(solve_from=1995, solve_to=2015)
-    assert_frame_equal(model.data.reindex(columns=xp.columns), xp)
+    assert_frame_equal(standardise_integer_column_dtypes(model.data.reindex(columns=xp.columns)),
+                       standardise_integer_column_dtypes(xp))
 
     model.initialise(1990, 2020, variables=list('YCIG'))
     assert_frame_equal(
-        model.data.reindex(columns=xp.drop(list('XM'), axis=1).columns),
-        xp.drop(list('XM'), axis=1))
+        standardise_integer_column_dtypes(model.data.reindex(columns=xp.drop(list('XM'), axis=1).columns)),
+        standardise_integer_column_dtypes(xp.drop(list('XM'), axis=1)))
 
     model.initialise(1990, 2020, parameters=list('YCIG'))
     assert_frame_equal(
-        model.data.reindex(columns=xp.drop(list('XM'), axis=1).columns),
-        xp.drop(list('XM'), axis=1))
+        standardise_integer_column_dtypes(model.data.reindex(columns=xp.drop(list('XM'), axis=1).columns)),
+        standardise_integer_column_dtypes(xp.drop(list('XM'), axis=1)))
 
     model.initialise(1990, 2020, errors=list('YCIG'))
     assert_frame_equal(
-        model.data.reindex(columns=xp.drop(list('XM'), axis=1).columns),
-        xp.drop(list('XM'), axis=1))
+        standardise_integer_column_dtypes(model.data.reindex(columns=xp.drop(list('XM'), axis=1).columns)),
+        standardise_integer_column_dtypes(xp.drop(list('XM'), axis=1)))
 
     model.initialise(data=xp)
-    assert_frame_equal(model.data.reindex(columns=xp.columns), xp)
+    assert_frame_equal(
+        standardise_integer_column_dtypes(model.data.reindex(columns=xp.columns)),
+        standardise_integer_column_dtypes(xp))
 
     model.initialise(1990, 2020, data=xp.loc['1995':'2000', :])
-    assert_frame_equal(model.data.reindex(columns=xp.columns), xp)
+    assert_frame_equal(
+        standardise_integer_column_dtypes(model.data.reindex(columns=xp.columns)),
+        standardise_integer_column_dtypes(xp))
 
 def test_initialise_period_index_from_int():
     data = DataFrame({'Y': 0.0, 'C': 0.0, 'I': 0.0, 'G': 0.0, 'X': 0.0, 'M': 0.0, },
@@ -99,19 +118,27 @@ def test_initialise_integer_index():
                    index=range(-10, 11))
 
     model = Variables(-10, 10)
-    assert_frame_equal(model.data.reindex(columns=xp.columns), xp)
+    assert_frame_equal(
+        standardise_integer_column_dtypes(model.data.reindex(columns=xp.columns)),
+        standardise_integer_column_dtypes(xp))
 
     model.initialise(-10, 10, convergence_variables=['Y'])
-    assert_frame_equal(model.data.reindex(columns=xp.columns), xp)
+    assert_frame_equal(
+        standardise_integer_column_dtypes(model.data.reindex(columns=xp.columns)),
+        standardise_integer_column_dtypes(xp))
 
     model = Dynamic(solve_from=-5, solve_to=5)
-    assert_frame_equal(model.data.reindex(columns=xp.columns), xp)
+    assert_frame_equal(
+        standardise_integer_column_dtypes(model.data.reindex(columns=xp.columns)),
+        standardise_integer_column_dtypes(xp))
 
     model = Model(solve_from=1, solve_to=1000)
     assert list(model.data.index.values) == list(range(1, 1001))
 
     model.initialise(data=xp)
-    assert_frame_equal(model.data.reindex(columns=xp.columns), xp)
+    assert_frame_equal(
+        standardise_integer_column_dtypes(model.data.reindex(columns=xp.columns)),
+        standardise_integer_column_dtypes(xp))
 
 def test_initialise_integer_index_with_zero():
     model = Model(0, 5)
