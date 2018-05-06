@@ -143,7 +143,7 @@ EXPECTED: {}
     order = fsic.analysis.graph.topological_sort(G)
     print('RESULT:  ', order)
 
-    assert order == expected_1 or order == expected_1
+    assert order == expected_1 or order == expected_2
 
 
 def test_unravel_graph():
